@@ -15,9 +15,22 @@ A Next.js application with a public-facing studio site and a protected admin das
 
 1. Add your Supabase project values to [`.env.local`](/c:/Users/Dell/Desktop/Tech%20Axis/axisx/.env.local).
 2. Apply the schema in [`SUPABASE_MIGRATION_SCHEMA.sql`](/c:/Users/Dell/Desktop/Tech%20Axis/axisx/SUPABASE_MIGRATION_SCHEMA.sql) to your Supabase project.
-3. Create the `media` storage bucket in Supabase and align its policies with your public upload/admin management needs.
-4. Run `npm run dev`.
-5. Open `http://localhost:3000/login` to access the admin dashboard.
+3. Create an admin user in Supabase Auth.
+4. Insert that user into `public.admins` with role `owner` or `admin`.
+5. Create the `media` storage bucket in Supabase and apply the policies from the schema file.
+6. Run `npm run dev`.
+7. Open `http://localhost:3000/login` to access the admin dashboard.
+
+## Admin Bootstrap
+
+Create the auth user first in Supabase Dashboard, then add a matching admin row:
+
+```sql
+insert into public.admins (uid, email, role)
+values ('YOUR_AUTH_USER_ID', 'admin@example.com', 'owner');
+```
+
+This project no longer uses any browser-side fallback admin password.
 
 ## Project Notes
 

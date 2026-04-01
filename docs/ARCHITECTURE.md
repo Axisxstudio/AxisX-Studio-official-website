@@ -98,6 +98,7 @@ Admin routes:
 Auth behavior:
 - Footer lock icon routes to /login
 - /admin/* requires signed-in user and membership in admins collection
+- No browser-side admin fallback credentials are used in production
 
 ## 5) Reusable UI Components List (Current + Suggested)
 
@@ -121,3 +122,4 @@ Suggested next extraction:
 - Unique file naming prevents collisions
 - Admin deletion also deletes Storage assets
 - Apply Supabase Row Level Security policies and storage policies before production deployment
+- Public feedback reads should be limited to records with `consentToPublish = true`

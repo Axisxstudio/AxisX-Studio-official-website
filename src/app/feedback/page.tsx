@@ -24,6 +24,7 @@ export default function FeedbackList() {
         const { data, error } = await supabase
           .from("feedback")
           .select(selectClause("feedback"))
+          .eq(toDatabaseField("feedback", "consentToPublish"), true)
           .order(toDatabaseField("feedback", "createdAt"), { ascending: false });
         if (error) throw error;
         setFeedbacks((data ?? []) as unknown as Feedback[]);

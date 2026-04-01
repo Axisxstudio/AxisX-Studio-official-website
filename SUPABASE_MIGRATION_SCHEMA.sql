@@ -61,19 +61,72 @@ ALTER TABLE public.feedback ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.contacts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admins ENABLE ROW LEVEL SECURITY;
 
--- Anonymous public read access for published projects and public feedback
-CREATE POLICY "Public read access to published projects" ON public.projects FOR SELECT USING (ispublished = true);
-CREATE POLICY "Public read access to feedback" ON public.feedback FOR SELECT USING (true);
--- Allow public to insert feedback & contacts
-CREATE POLICY "Public insert access to feedback" ON public.feedback FOR INSERT WITH CHECK (true);
-CREATE POLICY "Public insert access to contacts" ON public.contacts FOR INSERT WITH CHECK (true);
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS boolean
+LANGUAGE sql
+STABLE
+SECURITY DEFINER
+SET search_path = public
+AS $$
+  SELECT EXISTS (
+    SELECT 1
+    FROM public.admins
+    WHERE uid = auth.uid()
+  );
+$$;
 
--- Admin full access to everything (assuming 'role' column or similar custom claim can be mapped, or just using authenticated role for now)
--- Replace logic based on your secure auth rules
-CREATE POLICY "Admin full access projects" ON public.projects FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access feedback" ON public.feedback FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access contacts" ON public.contacts FOR ALL TO authenticated USING (true);
-CREATE POLICY "Admin full access admins" ON public.admins FOR ALL TO authenticated USING (true);
+REVOKE ALL ON FUNCTION public.is_admin() FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.is_admin() TO anon, authenticated;
+
+-- Anonymous/public access
+CREATE POLICY "Public read access to published projects"
+ON public.projects
+FOR SELECT
+USING (ispublished = true);
+
+CREATE POLICY "Public read access to approved feedback"
+ON public.feedback
+FOR SELECT
+USING (consenttopublish = true);
+
+CREATE POLICY "Public insert access to feedback"
+ON public.feedback
+FOR INSERT
+WITH CHECK (true);
+
+CREATE POLICY "Public insert access to contacts"
+ON public.contacts
+FOR INSERT
+WITH CHECK (true);
+
+-- Admin access
+CREATE POLICY "Admin full access projects"
+ON public.projects
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin full access feedback"
+ON public.feedback
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin full access contacts"
+ON public.contacts
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
+
+CREATE POLICY "Admin full access admins"
+ON public.admins
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
 
 -- 5. Storage Buckets & Policies
 -- Create 'media' bucket
@@ -98,5 +151,14 @@ FOR INSERT WITH CHECK (
 
 -- Note: In a production environment, you would use 'auth.role() = ''authenticated''' to limit 
 -- admin project uploads and deletions, but for the migration, we make sure it doesn't instantly block you.
-CREATE POLICY "Authenticated users can do anything on media bucket" ON storage.objects
-FOR ALL TO authenticated USING (bucket_id = 'media');
+CREATE POLICY "Admin media management" ON storage.objects
+FOR ALL
+TO authenticated
+USING (
+  bucket_id = 'media'
+  AND public.is_admin()
+)
+WITH CHECK (
+  bucket_id = 'media'
+  AND public.is_admin()
+);

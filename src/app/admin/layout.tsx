@@ -8,7 +8,6 @@ import { auth } from "@/lib/supabase-api";
 import { signOut } from "@/lib/supabase-api";
 import { LayoutDashboard, MessageSquare, Briefcase, Mail, LogOut, Settings, Menu, X } from "lucide-react";
 import toast from "react-hot-toast";
-import { clearMockAdminSession, isMockAdminSessionActive } from "@/lib/admin";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, isAdmin } = useAuth();
@@ -34,13 +33,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   const handleLogout = async () => {
     try {
-      if (isMockAdminSessionActive()) {
-        clearMockAdminSession();
-        toast.success("Logged out successfully");
-        router.replace("/login");
-        return;
-      }
-
       await signOut(auth);
       toast.success("Logged out successfully");
       router.replace("/login");

@@ -15,13 +15,8 @@ import {
 } from "lucide-react";
 import { Project } from "@/types";
 import { supabase } from "@/lib/supabase";
-import {
-  establishConfiguredAdminSession,
-  getAdminCredentials,
-  isMockAdminSessionActive,
-} from "@/lib/admin";
 import { deleteFilesByUrl, uploadFilesToStorage, validateFiles } from "@/lib/media";
-import { auth, selectClause, toDatabaseField, toDatabasePayload } from "@/lib/supabase-api";
+import { selectClause, toDatabaseField, toDatabasePayload } from "@/lib/supabase-api";
 import toast from "react-hot-toast";
 
 type ProjectForm = {
@@ -177,16 +172,6 @@ export default function AdminProjects() {
     setSubmitLoading(true);
 
     try {
-      if (isMockAdminSessionActive()) {
-        const credentials = getAdminCredentials();
-        const realUser = await establishConfiguredAdminSession(auth, credentials.email, credentials.password);
-
-        if (!realUser) {
-          toast.error("Please sign in again with your admin account.");
-          return;
-        }
-      }
-
       const projectPath = `projects/${formData.slug}-${Date.now()}`;
       const [galleryImageUrls, projectVideoUrls] = await Promise.all([
         uploadFilesToStorage(galleryImages, projectPath, "image"),

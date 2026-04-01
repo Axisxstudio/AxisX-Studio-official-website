@@ -7,11 +7,6 @@ export const appConfig = {
   maxFeedbackVideos: Number(process.env.NEXT_PUBLIC_MAX_FEEDBACK_VIDEOS ?? 3),
 };
 
-export const adminEnv = {
-  defaultEmail: process.env.NEXT_PUBLIC_DEFAULT_ADMIN_EMAIL ?? "vijayakumarvithusan2912@gmail.com",
-  defaultPassword: process.env.NEXT_PUBLIC_DEFAULT_ADMIN_PASSWORD ?? "vithu2912#",
-};
-
 export const supabaseEnv = {
   url: process.env.NEXT_PUBLIC_SUPABASE_URL,
   anonKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,

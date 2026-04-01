@@ -11,14 +11,7 @@ import { Key, Mail, Save, Shield, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { auth } from "@/lib/supabase-api";
-import {
-  ADMIN_AUTH_CHANGE_EVENT,
-  emitAdminAuthChange,
-  getAdminCredentials,
-  isMockAdminSessionActive,
-  saveAdminCredentials,
-  syncAdminEmail,
-} from "@/lib/admin";
+import { emitAdminAuthChange, syncAdminEmail } from "@/lib/admin";
 
 function getSettingsErrorMessage(error: unknown): string {
   const code = typeof error === "object" && error && "code" in error ? String(error.code) : "";
@@ -49,31 +42,10 @@ export default function AdminSettings() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailLoading, setEmailLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
-  const [authMode, setAuthMode] = useState<"mock" | "supabase">("supabase");
 
   useEffect(() => {
     setLoginEmail(user?.email ?? "");
   }, [user?.email]);
-
-  useEffect(() => {
-    const syncMode = () => {
-      setAuthMode(isMockAdminSessionActive() ? "mock" : "supabase");
-    };
-
-    syncMode();
-
-    if (typeof window !== "undefined") {
-      window.addEventListener(ADMIN_AUTH_CHANGE_EVENT, syncMode);
-      window.addEventListener("storage", syncMode);
-    }
-
-    return () => {
-      if (typeof window !== "undefined") {
-        window.removeEventListener(ADMIN_AUTH_CHANGE_EVENT, syncMode);
-        window.removeEventListener("storage", syncMode);
-      }
-    };
-  }, []);
 
   const reauthenticateAdmin = async (password: string) => {
     const currentUser = auth.currentUser;
@@ -104,24 +76,12 @@ export default function AdminSettings() {
     setEmailLoading(true);
 
     try {
-      const configuredCredentials = getAdminCredentials();
+      const currentUser = await reauthenticateAdmin(emailPassword);
+      const previousEmail = currentUser.email;
 
-      if (authMode === "supabase") {
-        const currentUser = await reauthenticateAdmin(emailPassword);
-        const previousEmail = currentUser.email;
-
-        await updateEmail(currentUser, nextEmail);
-        await syncAdminEmail(currentUser.uid, previousEmail, nextEmail);
-        emitAdminAuthChange();
-      } else if (configuredCredentials.password !== emailPassword) {
-        toast.error("Current password is incorrect.");
-        return;
-      }
-
-      saveAdminCredentials({
-        email: nextEmail,
-        password: authMode === "supabase" ? emailPassword : configuredCredentials.password,
-      });
+      await updateEmail(currentUser, nextEmail);
+      await syncAdminEmail(currentUser.uid, previousEmail, nextEmail);
+      emitAdminAuthChange();
 
       setEmailPassword("");
       toast.success("Admin email updated.");
@@ -153,23 +113,11 @@ export default function AdminSettings() {
     setPasswordLoading(true);
 
     try {
-      const configuredCredentials = getAdminCredentials();
+      await reauthenticateAdmin(currentPassword);
 
-      if (authMode === "supabase") {
-        await reauthenticateAdmin(currentPassword);
-
-        if (auth.currentUser) {
-          await updatePassword(auth.currentUser, newPassword);
-        }
-      } else if (configuredCredentials.password !== currentPassword) {
-        toast.error("Current password is incorrect.");
-        return;
+      if (auth.currentUser) {
+        await updatePassword(auth.currentUser, newPassword);
       }
-
-      saveAdminCredentials({
-        email: user?.email?.trim().toLowerCase() || configuredCredentials.email,
-        password: newPassword,
-      });
 
       setCurrentPassword("");
       setNewPassword("");
@@ -204,10 +152,8 @@ export default function AdminSettings() {
               <p className="text-sm text-[#adaaad] flex items-center gap-1">
                 <Mail size={14} className="text-[#a3a6ff]/70" /> {user?.email}
               </p>
-                <p className="text-xs text-[#adaaad] mt-1">
-                {authMode === "mock"
-                  ? "Using local admin fallback for this browser."
-                  : "Using Supabase Authentication."}
+              <p className="text-xs text-[#adaaad] mt-1">
+                Using Supabase Authentication.
               </p>
             </div>
           </div>

@@ -3,14 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "@/lib/supabase-api";
 import { auth } from "@/lib/supabase-api";
-import {
-  ADMIN_AUTH_CHANGE_EVENT,
-  establishConfiguredAdminSession,
-  getAdminCredentials,
-  getMockAdminUser,
-  isAdminUser,
-  isMockAdminSessionActive,
-} from "@/lib/admin";
+import { ADMIN_AUTH_CHANGE_EVENT, isAdminUser } from "@/lib/admin";
 
 interface AuthContextType {
   user: User | null;
@@ -34,28 +27,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (!mounted) return;
 
       setLoading(true);
-
-      if (isMockAdminSessionActive()) {
-        const credentials = getAdminCredentials();
-
-        try {
-          const realUser = await establishConfiguredAdminSession(auth, credentials.email, credentials.password);
-
-          if (realUser) {
-            setUser(realUser);
-            setIsAdmin(true);
-            setLoading(false);
-            return;
-          }
-        } catch {
-          // Fall back to the local mock session if Supabase auth cannot be restored.
-        }
-
-        setUser(getMockAdminUser());
-        setIsAdmin(true);
-        setLoading(false);
-        return;
-      }
 
       setUser(nextUser);
 

@@ -478,24 +478,3 @@ export async function updatePassword(_user: User, newPassword: string): Promise<
 
   currentUser = normalizeUser(data.user) ?? currentUser;
 }
-
-export async function createUserWithEmailAndPassword(
-  _auth: Auth,
-  email: string,
-  password: string,
-): Promise<{ user: User }> {
-  const { data, error } = await supabase.auth.signUp({ email, password });
-
-  if (error) {
-    throw normalizeAuthError(error);
-  }
-
-  const user = normalizeUser(data.user);
-
-  if (!user) {
-    throw createAuthError("auth/unknown", "Unable to create the Supabase admin user.");
-  }
-
-  currentUser = user;
-  return { user };
-}

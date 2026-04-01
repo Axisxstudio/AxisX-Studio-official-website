@@ -7,17 +7,12 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { Lock } from "lucide-react";
-import {
-  activateMockAdminSession,
-  adminCredentialsMatch,
-  clearMockAdminSession,
-  establishConfiguredAdminSession,
-  getAdminCredentials,
-  isAdminUser,
-} from "@/lib/admin";
+import { isAdminUser } from "@/lib/admin";
 
 function getLoginErrorMessage(error: unknown): string {
   const code = typeof error === "object" && error && "code" in error ? String(error.code) : "";
+  const message =
+    typeof error === "object" && error && "message" in error ? String(error.message).toLowerCase() : "";
 
   switch (code) {
     case "auth/invalid-credential":
@@ -29,13 +24,16 @@ function getLoginErrorMessage(error: unknown): string {
     case "auth/network-request-failed":
       return "Network error while trying to sign in.";
     default:
+      if (message.includes("email not confirmed")) {
+        return "Please confirm this email address in Supabase before signing in.";
+      }
+
       return "Unable to sign in with those credentials.";
   }
 }
 
 export default function Login() {
-  const configuredCredentials = getAdminCredentials();
-  const [email, setEmail] = useState(configuredCredentials.email);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -46,36 +44,6 @@ export default function Login() {
 
     try {
       const normalizedEmail = email.trim().toLowerCase();
-
-      if (adminCredentialsMatch(normalizedEmail, password)) {
-        let adminUser = null;
-
-        try {
-          adminUser = await establishConfiguredAdminSession(auth, normalizedEmail, password);
-        } catch {
-          activateMockAdminSession();
-          toast.success("Welcome back, Admin");
-          router.replace("/admin");
-          return;
-        }
-
-        if (!auth.currentUser) {
-          activateMockAdminSession();
-        }
-
-        const isAllowedAdmin = await isAdminUser(adminUser);
-
-        if (!isAllowedAdmin) {
-          await signOut(auth).catch(() => undefined);
-          toast.error("This account is not authorized for admin access.");
-          return;
-        }
-
-        toast.success("Welcome back, Admin");
-        router.replace("/admin");
-        return;
-      }
-
       const credential = await signInWithEmailAndPassword(auth, normalizedEmail, password);
       const isAllowedAdmin = await isAdminUser(credential.user);
 
@@ -85,7 +53,6 @@ export default function Login() {
         return;
       }
 
-      clearMockAdminSession();
       toast.success("Welcome back, Admin");
       router.replace("/admin");
     } catch (error) {
@@ -128,7 +95,9 @@ export default function Login() {
                    onChange={(e) => setEmail(e.target.value)}
                    className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 outline-none transition-colors"
                  />
-                 <p className="mt-2 text-xs text-[#adaaad]">Default admin email: {configuredCredentials.email}</p>
+                 <p className="mt-2 text-xs text-[#adaaad]">
+                   Sign in with a Supabase Auth user that also has an entry in the <code>admins</code> table.
+                 </p>
               </div>
               <div>
                  <label className="block text-sm font-medium text-[#adaaad] mb-2">Password</label>
@@ -139,7 +108,9 @@ export default function Login() {
                    onChange={(e) => setPassword(e.target.value)}
                    className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 outline-none transition-colors"
                  />
-                 <p className="mt-2 text-xs text-[#adaaad]">You can change the admin email and password later from Settings.</p>
+                 <p className="mt-2 text-xs text-[#adaaad]">
+                   Use the password stored for that Supabase Auth account.
+                 </p>
               </div>
 
               <button 
