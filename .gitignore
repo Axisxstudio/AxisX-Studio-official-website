@@ -29,6 +29,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
+*.err.log
+
+# local artifacts
+.codex-dev*
+.gemini-lint.txt
+eslint-out.json
+lint-output.txt
+lint-errors.txt
+tsc-errors.txt
+headless-*.png
 
 # env files (can opt-in for committing if needed)
 .env*
