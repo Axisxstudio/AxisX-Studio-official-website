@@ -2,6 +2,8 @@
 
 import { Lock } from "lucide-react";
 import Link from "next/link";
+import BrandLogo from "@/components/BrandLogo";
+import { CONTACT_INFO } from "@/lib/contact-info";
 
 import { usePathname, useRouter } from "next/navigation";
 
@@ -23,9 +25,8 @@ export default function Footer() {
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 text-[#adaaad] text-sm">
           <div>
-            <Link href="/" className="text-2xl font-bold tracking-tighter flex items-center gap-2 mb-5">
-              <span className="w-8 h-8 rounded bg-gradient-to-br from-[#a3a6ff] to-[#c180ff] flex items-center justify-center text-[#0e0e10] font-black text-xl">X</span>
-              <span className="font-outfit text-[#f9f5f8]">Axis<span className="text-[#a3a6ff]">X</span></span>
+            <Link href="/" aria-label="AxisX home" className="mb-5 inline-flex items-center">
+              <BrandLogo className="h-auto w-[10.5rem]" />
             </Link>
             <p className="leading-relaxed">
               Premium web development services. We build exceptional digital experiences for modern brands.
@@ -62,9 +63,32 @@ export default function Footer() {
           <div>
             <h4 className="text-[#f9f5f8] font-semibold mb-5">Contact Us</h4>
             <ul className="space-y-3">
-              <li>hello@axisx.dev</li>
-              <li>+1 (555) 000-0000</li>
-              <li>123 Innovation Drive<br />Tech City, TC 90210</li>
+              <li>
+                <a
+                  className="transition-colors hover:text-[#a3a6ff]"
+                  href={`mailto:${CONTACT_INFO.email}`}
+                >
+                  {CONTACT_INFO.email}
+                </a>
+              </li>
+              <li>
+                <a
+                  className="transition-colors hover:text-[#c180ff]"
+                  href={CONTACT_INFO.phone.href}
+                >
+                  {CONTACT_INFO.phone.display}
+                </a>
+              </li>
+              <li>
+                <a
+                  className="transition-colors hover:text-[#a3a6ff]"
+                  href={CONTACT_INFO.location.href}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  {CONTACT_INFO.location.label}
+                </a>
+              </li>
             </ul>
           </div>
         </div>
