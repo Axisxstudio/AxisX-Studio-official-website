@@ -3,7 +3,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import { Suspense } from "react";
 import PageProgressBar from "@/components/PageProgressBar";
-import SiteMaintenanceGate from "@/components/SiteMaintenanceGate";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -26,7 +25,7 @@ export default function RootLayout({
           <PageProgressBar />
         </Suspense>
         <AuthProvider>
-          <SiteMaintenanceGate>{children}</SiteMaintenanceGate>
+          {children}
           <Toaster 
             position="bottom-right"
             toastOptions={{

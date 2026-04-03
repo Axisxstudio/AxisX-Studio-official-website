@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight, Code, Layout, Zap, Users,
   Server, LayoutDashboard, Search, FileCode2, Palette,
@@ -12,10 +14,8 @@ import { motion, type Variants, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import FeedbackSection from "@/components/FeedbackSection";
-import ProjectShowcaseCard from "@/components/ProjectShowcaseCard";
 import { supabase } from "@/lib/supabase";
 import { selectClause, toDatabaseField, toDatabasePayload } from "@/lib/supabase-api";
-import { CONTACT_INFO } from "@/lib/contact-info";
 import { Project } from "@/types";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -202,14 +202,34 @@ function ProjectsSection() {
               <motion.div
                 key={project.id}
                 variants={fadeUp}
-                className="h-full"
+                className="group glass-strong rounded-3xl border border-[#a3a6ff]/10 overflow-hidden hover:border-[#a3a6ff]/30 transition-all duration-500 hover:-translate-y-2"
               >
-                <ProjectShowcaseCard
-                  project={project}
-                  href="/projects"
-                  ctaLabel="Explore Portfolio"
-                  compact
-                />
+                <div className="relative h-56 md:h-72 w-full overflow-hidden bg-[#19191c]">
+                  {project.coverImageUrl ? (
+                    <Image src={project.coverImageUrl} alt={project.title} fill className="object-cover group-hover:scale-105 transition-transform duration-700" />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-[#adaaad]">No Cover Image</div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e10] via-transparent to-transparent opacity-80" />
+                  <div className="absolute top-4 right-4 backdrop-blur-md bg-[#0e0e10]/60 border border-[#a3a6ff]/20 rounded-full px-3 py-1 text-xs font-semibold text-[#f9f5f8] uppercase tracking-wider">
+                    {project.category}
+                  </div>
+                </div>
+                <div className="p-7">
+                  <h3 className="text-xl font-bold font-outfit mb-2 group-hover:text-[#a3a6ff] transition-colors">{project.title}</h3>
+                  <p className="text-[#adaaad] text-sm line-clamp-2 mb-5 leading-relaxed">{project.description}</p>
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {project.technologies?.slice(0, 4).map((tech, i) => (
+                      <span key={i} className="text-xs px-3 py-1 rounded-full bg-[#1f1f22] border border-[#a3a6ff]/10 text-[#f9f5f8]">{tech}</span>
+                    ))}
+                    {project.technologies?.length > 4 && (
+                      <span className="text-xs px-3 py-1 rounded-full bg-[#1f1f22] border border-[#a3a6ff]/10 text-[#adaaad]">+{project.technologies.length - 4}</span>
+                    )}
+                  </div>
+                  <Link href={`/projects/[slug]?slug=${project.slug}`} as={`/projects/${project.slug}`} className="inline-flex items-center gap-2 text-[#a3a6ff] font-medium text-sm group-hover:gap-3 transition-all pt-2">
+                    View Case Study <ArrowRight size={16} />
+                  </Link>
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -433,54 +453,23 @@ export default function Home() {
                   <p className="text-[#adaaad] mb-10 text-base leading-relaxed">
                     Whether it&apos;s a technical query, project request, or you just want to talk code — our inbox is open.
                   </p>
-	                  <div className="space-y-7">
-	                    {[
-	                      {
-	                        color: "text-[#a3a6ff]",
-	                        href: `mailto:${CONTACT_INFO.email}`,
-	                        icon: <Mail size={22} />,
-	                        label: "Email",
-	                        rel: undefined,
-	                        target: undefined,
-	                        val: CONTACT_INFO.email,
-	                      },
-	                      {
-	                        color: "text-[#c180ff]",
-	                        href: CONTACT_INFO.phone.href,
-	                        icon: <Phone size={22} />,
-	                        label: "Phone",
-	                        rel: undefined,
-	                        target: undefined,
-	                        val: CONTACT_INFO.phone.display,
-	                      },
-	                      {
-	                        color: "text-[#a3a6ff]",
-	                        href: CONTACT_INFO.location.href,
-	                        icon: <MapPin size={22} />,
-	                        label: "HQ",
-	                        rel: "noopener noreferrer",
-	                        target: "_blank",
-	                        val: CONTACT_INFO.location.label,
-	                      },
-	                    ].map((item, idx) => (
-	                      <div key={idx} className="flex items-start gap-4">
-	                        <div className={`p-3 bg-[#19191c] rounded-xl border border-white/5 ${item.color}`}>
-	                          {item.icon}
-	                        </div>
-	                        <div>
-	                          <h4 className="text-[#f9f5f8] font-semibold mb-0.5">{item.label}</h4>
-	                          <a
-	                            className="text-[#adaaad] text-sm transition-colors hover:text-[#f9f5f8]"
-	                            href={item.href}
-	                            rel={item.rel}
-	                            target={item.target}
-	                          >
-	                            {item.val}
-	                          </a>
-	                        </div>
-	                      </div>
-	                    ))}
-	                  </div>
+                  <div className="space-y-7">
+                    {[
+                      { icon: <Mail size={22} />, label: "Email", val: "hello@axisx.dev", color: "text-[#a3a6ff]" },
+                      { icon: <Phone size={22} />, label: "Phone", val: "+1 (555) 000-0000", color: "text-[#c180ff]" },
+                      { icon: <MapPin size={22} />, label: "HQ", val: "123 Innovation Drive, Tech City", color: "text-[#a3a6ff]" },
+                    ].map((item, idx) => (
+                      <div key={idx} className="flex items-start gap-4">
+                        <div className={`p-3 bg-[#19191c] rounded-xl border border-white/5 ${item.color}`}>
+                          {item.icon}
+                        </div>
+                        <div>
+                          <h4 className="text-[#f9f5f8] font-semibold mb-0.5">{item.label}</h4>
+                          <div className="text-[#adaaad] text-sm">{item.val}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
 

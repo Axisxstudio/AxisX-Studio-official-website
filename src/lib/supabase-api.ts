@@ -52,12 +52,6 @@ const tableColumnMaps = {
     status: "status",
     createdAt: "createdat",
   },
-  site_settings: {
-    id: "id",
-    maintenanceMode: "maintenancemode",
-    maintenanceMessage: "maintenancemessage",
-    updatedAt: "updatedat",
-  },
   feedback: {
     id: "id",
     clientName: "clientname",

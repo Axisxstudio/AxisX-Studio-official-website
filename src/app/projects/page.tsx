@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, ArrowRight } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { selectClause, toDatabaseField } from "@/lib/supabase-api";
 import { Project } from "@/types";
-import ProjectShowcaseCard from "@/components/ProjectShowcaseCard";
 
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -69,12 +69,47 @@ export default function Projects() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                  {projects.map((project, idx) => (
-                    <div key={project.id} className="h-full animate-fade-in-up" style={{ animationDelay: `${idx * 100}ms` }}>
-                      <ProjectShowcaseCard
-                        project={project}
-                        ctaLabel="Portfolio Highlight"
-                        priorityImage={idx < 2}
-                      />
+                    <div key={project.id} className="group glass-strong rounded-3xl border border-[#a3a6ff]/10 overflow-hidden hover:border-[#a3a6ff]/30 transition-all duration-500 hover:-translate-y-2 animate-fade-in-up" style={{ animationDelay: `${idx * 100}ms` }}>
+                       <div className="relative h-64 md:h-80 w-full overflow-hidden bg-[#19191c]">
+                          {project.coverImageUrl ? (
+                             <Image 
+                               src={project.coverImageUrl} 
+                               alt={project.title} 
+                               fill
+                               className="object-cover group-hover:scale-105 transition-transform duration-700"
+                             />
+                          ) : (
+                             <div className="absolute inset-0 flex items-center justify-center text-[#adaaad]">No Cover Image</div>
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#0e0e10] via-transparent to-transparent opacity-80"></div>
+                          
+                          <div className="absolute top-4 right-4 backdrop-blur-md bg-[#0e0e10]/60 border border-[#a3a6ff]/20 rounded-full px-4 py-1.5 text-xs font-semibold text-[#f9f5f8] tracking-wider uppercase">
+                             {project.category}
+                          </div>
+                       </div>
+                       
+                       <div className="p-8 relative">
+                          <h3 className="text-2xl font-bold font-outfit mb-3 group-hover:text-[#a3a6ff] transition-colors">{project.title}</h3>
+                          <p className="text-[#adaaad] line-clamp-2 mb-6 text-sm md:text-base leading-relaxed">{project.description}</p>
+                          
+                          <div className="flex flex-wrap gap-2 mb-8">
+                             {project.technologies?.slice(0, 4).map((tech, i) => (
+                                <span key={i} className="text-xs px-3 py-1 rounded-full bg-[#1f1f22] border border-[#a3a6ff]/10 text-[#f9f5f8]">
+                                   {tech}
+                                </span>
+                             ))}
+                             {project.technologies?.length > 4 && (
+                                <span className="text-xs px-3 py-1 rounded-full bg-[#1f1f22] border border-[#a3a6ff]/10 text-[#adaaad]">
+                                   +{project.technologies.length - 4}
+                                </span>
+                             )}
+                          </div>
+                          
+                          <div className="inline-flex items-center gap-2 text-[#a3a6ff] font-medium text-sm group-hover:gap-3 transition-all">
+                             View Case Study <ArrowRight size={16} />
+                          </div>
+                          {/* Wrap whole card or add link logically if a detailed page exists. We'll leave it as non-clickable except styling for now, or you could add a link to `/projects/${project.slug}` later */}
+                       </div>
                     </div>
                  ))}
               </div>

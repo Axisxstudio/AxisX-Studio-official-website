@@ -6,7 +6,6 @@ import Footer from "@/components/Footer";
 import { Mail, Phone, MapPin, Send, CheckCircle2, ArrowLeft } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { toDatabasePayload } from "@/lib/supabase-api";
-import { CONTACT_INFO } from "@/lib/contact-info";
 import toast from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -130,33 +129,9 @@ export default function Contact() {
                           
                           <div className="space-y-8">
                              {[
-                               {
-                                 color: "text-[#a3a6ff]",
-                                 href: `mailto:${CONTACT_INFO.email}`,
-                                 icon: <Mail size={24} />,
-                                 label: "Email",
-                                 rel: undefined,
-                                 target: undefined,
-                                 val: CONTACT_INFO.email,
-                               },
-                               {
-                                 color: "text-[#c180ff]",
-                                 href: CONTACT_INFO.phone.href,
-                                 icon: <Phone size={24} />,
-                                 label: "Phone",
-                                 rel: undefined,
-                                 target: undefined,
-                                 val: CONTACT_INFO.phone.display,
-                               },
-                               {
-                                 color: "text-[#a3a6ff]",
-                                 href: CONTACT_INFO.location.href,
-                                 icon: <MapPin size={24} />,
-                                 label: "HQ",
-                                 rel: "noopener noreferrer",
-                                 target: "_blank",
-                                 val: CONTACT_INFO.location.label,
-                               }
+                               { icon: <Mail size={24} />, label: "Email", val: "hello@axisx.dev", color: "text-[#a3a6ff]", bg: "bg-[#a3a6ff]/10" },
+                               { icon: <Phone size={24} />, label: "Phone", val: "+1 (555) 000-0000", color: "text-[#c180ff]", bg: "bg-[#c180ff]/10" },
+                               { icon: <MapPin size={24} />, label: "HQ", val: <>123 Innovation Drive<br/>Tech City, TC 90210</>, color: "text-[#a3a6ff]", bg: "bg-[#a3a6ff]/10" }
                              ].map((item, idx) => (
                                <motion.div key={idx} className="flex items-start gap-4">
                                   <div className={`p-3 bg-[#19191c] rounded-xl border border-white/5 ${item.color} group-hover:scale-110 transition-transform`}>
@@ -164,14 +139,7 @@ export default function Contact() {
                                   </div>
                                   <div>
                                      <h4 className="text-[#f9f5f8] font-bold mb-1">{item.label}</h4>
-                                     <a
-                                       className="text-[#adaaad] transition-colors hover:text-[#f9f5f8]"
-                                       href={item.href}
-                                       rel={item.rel}
-                                       target={item.target}
-                                     >
-                                       {item.val}
-                                     </a>
+                                     <div className="text-[#adaaad]">{item.val}</div>
                                   </div>
                                </motion.div>
                              ))}

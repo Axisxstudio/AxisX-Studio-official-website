@@ -40,10 +40,3 @@ export interface Project {
   createdAt: AppTimestamp;
   updatedAt?: AppTimestamp;
 }
-
-export interface SiteSettings extends Record<string, unknown> {
-  id?: string;
-  maintenanceMode: boolean;
-  maintenanceMessage: string;
-  updatedAt?: AppTimestamp;
-}

@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import BrandLogo from "@/components/BrandLogo";
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -31,7 +30,7 @@ export default function Navigation() {
 
   const scrollTo = (id: string) => {
     setMobileMenuOpen(false);
-
+    
     if (pathname !== "/") {
       router.push(`/#${id}`);
       return;
@@ -52,29 +51,29 @@ export default function Navigation() {
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled
-        ? "bg-[#0e0e10]/80 backdrop-blur-md border-b border-[#a3a6ff]/10 py-3"
-        : "bg-transparent py-5"
-        }`}
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-[#0e0e10]/80 backdrop-blur-md border-b border-[#a3a6ff]/10 py-3"
+          : "bg-transparent py-5"
+      }`}
     >
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex items-center justify-between">
-          <Link href="/" aria-label="AxisX home" className="flex items-center">
-            <BrandLogo
-              className="h-auto w-[9.5rem] sm:w-[10.75rem]"
-              priority
-            />
+          <Link href="/" className="text-2xl font-bold tracking-tighter flex items-center gap-2">
+            <span className="w-8 h-8 rounded bg-gradient-to-br from-[#a3a6ff] to-[#c180ff] flex items-center justify-center text-[#0e0e10] font-black text-xl">X</span>
+            <span className="font-outfit">Axis<span className="text-[#a3a6ff]">X</span></span>
           </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center gap-8">
             {links.map((link) => (
-              <button
+               <button
                 suppressHydrationWarning
                 key={link.id}
                 onClick={() => scrollTo(link.id)}
-                className={`text-sm font-medium transition-colors hover:text-[#a3a6ff] ${activeSection === link.id ? "text-[#a3a6ff]" : "text-[#adaaad]"
-                  }`}
+                className={`text-sm font-medium transition-colors hover:text-[#a3a6ff] ${
+                  activeSection === link.id ? "text-[#a3a6ff]" : "text-[#adaaad]"
+                }`}
               >
                 {link.label}
               </button>
@@ -102,8 +101,9 @@ export default function Navigation() {
             <button
               key={link.id}
               onClick={() => scrollTo(link.id)}
-              className={`text-lg font-medium py-2 text-left ${activeSection === link.id ? "text-[#a3a6ff]" : "text-[#adaaad]"
-                }`}
+              className={`text-lg font-medium py-2 text-left ${
+                activeSection === link.id ? "text-[#a3a6ff]" : "text-[#adaaad]"
+              }`}
             >
               {link.label}
             </button>
