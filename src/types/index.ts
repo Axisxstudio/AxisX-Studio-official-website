@@ -12,6 +12,7 @@ export interface ContactMessage {
 }
 
 export interface Feedback {
+  [key: string]: unknown;
   id?: string;
   clientName: string;
   companyName?: string;
