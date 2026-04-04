@@ -16,6 +16,7 @@ import Footer from "@/components/Footer";
 import FeedbackSection from "@/components/FeedbackSection";
 import { supabase } from "@/lib/supabase";
 import { selectClause, toDatabaseField, toDatabasePayload } from "@/lib/supabase-api";
+import { CONTACT_INFO } from "@/lib/contact-info";
 import { Project } from "@/types";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
@@ -455,9 +456,33 @@ export default function Home() {
                   </p>
                   <div className="space-y-7">
                     {[
-                      { icon: <Mail size={22} />, label: "Email", val: "hello@axisx.dev", color: "text-[#a3a6ff]" },
-                      { icon: <Phone size={22} />, label: "Phone", val: "+1 (555) 000-0000", color: "text-[#c180ff]" },
-                      { icon: <MapPin size={22} />, label: "HQ", val: "123 Innovation Drive, Tech City", color: "text-[#a3a6ff]" },
+                      {
+                        color: "text-[#a3a6ff]",
+                        href: `mailto:${CONTACT_INFO.email}`,
+                        icon: <Mail size={22} />,
+                        label: "Email",
+                        rel: undefined,
+                        target: undefined,
+                        val: CONTACT_INFO.email,
+                      },
+                      {
+                        color: "text-[#c180ff]",
+                        href: CONTACT_INFO.phone.href,
+                        icon: <Phone size={22} />,
+                        label: "Phone",
+                        rel: undefined,
+                        target: undefined,
+                        val: CONTACT_INFO.phone.display,
+                      },
+                      {
+                        color: "text-[#a3a6ff]",
+                        href: CONTACT_INFO.location.href,
+                        icon: <MapPin size={22} />,
+                        label: "HQ",
+                        rel: "noopener noreferrer",
+                        target: "_blank",
+                        val: CONTACT_INFO.location.label,
+                      },
                     ].map((item, idx) => (
                       <div key={idx} className="flex items-start gap-4">
                         <div className={`p-3 bg-[#19191c] rounded-xl border border-white/5 ${item.color}`}>
@@ -465,7 +490,14 @@ export default function Home() {
                         </div>
                         <div>
                           <h4 className="text-[#f9f5f8] font-semibold mb-0.5">{item.label}</h4>
-                          <div className="text-[#adaaad] text-sm">{item.val}</div>
+                          <a
+                            className="text-[#adaaad] text-sm transition-colors hover:text-[#f9f5f8]"
+                            href={item.href}
+                            rel={item.rel}
+                            target={item.target}
+                          >
+                            {item.val}
+                          </a>
                         </div>
                       </div>
                     ))}

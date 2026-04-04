@@ -8,6 +8,7 @@ import { auth } from "@/lib/supabase-api";
 import { signOut } from "@/lib/supabase-api";
 import { LayoutDashboard, MessageSquare, Briefcase, Mail, LogOut, Settings, Menu, X } from "lucide-react";
 import toast from "react-hot-toast";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { user, loading, isAdmin } = useAuth();
@@ -62,8 +63,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Sidebar */}
       <aside className={`fixed top-0 left-0 h-screen w-64 bg-[#19191c] border-r border-[#a3a6ff]/10 flex flex-col transition-transform duration-300 z-50 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:relative'}`}>
          <div className="p-6 h-20 flex items-center justify-between border-b border-[#a3a6ff]/10">
-            <Link href="/admin" className="font-outfit text-xl font-bold flex items-center gap-2">
-               <span className="w-8 h-8 rounded bg-gradient-to-br from-[#a3a6ff] to-[#c180ff] flex items-center justify-center text-[#0e0e10] font-black text-lg">X</span>
+            <Link href="/admin" className="font-outfit text-xl font-bold flex items-center gap-3">
+               <BrandLogo alt="" className="h-auto w-10 shrink-0" variant="mark" />
                <span>Admin<span className="text-[#a3a6ff]">OS</span></span>
             </Link>
             <button className="lg:hidden text-[#adaaad]" onClick={() => setSidebarOpen(false)}>

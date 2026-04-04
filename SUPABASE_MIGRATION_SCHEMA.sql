@@ -1,8 +1,10 @@
--- Migration SQL from Firebase Firestore to Supabase PostgreSQL
--- Run this in your Supabase SQL Editor.
+-- Idempotent Supabase schema for AxisX.
+-- Safe to re-run in the Supabase SQL Editor.
 
--- 1. Create Projects Table
-CREATE TABLE public.projects (
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- 1. Projects
+CREATE TABLE IF NOT EXISTS public.projects (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   title text NOT NULL,
   slug text UNIQUE NOT NULL,
@@ -18,8 +20,23 @@ CREATE TABLE public.projects (
   updatedat timestamp with time zone DEFAULT now()
 );
 
--- 2. Create Feedback Table
-CREATE TABLE public.feedback (
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS id uuid DEFAULT gen_random_uuid();
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS title text;
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS slug text;
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS category text;
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS clientname text;
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS description text;
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS technologies text[] DEFAULT '{}';
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS coverimageurl text;
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS galleryimageurls text[] DEFAULT '{}';
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS videourls text[] DEFAULT '{}';
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS ispublished boolean DEFAULT false;
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS createdat timestamp with time zone DEFAULT now();
+ALTER TABLE public.projects ADD COLUMN IF NOT EXISTS updatedat timestamp with time zone DEFAULT now();
+CREATE UNIQUE INDEX IF NOT EXISTS projects_slug_key ON public.projects (slug);
+
+-- 2. Feedback
+CREATE TABLE IF NOT EXISTS public.feedback (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   clientname text NOT NULL,
   companyname text,
@@ -33,8 +50,20 @@ CREATE TABLE public.feedback (
   updatedat timestamp with time zone DEFAULT now()
 );
 
--- 3. Create Contacts Table
-CREATE TABLE public.contacts (
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS id uuid DEFAULT gen_random_uuid();
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS clientname text;
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS companyname text;
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS email text;
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS projectname text;
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS message text;
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS imageurls text[] DEFAULT '{}';
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS videourls text[] DEFAULT '{}';
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS consenttopublish boolean DEFAULT false;
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS createdat timestamp with time zone DEFAULT now();
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS updatedat timestamp with time zone DEFAULT now();
+
+-- 3. Contacts
+CREATE TABLE IF NOT EXISTS public.contacts (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   name text NOT NULL,
   email text NOT NULL,
@@ -45,21 +74,70 @@ CREATE TABLE public.contacts (
   createdat timestamp with time zone DEFAULT now()
 );
 
--- 4. Create Admins Table
-CREATE TABLE public.admins (
+ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS id uuid DEFAULT gen_random_uuid();
+ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS name text;
+ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS email text;
+ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS phone text;
+ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS subject text;
+ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS message text;
+ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS status text DEFAULT 'unread';
+ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS createdat timestamp with time zone DEFAULT now();
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1
+    FROM pg_constraint
+    WHERE conname = 'contacts_status_check'
+      AND conrelid = 'public.contacts'::regclass
+  ) THEN
+    ALTER TABLE public.contacts
+    ADD CONSTRAINT contacts_status_check CHECK (status IN ('unread', 'read'));
+  END IF;
+END $$;
+
+-- 4. Admins
+CREATE TABLE IF NOT EXISTS public.admins (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
-  uid uuid NOT NULL UNIQUE, -- links to Supabase Auth user id
+  uid uuid NOT NULL UNIQUE,
   email text NOT NULL UNIQUE,
   role text DEFAULT 'owner',
   createdat timestamp with time zone DEFAULT now(),
   updatedat timestamp with time zone DEFAULT now()
 );
 
--- Enable Row Level Security (RLS) on all tables (Securing the database)
+ALTER TABLE public.admins ADD COLUMN IF NOT EXISTS id uuid DEFAULT gen_random_uuid();
+ALTER TABLE public.admins ADD COLUMN IF NOT EXISTS uid uuid;
+ALTER TABLE public.admins ADD COLUMN IF NOT EXISTS email text;
+ALTER TABLE public.admins ADD COLUMN IF NOT EXISTS role text DEFAULT 'owner';
+ALTER TABLE public.admins ADD COLUMN IF NOT EXISTS createdat timestamp with time zone DEFAULT now();
+ALTER TABLE public.admins ADD COLUMN IF NOT EXISTS updatedat timestamp with time zone DEFAULT now();
+CREATE UNIQUE INDEX IF NOT EXISTS admins_uid_key ON public.admins (uid);
+CREATE UNIQUE INDEX IF NOT EXISTS admins_email_key ON public.admins (email);
+
+-- 5. Site settings
+CREATE TABLE IF NOT EXISTS public.site_settings (
+  id text PRIMARY KEY,
+  maintenancemode boolean DEFAULT false,
+  maintenancemessage text DEFAULT 'Temporary maintenance work',
+  updatedat timestamp with time zone DEFAULT now()
+);
+
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS id text;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS maintenancemode boolean DEFAULT false;
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS maintenancemessage text DEFAULT 'Temporary maintenance work';
+ALTER TABLE public.site_settings ADD COLUMN IF NOT EXISTS updatedat timestamp with time zone DEFAULT now();
+
+INSERT INTO public.site_settings (id, maintenancemode, maintenancemessage, updatedat)
+VALUES ('global', false, 'Temporary maintenance work', now())
+ON CONFLICT (id) DO NOTHING;
+
+-- Enable Row Level Security
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.feedback ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.contacts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.admins ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
 
 CREATE OR REPLACE FUNCTION public.is_admin()
 RETURNS boolean
@@ -78,7 +156,18 @@ $$;
 REVOKE ALL ON FUNCTION public.is_admin() FROM PUBLIC;
 GRANT EXECUTE ON FUNCTION public.is_admin() TO anon, authenticated;
 
--- Anonymous/public access
+-- Policies: drop and recreate so the file can be re-run safely.
+DROP POLICY IF EXISTS "Public read access to published projects" ON public.projects;
+DROP POLICY IF EXISTS "Public read access to approved feedback" ON public.feedback;
+DROP POLICY IF EXISTS "Public insert access to feedback" ON public.feedback;
+DROP POLICY IF EXISTS "Public insert access to contacts" ON public.contacts;
+DROP POLICY IF EXISTS "Public read access to site settings" ON public.site_settings;
+DROP POLICY IF EXISTS "Admin full access projects" ON public.projects;
+DROP POLICY IF EXISTS "Admin full access feedback" ON public.feedback;
+DROP POLICY IF EXISTS "Admin full access contacts" ON public.contacts;
+DROP POLICY IF EXISTS "Admin full access admins" ON public.admins;
+DROP POLICY IF EXISTS "Admin full access site settings" ON public.site_settings;
+
 CREATE POLICY "Public read access to published projects"
 ON public.projects
 FOR SELECT
@@ -99,7 +188,11 @@ ON public.contacts
 FOR INSERT
 WITH CHECK (true);
 
--- Admin access
+CREATE POLICY "Public read access to site settings"
+ON public.site_settings
+FOR SELECT
+USING (true);
+
 CREATE POLICY "Admin full access projects"
 ON public.projects
 FOR ALL
@@ -128,30 +221,43 @@ TO authenticated
 USING (public.is_admin())
 WITH CHECK (public.is_admin());
 
--- 5. Storage Buckets & Policies
--- Create 'media' bucket
-INSERT INTO storage.buckets (id, name, public) VALUES ('media', 'media', true) ON CONFLICT DO NOTHING;
+CREATE POLICY "Admin full access site settings"
+ON public.site_settings
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
 
--- Supabase Storage requires Row Level Security (RLS) on storage.objects
+-- 6. Storage bucket and policies
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('media', 'media', true)
+ON CONFLICT (id) DO UPDATE
+SET
+  name = EXCLUDED.name,
+  public = EXCLUDED.public;
 
--- Allow public read access to all files inside 'media'
-CREATE POLICY "Public read access to media files" ON storage.objects
-FOR SELECT USING (bucket_id = 'media');
+DROP POLICY IF EXISTS "Public read access to media files" ON storage.objects;
+DROP POLICY IF EXISTS "Public insert access for feedback Images and Videos" ON storage.objects;
+DROP POLICY IF EXISTS "Admin media management" ON storage.objects;
 
--- Allow public inserts for feedback files (Images and Videos)
--- Similar to 'allow create: if true' in Firebase (restricting by path and MIME type can be done on the client, or via complex SQL functions here; this basic policy allows public inserts in those folders)
-CREATE POLICY "Public insert access for feedback Images and Videos" ON storage.objects
-FOR INSERT WITH CHECK (
-  bucket_id = 'media' 
+CREATE POLICY "Public read access to media files"
+ON storage.objects
+FOR SELECT
+USING (bucket_id = 'media');
+
+CREATE POLICY "Public insert access for feedback Images and Videos"
+ON storage.objects
+FOR INSERT
+WITH CHECK (
+  bucket_id = 'media'
   AND (
-    (storage.foldername(name))[1] = 'feedback_images' 
+    (storage.foldername(name))[1] = 'feedback_images'
     OR (storage.foldername(name))[1] = 'feedback_videos'
   )
 );
 
--- Note: In a production environment, you would use 'auth.role() = ''authenticated''' to limit 
--- admin project uploads and deletions, but for the migration, we make sure it doesn't instantly block you.
-CREATE POLICY "Admin media management" ON storage.objects
+CREATE POLICY "Admin media management"
+ON storage.objects
 FOR ALL
 TO authenticated
 USING (

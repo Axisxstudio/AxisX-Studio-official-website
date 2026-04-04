@@ -7,11 +7,17 @@ import {
   updateEmail,
   updatePassword,
 } from "@/lib/supabase-api";
-import { Key, Mail, Save, Shield, User } from "lucide-react";
+import { AlertTriangle, Key, Mail, Power, Save, Shield, User } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { auth } from "@/lib/supabase-api";
 import { emitAdminAuthChange, syncAdminEmail } from "@/lib/admin";
+import {
+  DEFAULT_MAINTENANCE_MESSAGE,
+  getSiteSettings,
+  isSiteSettingsSchemaMissing,
+  saveSiteSettings,
+} from "@/lib/site-settings";
 
 function getSettingsErrorMessage(error: unknown): string {
   const code = typeof error === "object" && error && "code" in error ? String(error.code) : "";
@@ -42,10 +48,57 @@ export default function AdminSettings() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailLoading, setEmailLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
+  const [maintenanceMode, setMaintenanceMode] = useState(false);
+  const [maintenanceMessage, setMaintenanceMessage] = useState(DEFAULT_MAINTENANCE_MESSAGE);
+  const [siteSettingsLoading, setSiteSettingsLoading] = useState(true);
+  const [siteSettingsSaving, setSiteSettingsSaving] = useState(false);
+  const [siteSettingsError, setSiteSettingsError] = useState<string | null>(null);
+  const [siteSettingsSchemaMissing, setSiteSettingsSchemaMissing] = useState(false);
 
   useEffect(() => {
     setLoginEmail(user?.email ?? "");
   }, [user?.email]);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadSiteSettings = async () => {
+      try {
+        const settings = await getSiteSettings();
+        if (!active) {
+          return;
+        }
+
+        setSiteSettingsError(null);
+        setSiteSettingsSchemaMissing(false);
+        setMaintenanceMode(settings.maintenanceMode);
+        setMaintenanceMessage(settings.maintenanceMessage);
+      } catch (error) {
+        if (!active) {
+          return;
+        }
+
+        if (isSiteSettingsSchemaMissing(error)) {
+          setSiteSettingsSchemaMissing(true);
+          setSiteSettingsError("Run the Supabase migration schema to enable maintenance mode.");
+          return;
+        }
+
+        setSiteSettingsError("Unable to load site visibility settings.");
+        toast.error("Unable to load site visibility settings.");
+      } finally {
+        if (active) {
+          setSiteSettingsLoading(false);
+        }
+      }
+    };
+
+    void loadSiteSettings();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const reauthenticateAdmin = async (password: string) => {
     const currentUser = auth.currentUser;
@@ -130,6 +183,39 @@ export default function AdminSettings() {
     }
   };
 
+  const handleSiteSettingsUpdate = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (siteSettingsSchemaMissing) {
+      toast.error("Run the Supabase migration schema first to enable maintenance mode.");
+      return;
+    }
+
+    setSiteSettingsSaving(true);
+
+    try {
+      const savedSettings = await saveSiteSettings({
+        maintenanceMessage: maintenanceMessage.trim() || DEFAULT_MAINTENANCE_MESSAGE,
+        maintenanceMode,
+      });
+
+      setMaintenanceMode(savedSettings.maintenanceMode);
+      setMaintenanceMessage(savedSettings.maintenanceMessage);
+      setSiteSettingsError(null);
+      toast.success(savedSettings.maintenanceMode ? "Maintenance mode enabled." : "Maintenance mode disabled.");
+    } catch (error) {
+      if (isSiteSettingsSchemaMissing(error)) {
+        setSiteSettingsSchemaMissing(true);
+        setSiteSettingsError("Run the Supabase migration schema to enable maintenance mode.");
+        toast.error("Run the Supabase migration schema first to enable maintenance mode.");
+      } else {
+        toast.error("Unable to update maintenance mode right now.");
+      }
+    } finally {
+      setSiteSettingsSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-8 animate-fade-in-up">
       <header>
@@ -157,6 +243,89 @@ export default function AdminSettings() {
               </p>
             </div>
           </div>
+
+          <form onSubmit={handleSiteSettingsUpdate} className="rounded-xl border border-[#a3a6ff]/10 bg-[#0e0e10]/50 p-5 space-y-5">
+            <div className="flex items-start gap-3">
+              <AlertTriangle size={18} className="text-[#a3a6ff] mt-0.5" />
+              <div>
+                <p className="font-medium text-[#f9f5f8] text-sm">Public Site Visibility</p>
+                <p className="text-xs text-[#adaaad]">
+                  When maintenance mode is active, visitors only see the maintenance message and the admin login icon.
+                </p>
+              </div>
+            </div>
+
+            {siteSettingsError && (
+              <div className={`rounded-xl border px-4 py-3 text-sm ${siteSettingsSchemaMissing
+                ? "border-[#ffb86b]/20 bg-[#ffb86b]/10 text-[#ffd7a8]"
+                : "border-[#ff6e84]/20 bg-[#ff6e84]/10 text-[#ffd0d8]"
+                }`}>
+                {siteSettingsError}
+                {siteSettingsSchemaMissing && (
+                  <span className="block mt-1 text-xs text-[#adaaad]">
+                    Apply the SQL in `SUPABASE_MIGRATION_SCHEMA.sql`, then refresh this page.
+                  </span>
+                )}
+              </div>
+            )}
+
+            <div className="rounded-2xl border border-[#a3a6ff]/10 bg-[#19191c] p-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-sm font-semibold text-[#f9f5f8]">Maintenance mode</p>
+                  <p className="text-xs text-[#adaaad]">
+                    Admin pages and the login page stay accessible while public pages are hidden.
+                  </p>
+                </div>
+
+                <button
+                  aria-checked={maintenanceMode}
+                  className={`inline-flex h-8 w-14 items-center rounded-full border px-1 transition-colors ${maintenanceMode
+                    ? "border-[#c180ff]/40 bg-[#c180ff]/20"
+                    : "border-[#a3a6ff]/15 bg-[#0e0e10]"
+                    }`}
+                  disabled={siteSettingsLoading || siteSettingsSaving || siteSettingsSchemaMissing}
+                  onClick={() => setMaintenanceMode((current) => !current)}
+                  role="switch"
+                  type="button"
+                >
+                  <span
+                    className={`h-6 w-6 rounded-full bg-[#f9f5f8] shadow-sm transition-transform ${maintenanceMode ? "translate-x-6" : "translate-x-0"}`}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm font-medium text-[#adaaad]" htmlFor="maintenance-message">
+                Public maintenance message
+              </label>
+              <textarea
+                className="min-h-28 w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 outline-none transition-colors resize-none"
+                disabled={siteSettingsLoading || siteSettingsSaving || siteSettingsSchemaMissing}
+                id="maintenance-message"
+                onChange={(event) => setMaintenanceMessage(event.target.value)}
+                placeholder={DEFAULT_MAINTENANCE_MESSAGE}
+                value={maintenanceMessage}
+              />
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <button
+                type="submit"
+                disabled={siteSettingsLoading || siteSettingsSaving || siteSettingsSchemaMissing}
+                className="inline-flex items-center gap-2 rounded-xl border border-[#a3a6ff]/20 px-4 py-2.5 text-sm font-semibold text-[#a3a6ff] hover:bg-[#a3a6ff]/10 transition-colors disabled:opacity-60"
+              >
+                <Save size={16} />
+                {siteSettingsSaving ? "Saving..." : "Save Maintenance Settings"}
+              </button>
+
+              <div className="inline-flex items-center gap-2 rounded-full border border-[#a3a6ff]/10 bg-[#19191c] px-3 py-2 text-xs text-[#adaaad]">
+                <Power size={14} className={maintenanceMode ? "text-[#c180ff]" : "text-[#a3a6ff]"} />
+                {maintenanceMode ? "Public site hidden" : "Public site visible"}
+              </div>
+            </div>
+          </form>
 
           <form onSubmit={handleEmailUpdate} className="rounded-xl border border-[#a3a6ff]/10 bg-[#0e0e10]/50 p-5 space-y-4">
             <div className="flex items-start gap-3">

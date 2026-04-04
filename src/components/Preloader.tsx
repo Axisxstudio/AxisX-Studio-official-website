@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import BrandLogo from "@/components/BrandLogo";
 
 const PRELOADER_DURATION_MS = 1200;
 
@@ -48,12 +49,17 @@ export default function Preloader() {
 
           <div className="relative z-10 text-center">
             <motion.div
-              initial={{ scale: 0.92, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              initial={{ scale: 0.92, opacity: 0, y: 12 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
               transition={{ duration: 0.35, ease: "easeOut" }}
-              className="mb-10 flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-[#a3a6ff] to-[#c180ff] shadow-[0_0_50px_rgba(163,166,255,0.2)]"
+              className="mb-10 flex items-center justify-center"
             >
-              <span className="font-outfit text-5xl font-black text-[#0e0e10]">X</span>
+              <BrandLogo
+                alt=""
+                className="h-auto w-28 drop-shadow-[0_0_35px_rgba(68,180,255,0.3)] md:w-32"
+                priority
+                variant="mark"
+              />
             </motion.div>
 
             <div className="mx-auto mb-6 h-[2px] w-64 overflow-hidden rounded-full bg-[#a3a6ff]/10">
