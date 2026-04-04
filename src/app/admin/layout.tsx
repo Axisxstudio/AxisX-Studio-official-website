@@ -138,11 +138,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                      <p className="text-[10px] font-bold text-[#4A5568] uppercase tracking-widest">Root Auth</p>
                   </div>
                </div>
-               <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] p-[2px] shadow-lg shadow-[#3B82F6]/20">
-                  <div className="w-full h-full rounded-2xl bg-[#0B0F14] flex items-center justify-center text-[#3B82F6]">
-                     <ShieldCheck size={20} />
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#60A5FA] p-[0.5px] shadow-lg shadow-[#3B82F6]/20 overflow-hidden">
+                  <div className="w-full h-full rounded-2xl bg-[#0B0F14] flex items-center justify-center overflow-hidden">
+                     <img src="/admin-profile.png" alt="Admin" className="w-full h-full object-cover" />
                   </div>
-               </div>
+                </div>
             </div>
          </header>
 

@@ -6,6 +6,7 @@ import { Lock } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { defaultSiteSettings, getSiteSettings, isSiteSettingsSchemaMissing } from "@/lib/site-settings";
 import type { SiteSettings } from "@/types";
+import BrandLogo from "./BrandLogo";
 
 type SiteMaintenanceGateProps = {
   children: ReactNode;
@@ -20,6 +21,10 @@ function MaintenanceScreen({ message }: { message: string }) {
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#0e0e10] px-6 text-center">
       <div className="pointer-events-none absolute inset-0">
         <div className="absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#a3a6ff]/8 blur-[120px]" />
+      </div>
+
+      <div className="absolute left-6 top-6 z-10">
+        <BrandLogo className="h-8 w-auto opacity-90 md:h-10" variant="lockup" />
       </div>
 
       <Link

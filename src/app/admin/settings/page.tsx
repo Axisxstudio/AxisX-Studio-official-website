@@ -237,8 +237,8 @@ export default function AdminSettings() {
         <div className="glass-strong rounded-[32px] p-8 border border-[#3B82F6]/10">
           <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
             <div className="relative">
-              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#3B82F6] to-[#1F2937] flex items-center justify-center text-3xl font-bold text-[#0B0F14] shadow-2xl">
-                {user?.email?.charAt(0).toUpperCase()}
+              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#3B82F6] to-[#1F2937] flex items-center justify-center overflow-hidden shadow-2xl">
+                <img src="/admin-profile.png" alt="Admin Profle" className="w-full h-full object-cover" />
               </div>
               <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-xl bg-[#0B0F14] border border-[#3B82F6]/30 flex items-center justify-center text-[#3B82F6] shadow-lg">
                 <Shield size={16} />
