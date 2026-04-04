@@ -2,17 +2,17 @@
 
 @layer base {
   :root {
-    --bg: #0e0e10;
-    --surface: #19191c;
-    --surface-2: #1f1f22;
-    --surface-3: #262528;
-    --text: #f9f5f8;
-    --muted: #adaaad;
-    --accent: #a3a6ff;
-    --accent-2: #c180ff;
-    --error: #ff6e84;
-    --border: rgba(163, 166, 255, 0.12);
-    --border-hover: rgba(163, 166, 255, 0.28);
+    --bg: #0B0F14;
+    --surface: #111827;
+    --surface-2: #161F2C;
+    --surface-3: #1F2937;
+    --text: #F8FAFC;
+    --muted: #94A3B8;
+    --accent: #3B82F6;
+    --accent-glow: rgba(59, 130, 246, 0.25);
+    --error: #ef4444;
+    --border: #1F2937;
+    --border-hover: rgba(148, 163, 184, 0.2);
   }
 
   * {
@@ -36,20 +36,23 @@
   }
 
   ::selection {
-    background-color: rgba(163, 166, 255, 0.25);
+    background-color: var(--accent-glow);
     color: #fff;
   }
 
   ::-webkit-scrollbar {
     width: 6px;
   }
+
   ::-webkit-scrollbar-track {
     background: var(--bg);
   }
+
   ::-webkit-scrollbar-thumb {
     background: var(--surface-3);
     border-radius: 3px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
   }
@@ -59,61 +62,75 @@
 
 @layer utilities {
   .glass {
-    background: rgba(25, 25, 28, 0.4);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid var(--border);
-    will-change: transform;
-    transform: translateZ(0); /* Hardware acceleration */
-  }
-
-  .glass-strong {
-    background: rgba(31, 31, 34, 0.6);
+    background: rgba(17, 24, 39, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--border);
+    box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.4), 0 0 12px 0 rgba(59, 130, 246, 0.05); /* Added shadow */
+    will-change: transform;
+    transform: translateZ(0);
+    /* Hardware acceleration */
+  }
+
+  .glass-strong {
+    background: rgba(22, 31, 44, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5), 0 0 16px 0 rgba(59, 130, 246, 0.08); /* Stronger shadow */
     will-change: transform;
     transform: translateZ(0);
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #a3a6ff 0%, #c180ff 100%);
+    background: linear-gradient(180deg, #F8FAFC 0%, #94A3B8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .gradient-text-alt {
-    background: linear-gradient(135deg, #c180ff 0%, #a3a6ff 100%);
+    background: linear-gradient(135deg, #3B82F6 0%, #94A3B8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   .glow-accent {
-    box-shadow: 0 0 15px rgba(163, 166, 255, 0.15);
+    box-shadow: 0 0 15px var(--accent-glow);
   }
 
   .glow-accent-2 {
-    box-shadow: 0 0 15px rgba(193, 128, 255, 0.15);
+    box-shadow: 0 0 30px var(--accent-glow);
   }
 
   .text-glow {
-    text-shadow: 0 0 20px rgba(163, 166, 255, 0.3);
+    text-shadow: 0 0 20px var(--accent-glow);
   }
 
   .grid-bg {
     background-image:
-      linear-gradient(rgba(163, 166, 255, 0.03) 1px, transparent 1px),
-      linear-gradient(to right, rgba(163, 166, 255, 0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
+      linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+      linear-gradient(to right, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at center, black, transparent 80%);
   }
 }
 
 /* Fast hardware-accelerated generic animations */
 @keyframes pulse-light {
-  0%, 100% { opacity: 0.8; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.02); }
+
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.5;
+    transform: scale(1.02);
+  }
 }
 
 .animate-pulse-glow {
@@ -125,18 +142,37 @@
   Missing animations for visual loading feedback
 */
 @keyframes fade-in-up {
-  0% { opacity: 0; transform: translateY(30px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fade-in {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes ping-muted {
-  0% { opacity: 0.6; transform: scale(0.85); }
-  100% { opacity: 0; transform: scale(1.15); }
+  0% {
+    opacity: 0.6;
+    transform: scale(0.85);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
 }
 
 .animate-fade-in-up {
@@ -149,11 +185,25 @@
   will-change: opacity;
 }
 
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
+
+.delay-400 {
+  animation-delay: 400ms;
+}
+
+.delay-500 {
+  animation-delay: 500ms;
+}
 
 /* Form focus rings */
 input:focus,
@@ -163,34 +213,89 @@ select:focus {
 }
 
 input[type="checkbox"] {
-  accent-color: #a3a6ff;
+  accent-color: #ffffff;
 }
 
-img, video {
+img,
+video {
   max-width: 100%;
   height: auto;
 }
 
 .drag-over {
-  border-color: #a3a6ff !important;
+  border-color: #ffffff !important;
   background-color: rgba(163, 166, 255, 0.06) !important;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
 @keyframes marquee-scroll {
-  0%   { transform: translateX(-50%); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(-50%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 /* Feedback card hover lift */
 .feedback-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(163, 166, 255, 0.12);
+}
+
+/* Premium Left-to-Right Hover Fills merging into Contact Theme */
+.btn-ltr-white {
+  background-size: 200% 100% !important;
+  /* Left half: Contact Theme Gradient. Right half: Default White */
+  background-image: linear-gradient(to right, #3B82F6 0%, #1F2937 50%, #F8FAFC 50%, #F8FAFC 100%) !important;
+  background-position: 100% 0 !important;
+  color: #0B0F14 !important;
+  transition: background-position 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease !important;
+}
+.btn-ltr-white:hover {
+  background-position: 0 0 !important;
+  color: #0B0F14 !important;
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.4) !important;
+  border-color: transparent !important;
+}
+
+.btn-ltr-dark {
+  background-size: 200% 100% !important;
+  /* Left half: Contact Theme Gradient. Right half: Default Transparent/Dark */
+  background-image: linear-gradient(to right, #3B82F6 0%, #1F2937 50%, transparent 50%, transparent 100%) !important;
+  background-position: 100% 0 !important;
+  background-color: rgba(17, 24, 39, 0.5) !important;
+  color: #F8FAFC !important;
+  transition: background-position 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease !important;
+}
+.btn-ltr-dark:hover {
+  background-position: 0 0 !important;
+  color: #0B0F14 !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.4) !important;
+}
+
+.btn-ltr-blue {
+  background-size: 200% 100% !important;
+  background-image: linear-gradient(to right, #3B82F6 0%, #1F2937 50%, #3B82F6 50%, transparent 100%) !important;
+  background-position: 100% 0 !important;
+  background-color: rgba(59, 130, 246, 0.1) !important;
+  color: #F8FAFC !important;
+  border: 1px solid rgba(59, 130, 246, 0.5) !important;
+  transition: background-position 0.8s cubic-bezier(0.25, 0.8, 0.25, 1), color 0.8s ease, border-color 0.8s ease, box-shadow 0.8s ease !important;
+}
+.btn-ltr-blue:hover {
+  background-position: 0 0 !important;
+  color: #0B0F14 !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 24px rgba(59, 130, 246, 0.4) !important;
 }

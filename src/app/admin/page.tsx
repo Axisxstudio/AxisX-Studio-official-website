@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { Users, Code, MessageSquare, TrendingUp, ChevronRight } from "lucide-react";
+import { Users, Code, MessageSquare, TrendingUp, ChevronRight, Activity, Cloud, Database, ShieldCheck, Box } from "lucide-react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -37,89 +38,106 @@ export default function AdminDashboard() {
   }, []);
 
   const statCards = [
-    { title: "Total Projects", value: stats.projects, icon: <Code size={24} className="text-[#a3a6ff]" />, link: "/admin/projects", bg: "from-[#a3a6ff]/20 to-transparent" },
-    { title: "Client Feedback", value: stats.feedback, icon: <MessageSquare size={24} className="text-[#c180ff]" />, link: "/admin/feedback", bg: "from-[#c180ff]/20 to-transparent" },
-    { title: "Contact Requests", value: stats.contacts, icon: <Users size={24} className="text-[#a3a6ff]" />, link: "/admin/contacts", bg: "from-[#a3a6ff]/20 to-transparent" },
-    { title: "System Health", value: "99.9%", icon: <TrendingUp size={24} className="text-[#c180ff]" />, link: "#", bg: "from-[#c180ff]/20 to-transparent" },
+    { title: "Live Projects", value: stats.projects, icon: <Box size={20} />, link: "/admin/projects", color: "#3B82F6", detail: "Active infrastructure" },
+    { title: "Client Insights", value: stats.feedback, icon: <MessageSquare size={20} />, link: "/admin/feedback", color: "#60A5FA", detail: "Validated responses" },
+    { title: "Inbound Leads", value: stats.contacts, icon: <Users size={20} />, link: "/admin/contacts", color: "#93C5FD", detail: "Unread communications" },
+    { title: "Uptime Rate", value: "99.9%", icon: <Activity size={20} />, link: "#", color: "#3B82F6", detail: "System availability" },
   ];
 
   return (
-    <div className="space-y-10 animate-fade-in-up">
-      <header>
-         <h1 className="text-3xl font-bold font-outfit text-[#f9f5f8] mb-2">Overview</h1>
-         <p className="text-[#adaaad]">Welcome back to your AxisX management dashboard.</p>
+    <div className="max-w-7xl mx-auto space-y-10 animate-fade-in-up">
+      <header className="pb-6 border-b border-[#3B82F6]/10">
+         <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center text-[#3B82F6]">
+               <Activity size={20} />
+            </div>
+            <h1 className="text-3xl font-bold font-outfit text-[#F8FAFC]">Operational Overview</h1>
+         </div>
+         <p className="text-[#94A3B8]">Critical monitoring and command center for AxisX digital assets.</p>
       </header>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
          {statCards.map((stat, i) => (
-            <Link key={i} href={stat.link} className="glass-strong rounded-2xl p-6 border border-[#a3a6ff]/10 hover:border-[#a3a6ff]/30 transition-all group overflow-hidden relative">
-               <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl ${stat.bg} rounded-bl-full opacity-50 transition-opacity group-hover:opacity-100`}></div>
-               
+            <Link key={i} href={stat.link} className="glass-strong rounded-[24px] p-6 border border-[#3B82F6]/10 hover:border-[#3B82F6]/30 transition-all group relative overflow-hidden">
                <div className="relative z-10">
-                  <div className="w-12 h-12 bg-[#19191c] rounded-xl border border-[#a3a6ff]/20 flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform">
-                     {stat.icon}
+                  <div className="flex items-center justify-between mb-4">
+                     <div className="w-10 h-10 bg-[#0B0F14] rounded-xl border border-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] group-hover:scale-110 transition-transform">
+                        {stat.icon}
+                     </div>
+                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568]">{stat.detail}</span>
                   </div>
-                  <h3 className="text-[#adaaad] text-sm font-medium mb-1">{stat.title}</h3>
+                  <h3 className="text-[#94A3B8] text-xs font-bold uppercase tracking-wider mb-1">{stat.title}</h3>
                   <div className="flex items-end justify-between">
-                     <p className="text-4xl font-bold font-outfit text-[#f9f5f8]">
-                        {loading ? <span className="text-[#19191c] animate-pulse">0</span> : stat.value}
+                     <p className="text-4xl font-bold font-outfit text-[#F8FAFC] tracking-tight">
+                        {loading ? "..." : stat.value}
                      </p>
-                     <div className="text-[#a3a6ff] opacity-0 group-hover:opacity-100 transition-opacity translate-x-4 group-hover:translate-x-0">
-                        <ChevronRight size={20} />
+                     <div className="text-[#3B82F6] opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+                        <ChevronRight size={18} />
                      </div>
                   </div>
                </div>
+               <div className="absolute -bottom-6 -right-6 w-24 h-24 bg-[#3B82F6]/5 rounded-full blur-2xl group-hover:bg-[#3B82F6]/10 transition-colors" />
             </Link>
          ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
          {/* Quick Actions */}
-         <div className="glass rounded-2xl p-8 border border-[#a3a6ff]/10">
-            <h2 className="text-xl font-bold font-outfit mb-6">Quick Actions</h2>
-            <div className="space-y-4">
-               <Link href="/admin/projects" className="w-full flex items-center justify-between p-4 rounded-xl bg-[#19191c] border border-[#a3a6ff]/5 hover:border-[#a3a6ff]/20 transition-colors group">
-                  <div className="flex items-center gap-4">
-                     <div className="w-10 h-10 rounded-lg bg-[#a3a6ff]/10 flex items-center justify-center text-[#a3a6ff]"><Code size={20} /></div>
-                     <div>
-                        <h4 className="font-semibold text-[#f9f5f8] text-sm">Add New Project</h4>
-                        <p className="text-xs text-[#adaaad]">Publish a new case study</p>
-                     </div>
-                  </div>
-                  <ChevronRight size={16} className="text-[#adaaad] group-hover:text-[#f9f5f8]" />
+         <div className="lg:col-span-3 glass-strong rounded-[32px] p-8 border border-[#3B82F6]/10">
+            <h2 className="text-xl font-bold font-outfit mb-8 flex items-center gap-2">
+               <Code size={20} className="text-[#3B82F6]" /> Mission Control
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <Link href="/admin/projects" className="flex flex-col p-5 rounded-2xl bg-[#0B0F14]/40 border border-[#3B82F6]/5 hover:border-[#3B82F6]/30 transition-all group">
+                  <div className="w-10 h-10 rounded-xl bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] mb-4"><Code size={18} /></div>
+                  <h4 className="font-bold text-[#F8FAFC] text-sm mb-1 uppercase tracking-wide">Publish Project</h4>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">Stage and deploy new technical case studies to production.</p>
                </Link>
 
-               <Link href="/admin/feedback" className="w-full flex items-center justify-between p-4 rounded-xl bg-[#19191c] border border-[#a3a6ff]/5 hover:border-[#a3a6ff]/20 transition-colors group">
-                  <div className="flex items-center gap-4">
-                     <div className="w-10 h-10 rounded-lg bg-[#c180ff]/10 flex items-center justify-center text-[#c180ff]"><MessageSquare size={20} /></div>
-                     <div>
-                        <h4 className="font-semibold text-[#f9f5f8] text-sm">Review Client Feedback</h4>
-                        <p className="text-xs text-[#adaaad]">Moderate incoming submissions</p>
-                     </div>
-                  </div>
-                  <ChevronRight size={16} className="text-[#adaaad] group-hover:text-[#f9f5f8]" />
+               <Link href="/admin/feedback" className="flex flex-col p-5 rounded-2xl bg-[#0B0F14]/40 border border-[#3B82F6]/5 hover:border-[#3B82F6]/30 transition-all group">
+                  <div className="w-10 h-10 rounded-xl bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] mb-4"><MessageSquare size={18} /></div>
+                  <h4 className="font-bold text-[#F8FAFC] text-sm mb-1 uppercase tracking-wide">Moderate Insights</h4>
+                  <p className="text-xs text-[#94A3B8] leading-relaxed">Analyze and respond to verified client feedback submissions.</p>
                </Link>
             </div>
          </div>
 
-         {/* System Info */}
-         <div className="glass rounded-2xl p-8 border border-[#a3a6ff]/10">
-            <h2 className="text-xl font-bold font-outfit mb-6">System Status</h2>
-            <div className="space-y-6">
-               <div className="flex justify-between items-center text-sm">
-                  <span className="text-[#adaaad]">Database</span>
-                  <span className="flex items-center gap-2 text-[#f9f5f8]"><span className="w-2 h-2 rounded-full bg-green-400"></span> Online</span>
+         {/* System Heartbeat */}
+         <div className="lg:col-span-2 glass-strong rounded-[32px] p-8 border border-[#3B82F6]/10">
+            <h2 className="text-xl font-bold font-outfit mb-8 flex items-center gap-2">
+               <ShieldCheck size={20} className="text-[#3B82F6]" /> System Heartbeat
+            </h2>
+            <div className="space-y-5">
+               <div className="flex justify-between items-center bg-[#0B0F14]/40 p-4 rounded-xl border border-[#3B82F6]/5">
+                  <div className="flex items-center gap-3">
+                     <Database size={16} className="text-[#3B82F6]" />
+                     <span className="text-sm font-medium text-[#F8FAFC]">SQL Cluster</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#10B981]">
+                     <span className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_8px_#10B981]"></span>
+                     Operational
+                  </div>
                </div>
-               <div className="w-full h-px bg-[#a3a6ff]/10"></div>
-               <div className="flex justify-between items-center text-sm">
-                  <span className="text-[#adaaad]">Storage Gateway</span>
-                  <span className="flex items-center gap-2 text-[#f9f5f8]"><span className="w-2 h-2 rounded-full bg-green-400"></span> Online</span>
+               <div className="flex justify-between items-center bg-[#0B0F14]/40 p-4 rounded-xl border border-[#3B82F6]/5">
+                  <div className="flex items-center gap-3">
+                     <Cloud size={16} className="text-[#3B82F6]" />
+                     <span className="text-sm font-medium text-[#F8FAFC]">Storage Gateway</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#10B981]">
+                     <span className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_8px_#10B981]"></span>
+                     Syncing
+                  </div>
                </div>
-               <div className="w-full h-px bg-[#a3a6ff]/10"></div>
-               <div className="flex justify-between items-center text-sm">
-                  <span className="text-[#adaaad]">Auth Service</span>
-                  <span className="flex items-center gap-2 text-[#f9f5f8]"><span className="w-2 h-2 rounded-full bg-green-400"></span> Protected</span>
+               <div className="flex justify-between items-center bg-[#0B0F14]/40 p-4 rounded-xl border border-[#3B82F6]/5">
+                  <div className="flex items-center gap-3">
+                     <ShieldCheck size={16} className="text-[#3B82F6]" />
+                     <span className="text-sm font-medium text-[#F8FAFC]">Auth Handshake</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#3B82F6]">
+                     <span className="w-2 h-2 rounded-full bg-[#3B82F6] shadow-[0_0_8px_#3B82F6]"></span>
+                     Secured
+                  </div>
                </div>
             </div>
          </div>
@@ -127,3 +145,4 @@ export default function AdminDashboard() {
     </div>
   );
 }
+

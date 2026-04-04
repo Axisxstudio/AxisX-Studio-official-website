@@ -7,7 +7,7 @@ import {
   updateEmail,
   updatePassword,
 } from "@/lib/supabase-api";
-import { AlertTriangle, Key, Mail, Power, Save, Shield, User } from "lucide-react";
+import { AlertTriangle, Key, Mail, Power, Save, Shield, User, Settings2, Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { auth } from "@/lib/supabase-api";
@@ -18,6 +18,7 @@ import {
   isSiteSettingsSchemaMissing,
   saveSiteSettings,
 } from "@/lib/site-settings";
+import { motion } from "framer-motion";
 
 function getSettingsErrorMessage(error: unknown): string {
   const code = typeof error === "object" && error && "code" in error ? String(error.code) : "";
@@ -216,92 +217,98 @@ export default function AdminSettings() {
     }
   };
 
+  const inputCls = "w-full rounded-xl border border-[#3B82F6]/15 bg-[#0B0F14] px-4 py-3 text-[#F8FAFC] focus:border-[#3B82F6]/50 focus:ring-1 focus:ring-[#3B82F6]/30 outline-none transition-all placeholder:text-[#4A5568] text-sm";
+  const btnCls = "inline-flex items-center justify-center gap-2 rounded-xl border border-[#3B82F6]/20 bg-[#3B82F6]/5 px-5 py-2.5 text-xs font-bold uppercase tracking-widest text-[#3B82F6] hover:bg-[#3B82F6] hover:text-[#0B0F14] transition-all disabled:opacity-50 cursor-pointer";
+
   return (
-    <div className="space-y-8 animate-fade-in-up">
-      <header>
-        <h1 className="text-3xl font-bold font-outfit text-[#f9f5f8] mb-2">Settings</h1>
-        <p className="text-[#adaaad]">Manage your account preferences and security.</p>
+    <div className="max-w-4xl mx-auto space-y-10 animate-fade-in-up">
+      <header className="flex items-center gap-4 pb-6 border-b border-[#3B82F6]/10">
+        <div className="w-12 h-12 rounded-2xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center text-[#3B82F6]">
+          <Settings2 size={24} />
+        </div>
+        <div>
+          <h1 className="text-3xl font-bold font-outfit text-[#F8FAFC]">System Settings</h1>
+          <p className="text-[#94A3B8]">Configure your administrative environment and site visibility.</p>
+        </div>
       </header>
 
-      <div className="glass-strong rounded-3xl p-8 border border-[#a3a6ff]/10 max-w-3xl">
-        <h2 className="text-xl font-bold font-outfit text-[#f9f5f8] mb-6 flex items-center gap-2">
-          <User size={20} className="text-[#a3a6ff]" /> Admin Profile
-        </h2>
-
-        <div className="space-y-6">
-          <div className="flex items-center gap-4 bg-[#19191c] p-4 rounded-xl border border-[#a3a6ff]/5">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#a3a6ff] to-[#c180ff] flex items-center justify-center font-bold text-[#0e0e10] text-xl">
-              {user?.email?.charAt(0).toUpperCase()}
+      <div className="space-y-8">
+        {/* Profile Card */}
+        <div className="glass-strong rounded-[32px] p-8 border border-[#3B82F6]/10">
+          <div className="flex flex-col md:flex-row items-center gap-8 mb-8">
+            <div className="relative">
+              <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-[#3B82F6] to-[#1F2937] flex items-center justify-center text-3xl font-bold text-[#0B0F14] shadow-2xl">
+                {user?.email?.charAt(0).toUpperCase()}
+              </div>
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-xl bg-[#0B0F14] border border-[#3B82F6]/30 flex items-center justify-center text-[#3B82F6] shadow-lg">
+                <Shield size={16} />
+              </div>
             </div>
-            <div>
-              <p className="font-semibold text-[#f9f5f8]">Primary Administrator</p>
-              <p className="text-sm text-[#adaaad] flex items-center gap-1">
-                <Mail size={14} className="text-[#a3a6ff]/70" /> {user?.email}
-              </p>
-              <p className="text-xs text-[#adaaad] mt-1">
-                Using Supabase Authentication.
-              </p>
+            <div className="text-center md:text-left">
+               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#3B82F6]/10 border border-[#3B82F6]/20 text-[10px] font-bold uppercase tracking-widest text-[#3B82F6] mb-2">
+                 Root Account Verified
+               </div>
+               <h2 className="text-2xl font-bold font-outfit text-[#F8FAFC]">{user?.email?.split('@')[0]}</h2>
+               <p className="text-[#94A3B8] text-sm flex items-center justify-center md:justify-start gap-2 mt-1">
+                 <Mail size={14} className="text-[#3B82F6]" /> {user?.email}
+               </p>
             </div>
           </div>
 
-          <form onSubmit={handleSiteSettingsUpdate} className="rounded-xl border border-[#a3a6ff]/10 bg-[#0e0e10]/50 p-5 space-y-5">
-            <div className="flex items-start gap-3">
-              <AlertTriangle size={18} className="text-[#a3a6ff] mt-0.5" />
-              <div>
-                <p className="font-medium text-[#f9f5f8] text-sm">Public Site Visibility</p>
-                <p className="text-xs text-[#adaaad]">
-                  When maintenance mode is active, visitors only see the maintenance message and the admin login icon.
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 rounded-2xl bg-[#0B0F14]/40 border border-[#3B82F6]/5">
+              <p className="text-[10px] uppercase font-bold text-[#4A5568] tracking-widest mb-1">Provider</p>
+              <p className="text-sm font-medium text-[#94A3B8]">Supabase Engineering</p>
+            </div>
+            <div className="p-4 rounded-2xl bg-[#0B0F14]/40 border border-[#3B82F6]/5">
+              <p className="text-[10px] uppercase font-bold text-[#4A5568] tracking-widest mb-1">Access Level</p>
+              <p className="text-sm font-medium text-[#3B82F6]">Global Administrator</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Visibility Controls */}
+        <section className="glass-strong rounded-[32px] p-8 border border-[#3B82F6]/10 overflow-hidden relative">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="w-10 h-10 rounded-xl bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] border border-[#3B82F6]/20">
+              <Power size={20} />
+            </div>
+            <h2 className="text-xl font-bold font-outfit text-[#F8FAFC]">Deployment Visibility</h2>
+          </div>
+
+          <form onSubmit={handleSiteSettingsUpdate} className="space-y-6">
+            <div className="flex flex-col md:flex-row md:items-center justify-between p-6 rounded-2xl bg-[#0B0F14]/60 border border-[#3B82F6]/10 gap-6">
+              <div className="max-w-md">
+                <p className="font-bold text-[#F8FAFC] text-sm mb-1">Maintenance Mode</p>
+                <p className="text-xs text-[#94A3B8] leading-relaxed">
+                  Toggle this to prevent public access while performing critical system updates. 
+                  Login and administrative endpoints will remain available.
                 </p>
               </div>
-            </div>
 
-            {siteSettingsError && (
-              <div className={`rounded-xl border px-4 py-3 text-sm ${siteSettingsSchemaMissing
-                ? "border-[#ffb86b]/20 bg-[#ffb86b]/10 text-[#ffd7a8]"
-                : "border-[#ff6e84]/20 bg-[#ff6e84]/10 text-[#ffd0d8]"
-                }`}>
-                {siteSettingsError}
-                {siteSettingsSchemaMissing && (
-                  <span className="block mt-1 text-xs text-[#adaaad]">
-                    Apply the SQL in `SUPABASE_MIGRATION_SCHEMA.sql`, then refresh this page.
-                  </span>
-                )}
-              </div>
-            )}
-
-            <div className="rounded-2xl border border-[#a3a6ff]/10 bg-[#19191c] p-4">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-[#f9f5f8]">Maintenance mode</p>
-                  <p className="text-xs text-[#adaaad]">
-                    Admin pages and the login page stay accessible while public pages are hidden.
-                  </p>
-                </div>
-
-                <button
-                  aria-checked={maintenanceMode}
-                  className={`inline-flex h-8 w-14 items-center rounded-full border px-1 transition-colors ${maintenanceMode
-                    ? "border-[#c180ff]/40 bg-[#c180ff]/20"
-                    : "border-[#a3a6ff]/15 bg-[#0e0e10]"
-                    }`}
-                  disabled={siteSettingsLoading || siteSettingsSaving || siteSettingsSchemaMissing}
-                  onClick={() => setMaintenanceMode((current) => !current)}
-                  role="switch"
-                  type="button"
-                >
-                  <span
-                    className={`h-6 w-6 rounded-full bg-[#f9f5f8] shadow-sm transition-transform ${maintenanceMode ? "translate-x-6" : "translate-x-0"}`}
-                  />
-                </button>
-              </div>
+              <button
+                aria-checked={maintenanceMode}
+                className={`relative inline-flex h-9 w-16 shrink-0 items-center rounded-full border-2 transition-all duration-300 ${maintenanceMode
+                  ? "border-[#3B82F6] bg-[#3B82F6]/20 shadow-[0_0_15px_rgba(59,130,246,0.3)]"
+                  : "border-[#1F2937] bg-[#0B0F14]"
+                  }`}
+                disabled={siteSettingsLoading || siteSettingsSaving || siteSettingsSchemaMissing}
+                onClick={() => setMaintenanceMode((current) => !current)}
+                role="switch"
+                type="button"
+              >
+                <span
+                  className={`inline-block h-6 w-6 rounded-full transition-transform duration-300 ${maintenanceMode ? "translate-x-8 bg-[#3B82F6] shadow-[0_0_10px_#3B82F6]" : "translate-x-1 bg-[#1F2937]"}`}
+                />
+              </button>
             </div>
 
             <div>
-              <label className="mb-2 block text-sm font-medium text-[#adaaad]" htmlFor="maintenance-message">
-                Public maintenance message
+              <label className="mb-2 block text-xs font-bold uppercase tracking-widest text-[#4A5568]" htmlFor="maintenance-message">
+                Public Announcement Message
               </label>
               <textarea
-                className="min-h-28 w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 outline-none transition-colors resize-none"
+                className="min-h-32 w-full rounded-2xl border border-[#3B82F6]/15 bg-[#0B0F14] px-4 py-4 text-[#F8FAFC] focus:border-[#3B82F6]/50 focus:ring-1 focus:ring-[#3B82F6]/20 outline-none transition-all resize-none text-sm leading-relaxed"
                 disabled={siteSettingsLoading || siteSettingsSaving || siteSettingsSchemaMissing}
                 id="maintenance-message"
                 onChange={(event) => setMaintenanceMessage(event.target.value)}
@@ -310,103 +317,88 @@ export default function AdminSettings() {
               />
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="submit"
-                disabled={siteSettingsLoading || siteSettingsSaving || siteSettingsSchemaMissing}
-                className="inline-flex items-center gap-2 rounded-xl border border-[#a3a6ff]/20 px-4 py-2.5 text-sm font-semibold text-[#a3a6ff] hover:bg-[#a3a6ff]/10 transition-colors disabled:opacity-60"
-              >
-                <Save size={16} />
-                {siteSettingsSaving ? "Saving..." : "Save Maintenance Settings"}
-              </button>
-
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#a3a6ff]/10 bg-[#19191c] px-3 py-2 text-xs text-[#adaaad]">
-                <Power size={14} className={maintenanceMode ? "text-[#c180ff]" : "text-[#a3a6ff]"} />
-                {maintenanceMode ? "Public site hidden" : "Public site visible"}
-              </div>
-            </div>
+            <button
+              type="submit"
+              disabled={siteSettingsLoading || siteSettingsSaving || siteSettingsSchemaMissing}
+              className={btnCls}
+            >
+              <Save size={16} />
+              {siteSettingsSaving ? "Processing..." : "Sync Site State"}
+            </button>
           </form>
+        </section>
 
-          <form onSubmit={handleEmailUpdate} className="rounded-xl border border-[#a3a6ff]/10 bg-[#0e0e10]/50 p-5 space-y-4">
-            <div className="flex items-start gap-3">
-              <Shield size={18} className="text-[#c180ff] mt-0.5" />
-              <div>
-                <p className="font-medium text-[#f9f5f8] text-sm">Change Login Email</p>
-                <p className="text-xs text-[#adaaad]">Use your current password to confirm the change.</p>
+        {/* Security / Credentials */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Email Update */}
+          <section className="glass-strong rounded-[32px] p-8 border border-[#3B82F6]/10">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-xl bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] border border-[#3B82F6]/20">
+                <Shield size={20} />
               </div>
+              <h2 className="text-xl font-bold font-outfit text-[#F8FAFC]">Update Email</h2>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <form onSubmit={handleEmailUpdate} className="space-y-4">
               <input
                 type="email"
                 value={loginEmail}
                 onChange={(event) => setLoginEmail(event.target.value)}
-                className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 outline-none transition-colors"
-                placeholder="New admin email"
+                className={inputCls}
+                placeholder="New Email Endpoint"
               />
               <input
                 type="password"
                 value={emailPassword}
                 onChange={(event) => setEmailPassword(event.target.value)}
-                className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 outline-none transition-colors"
-                placeholder="Current password"
+                className={inputCls}
+                placeholder="Account Password"
               />
-            </div>
+              <button type="submit" disabled={emailLoading} className={btnCls}>
+                <Save size={16} /> Update Endpoint
+              </button>
+            </form>
+          </section>
 
-            <button
-              type="submit"
-              disabled={emailLoading}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#a3a6ff]/20 px-4 py-2.5 text-sm font-semibold text-[#a3a6ff] hover:bg-[#a3a6ff]/10 transition-colors disabled:opacity-60"
-            >
-              <Save size={16} />
-              {emailLoading ? "Updating..." : "Update Email"}
-            </button>
-          </form>
-
-          <form onSubmit={handlePasswordUpdate} className="rounded-xl border border-[#a3a6ff]/10 bg-[#0e0e10]/50 p-5 space-y-4">
-            <div className="flex items-start gap-3">
-              <Key size={18} className="text-[#a3a6ff] mt-0.5" />
-              <div>
-                <p className="font-medium text-[#f9f5f8] text-sm">Change Password</p>
-                <p className="text-xs text-[#adaaad]">Your current password is required before saving a new one.</p>
+          {/* Password Update */}
+          <section className="glass-strong rounded-[32px] p-8 border border-[#3B82F6]/10">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-xl bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] border border-[#3B82F6]/20">
+                <Lock size={20} />
               </div>
+              <h2 className="text-xl font-bold font-outfit text-[#F8FAFC]">Security Keys</h2>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <form onSubmit={handlePasswordUpdate} className="space-y-4">
               <input
                 type="password"
                 value={currentPassword}
                 onChange={(event) => setCurrentPassword(event.target.value)}
-                className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 outline-none transition-colors"
-                placeholder="Current password"
+                className={inputCls}
+                placeholder="Current Secret Key"
               />
               <input
                 type="password"
                 value={newPassword}
                 onChange={(event) => setNewPassword(event.target.value)}
-                className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 outline-none transition-colors"
-                placeholder="New password"
+                className={inputCls}
+                placeholder="New Secret Key"
               />
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
-                className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 outline-none transition-colors"
-                placeholder="Confirm new password"
+                className={inputCls}
+                placeholder="Confirm Secret Key"
               />
-            </div>
-
-            <button
-              type="submit"
-              disabled={passwordLoading}
-              className="inline-flex items-center gap-2 rounded-xl border border-[#a3a6ff]/20 px-4 py-2.5 text-sm font-semibold text-[#a3a6ff] hover:bg-[#a3a6ff]/10 transition-colors disabled:opacity-60"
-            >
-              <Save size={16} />
-              {passwordLoading ? "Updating..." : "Update Password"}
-            </button>
-          </form>
+              <button type="submit" disabled={passwordLoading} className={btnCls}>
+                <Key size={16} /> Renew Access
+              </button>
+            </form>
+          </section>
         </div>
       </div>
     </div>
   );
 }
+

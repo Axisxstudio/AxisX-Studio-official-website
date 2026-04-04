@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { Suspense } from "react";
 import PageProgressBar from "@/components/PageProgressBar";
 import SiteMaintenanceGate from "@/components/SiteMaintenanceGate";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -21,18 +22,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <body suppressHydrationWarning className={`${inter.variable} ${outfit.variable} antialiased bg-[#0e0e10] text-[#f9f5f8] min-h-screen flex flex-col`}>
+      <body suppressHydrationWarning className={`${inter.variable} ${outfit.variable} antialiased bg-[#0B0F14] text-[#F8FAFC] min-h-screen flex flex-col`}>
         <Suspense fallback={null}>
           <PageProgressBar />
         </Suspense>
         <AuthProvider>
           <SiteMaintenanceGate>{children}</SiteMaintenanceGate>
+          <WhatsAppFloat />
           <Toaster 
             position="bottom-right"
             toastOptions={{
               style: {
-                background: '#19191c',
-                color: '#f9f5f8',
+                background: '#111827',
+                color: '#F8FAFC',
                 border: '1px solid rgba(163, 166, 255, 0.12)',
               },
             }}

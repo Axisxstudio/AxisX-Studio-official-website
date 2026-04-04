@@ -12,12 +12,20 @@ import {
   Trash2,
   UploadCloud,
   X,
+  Layout,
+  Tag,
+  User,
+  ExternalLink,
+  Cpu,
+  Monitor,
+  CheckCircle2
 } from "lucide-react";
 import { Project } from "@/types";
 import { supabase } from "@/lib/supabase";
 import { deleteFilesByUrl, uploadFilesToStorage, validateFiles } from "@/lib/media";
 import { selectClause, toDatabaseField, toDatabasePayload } from "@/lib/supabase-api";
 import toast from "react-hot-toast";
+import { motion, AnimatePresence } from "framer-motion";
 
 type ProjectForm = {
   title: string;
@@ -149,26 +157,6 @@ export default function AdminProjects() {
       return;
     }
 
-    if (coverImage) {
-      const coverValid = validateFiles([coverImage], "image");
-      if (!coverValid.valid) {
-        toast.error(coverValid.error ?? "Invalid cover image.");
-        return;
-      }
-    }
-
-    const galleryValid = validateFiles(galleryImages, "image");
-    if (!galleryValid.valid) {
-      toast.error(galleryValid.error ?? "Invalid gallery images.");
-      return;
-    }
-
-    const videoValid = validateFiles(videoFiles, "video");
-    if (!videoValid.valid) {
-      toast.error(videoValid.error ?? "Invalid project videos.");
-      return;
-    }
-
     setSubmitLoading(true);
 
     try {
@@ -245,13 +233,11 @@ export default function AdminProjects() {
 
         setProjects((current) => [
           {
-            id: inserted.id,
+            ...inserted,
             ...payload,
             coverImageUrl,
             galleryImageUrls,
             videoUrls: projectVideoUrls,
-            createdAt: inserted.createdAt,
-            updatedAt: inserted.updatedAt,
           },
           ...current,
         ]);
@@ -261,7 +247,6 @@ export default function AdminProjects() {
 
       resetForm();
     } catch (error) {
-      console.error("Failed to save project:", error);
       toast.error(getProjectSaveErrorMessage(error));
     } finally {
       setSubmitLoading(false);
@@ -306,109 +291,142 @@ export default function AdminProjects() {
     }
   };
 
+  const inputCls = "w-full rounded-xl border border-[#3B82F6]/15 bg-[#0B0F14] px-4 py-3 text-[#F8FAFC] focus:border-[#3B82F6]/50 focus:ring-1 focus:ring-[#3B82F6]/30 outline-none transition-all placeholder:text-[#4A5568] text-sm";
+  const btnPrimary = "inline-flex items-center gap-2 rounded-xl bg-[#3B82F6] px-6 py-3 text-[#0B0F14] font-bold text-xs uppercase tracking-widest hover:bg-white transition-all disabled:opacity-50";
+
   return (
-    <div className="space-y-8 animate-fade-in-up">
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="max-w-7xl mx-auto space-y-10 animate-fade-in-up">
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-[#3B82F6]/10">
         <div>
-          <h1 className="text-3xl font-bold font-outfit text-[#f9f5f8] mb-2">Project Management</h1>
-          <p className="text-[#adaaad]">Create and maintain your portfolio catalog.</p>
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-10 h-10 rounded-xl bg-[#3B82F6]/10 border border-[#3B82F6]/20 flex items-center justify-center text-[#3B82F6]">
+              <Layout size={20} />
+            </div>
+            <h1 className="text-3xl font-bold font-outfit text-[#F8FAFC]">Catalog Engineering</h1>
+          </div>
+          <p className="text-[#94A3B8]">Deploy and manage technical case studies to your public portal.</p>
         </div>
 
         <button
           onClick={isFormOpen ? resetForm : openCreate}
-          className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#a3a6ff] to-[#c180ff] px-5 py-3 text-[#0e0e10] font-semibold"
+          className={btnPrimary}
         >
           {isFormOpen ? <X size={16} /> : <Plus size={16} />}
-          {isFormOpen ? "Close Form" : "New Project"}
+          {isFormOpen ? "Terminate Form" : "Initialize Project"}
         </button>
       </header>
 
-      {isFormOpen && (
-        <form onSubmit={persistProject} className="glass-strong rounded-3xl border border-[#a3a6ff]/20 p-6 md:p-8 space-y-5">
-          <h2 className="text-xl font-semibold text-[#f9f5f8]">{editingProjectId ? "Edit Project" : "Create Project"}</h2>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="text-sm text-[#adaaad] mb-2 block">Project title *</label>
-              <input name="title" value={formData.title} onChange={handleChange} className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3" />
+      <AnimatePresence>
+        {isFormOpen && (
+          <motion.form 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            onSubmit={persistProject} 
+            className="glass-strong rounded-[32px] border border-[#3B82F6]/15 p-8 md:p-10 space-y-8 relative overflow-hidden"
+          >
+            <div className="flex items-center gap-3 mb-2">
+               <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] border border-[#3B82F6]/10">
+                  {editingProjectId ? <Edit size={16} /> : <Plus size={16} />}
+               </div>
+               <h2 className="text-xl font-bold font-outfit text-[#F8FAFC]">
+                 {editingProjectId ? "Update Infrastructure" : "New Asset Initialization"}
+               </h2>
             </div>
-            <div>
-              <label className="text-sm text-[#adaaad] mb-2 block">Slug *</label>
-              <input name="slug" value={formData.slug} onChange={handleChange} className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3" />
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">Project Title *</label>
+                <input name="title" value={formData.title} onChange={handleChange} className={inputCls} placeholder="e.g. AxisX Cloud Gateway" />
+              </div>
+              <div>
+                <label className="text-[10px) font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">URL Identifier (Slug) *</label>
+                <input name="slug" value={formData.slug} onChange={handleChange} className={inputCls} placeholder="axisx-cloud-gateway" />
+              </div>
             </div>
-          </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="text-sm text-[#adaaad] mb-2 block">Category *</label>
-              <input name="category" value={formData.category} onChange={handleChange} className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3" />
+            <div className="grid gap-6 md:grid-cols-2">
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">System Category *</label>
+                <input name="category" value={formData.category} onChange={handleChange} className={inputCls} placeholder="e.g. Backend Infrastructure" />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">Client Organization</label>
+                <input name="clientName" value={formData.clientName} onChange={handleChange} className={inputCls} placeholder="Client Entity Name" />
+              </div>
             </div>
+
             <div>
-              <label className="text-sm text-[#adaaad] mb-2 block">Client name</label>
-              <input name="clientName" value={formData.clientName} onChange={handleChange} className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3" />
+              <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">Technical Abstract *</label>
+              <textarea name="description" rows={4} value={formData.description} onChange={handleChange} className={`${inputCls} resize-none`} placeholder="Describe the engineering challenges and solutions..." />
             </div>
-          </div>
 
-          <div>
-            <label className="text-sm text-[#adaaad] mb-2 block">Description *</label>
-            <textarea name="description" rows={4} value={formData.description} onChange={handleChange} className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3" />
-          </div>
+            <div>
+              <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">Tech Stack (CSV)</label>
+              <input name="technologies" value={formData.technologies} onChange={handleChange} className={inputCls} placeholder="Next.js, Supabase, Rust, WASM" />
+            </div>
 
-          <div>
-            <label className="text-sm text-[#adaaad] mb-2 block">Technologies (comma separated)</label>
-            <input name="technologies" value={formData.technologies} onChange={handleChange} className="w-full rounded-xl border border-[#a3a6ff]/20 bg-[#0e0e10] px-4 py-3" />
-          </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <label className="group rounded-2xl border-2 border-dashed border-[#3B82F6]/10 bg-[#0B0F14]/50 p-6 text-center cursor-pointer hover:border-[#3B82F6]/30 hover:bg-[#3B82F6]/5 transition-all">
+                <UploadCloud className="mx-auto mb-3 text-[#3B82F6] group-hover:scale-110 transition-transform" size={24} />
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568]">Cover Identity</p>
+                <p className="text-[11px] text-[#94A3B8] mt-1 truncate">{coverImage?.name ?? "No file selected"}</p>
+                <input hidden type="file" accept="image/*" onChange={(event) => setCoverImage(event.target.files?.[0] ?? null)} />
+              </label>
 
-          <div className="grid gap-4 md:grid-cols-3">
-            <label className="rounded-xl border border-dashed border-[#a3a6ff]/30 bg-[#0e0e10] p-4 text-center cursor-pointer">
-              <UploadCloud className="mx-auto mb-2 text-[#a3a6ff]" size={20} />
-              <p className="text-xs text-[#adaaad]">Upload cover image</p>
-              <p className="text-xs text-[#f9f5f8] mt-1 truncate">{coverImage?.name ?? "No file selected"}</p>
-              <input hidden type="file" accept="image/*" onChange={(event) => setCoverImage(event.target.files?.[0] ?? null)} />
-            </label>
+              <label className="group rounded-2xl border-2 border-dashed border-[#3B82F6]/10 bg-[#0B0F14]/50 p-6 text-center cursor-pointer hover:border-[#3B82F6]/30 hover:bg-[#3B82F6]/5 transition-all">
+                <Layout className="mx-auto mb-3 text-[#3B82F6] group-hover:scale-110 transition-transform" size={24} />
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568]">Asset Gallery</p>
+                <p className="text-[11px] text-[#94A3B8] mt-1 truncate">{galleryImages.length} items staged</p>
+                <input hidden type="file" accept="image/*" multiple onChange={(event) => setGalleryImages(Array.from(event.target.files ?? []))} />
+              </label>
 
-            <label className="rounded-xl border border-dashed border-[#a3a6ff]/30 bg-[#0e0e10] p-4 text-center cursor-pointer">
-              <UploadCloud className="mx-auto mb-2 text-[#a3a6ff]" size={20} />
-              <p className="text-xs text-[#adaaad]">Upload gallery images</p>
-              <p className="text-xs text-[#f9f5f8] mt-1 truncate">{galleryImages.length} selected</p>
-              <input hidden type="file" accept="image/*" multiple onChange={(event) => setGalleryImages(Array.from(event.target.files ?? []))} />
-            </label>
+              <label className="group rounded-2xl border-2 border-dashed border-[#3B82F6]/10 bg-[#0B0F14]/50 p-6 text-center cursor-pointer hover:border-[#3B82F6]/30 hover:bg-[#3B82F6]/5 transition-all">
+                <Monitor className="mx-auto mb-3 text-[#3B82F6] group-hover:scale-110 transition-transform" size={24} />
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568]">Motion Media</p>
+                <p className="text-[11px] text-[#94A3B8] mt-1 truncate">{videoFiles.length} files staged</p>
+                <input hidden type="file" accept="video/*" multiple onChange={(event) => setVideoFiles(Array.from(event.target.files ?? []))} />
+              </label>
+            </div>
 
-            <label className="rounded-xl border border-dashed border-[#c180ff]/30 bg-[#0e0e10] p-4 text-center cursor-pointer">
-              <UploadCloud className="mx-auto mb-2 text-[#c180ff]" size={20} />
-              <p className="text-xs text-[#adaaad]">Upload project videos</p>
-              <p className="text-xs text-[#f9f5f8] mt-1 truncate">{videoFiles.length} selected</p>
-              <input hidden type="file" accept="video/*" multiple onChange={(event) => setVideoFiles(Array.from(event.target.files ?? []))} />
-            </label>
-          </div>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-4">
+              <label className="inline-flex items-center gap-3 cursor-pointer group">
+                <div className="relative">
+                  <input type="checkbox" name="isPublished" checked={formData.isPublished} onChange={handleChange} className="sr-only peer" />
+                  <div className="w-11 h-6 bg-[#111827] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#3B82F6]"></div>
+                </div>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#94A3B8]">Public Deployment</span>
+              </label>
 
-          <label className="inline-flex items-center gap-2 text-sm text-[#adaaad]">
-            <input type="checkbox" name="isPublished" checked={formData.isPublished} onChange={handleChange} className="accent-[#a3a6ff]" />
-            Publish this project publicly
-          </label>
-
-          <button type="submit" disabled={submitLoading} className="inline-flex items-center gap-2 rounded-xl bg-[#a3a6ff] px-5 py-3 text-[#0e0e10] font-semibold disabled:opacity-60">
-            <Save size={16} /> {submitLoading ? "Saving..." : editingProjectId ? "Update Project" : "Create Project"}
-          </button>
-        </form>
-      )}
+              <button type="submit" disabled={submitLoading} className={`${btnPrimary} min-w-[200px]`}>
+                <Save size={16} /> {submitLoading ? "Processing..." : editingProjectId ? "Sync Update" : "Deploy Asset"}
+              </button>
+            </div>
+            
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#3B82F6]/5 rounded-full blur-[100px] -z-10" />
+          </motion.form>
+        )}
+      </AnimatePresence>
 
       {loading ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          <div className="h-64 rounded-2xl bg-[#19191c] animate-pulse" />
-          <div className="h-64 rounded-2xl bg-[#19191c] animate-pulse" />
-          <div className="h-64 rounded-2xl bg-[#19191c] animate-pulse" />
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {[1, 2, 3].map(n => <div key={n} className="h-72 rounded-[32px] bg-[#111827]/40 border border-[#3B82F6]/10 animate-pulse" />)}
         </div>
       ) : projects.length === 0 ? (
-        <div className="rounded-2xl border border-[#a3a6ff]/10 py-16 text-center glass">
-          <Briefcase size={42} className="mx-auto text-[#adaaad] mb-2" />
-          <p className="text-[#f9f5f8] font-semibold">No projects found.</p>
+        <div className="rounded-[32px] border border-[#3B82F6]/10 py-32 text-center glass-strong">
+          <Briefcase size={48} className="mx-auto text-[#4A5568] mb-6" />
+          <p className="text-[#F8FAFC] font-bold text-xl font-outfit">Inventory Empty</p>
+          <p className="text-[#94A3B8] text-sm mt-1">Initialize your first strategic project asset above.</p>
         </div>
       ) : (
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => (
-            <article key={project.id} className="glass-strong rounded-2xl border border-[#a3a6ff]/10 overflow-hidden">
-              <div className="relative h-44 bg-[#0e0e10]">
+            <motion.article 
+              layout
+              key={project.id} 
+              className="group glass-strong rounded-[32px] border border-[#3B82F6]/10 overflow-hidden hover:border-[#3B82F6]/30 transition-all duration-300 relative"
+            >
+              <div className="relative h-56 bg-[#0B0F14] overflow-hidden">
                 {project.coverImageUrl ? (
                   <Image
                     src={project.coverImageUrl}
@@ -416,42 +434,69 @@ export default function AdminProjects() {
                     fill
                     unoptimized
                     sizes="(max-width: 1280px) 50vw, 33vw"
-                    className="object-cover"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 ) : (
-                  <div className="h-full w-full flex items-center justify-center text-xs text-[#adaaad]">No cover image</div>
+                  <div className="h-full w-full flex items-center justify-center text-[10px] font-bold uppercase tracking-widest text-[#4A5568]">Abstract Pending</div>
                 )}
-              </div>
-
-              <div className="p-5 space-y-3">
-                <div className="flex items-center justify-between gap-3">
-                  <h3 className="font-semibold text-lg text-[#f9f5f8] truncate">{project.title}</h3>
-                  <button onClick={() => togglePublish(project)} className="rounded-lg border border-[#a3a6ff]/20 bg-[#19191c] p-1.5 text-[#adaaad] hover:text-[#a3a6ff]">
-                    {project.isPublished ? <Eye size={15} /> : <EyeOff size={15} />}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F14] to-transparent opacity-60" />
+                
+                <div className="absolute top-4 right-4">
+                  <button 
+                    onClick={() => togglePublish(project)} 
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all backdrop-blur-md ${
+                      project.isPublished 
+                        ? 'bg-[#3B82F6]/20 border border-[#3B82F6]/30 text-[#3B82F6]' 
+                        : 'bg-[#0B0F14]/60 border border-[#ef4444]/20 text-[#ef4444]'
+                    }`}
+                  >
+                    {project.isPublished ? <CheckCircle2 size={18} /> : <EyeOff size={18} />}
                   </button>
                 </div>
+              </div>
 
-                <p className="text-xs uppercase tracking-wider text-[#a3a6ff]">{project.category}</p>
-                <p className="text-sm text-[#adaaad] line-clamp-2">{project.description}</p>
+              <div className="p-8 space-y-5">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#3B82F6]">
+                    <Cpu size={12} />
+                    {project.category}
+                  </div>
+                  <h3 className="font-bold text-xl text-[#F8FAFC] truncate font-outfit">{project.title}</h3>
+                </div>
+
+                <p className="text-sm text-[#94A3B8] line-clamp-2 leading-relaxed">
+                  {project.description}
+                </p>
 
                 <div className="flex flex-wrap gap-2">
-                  {(project.technologies ?? []).slice(0, 4).map((tech) => (
-                    <span key={tech} className="rounded-full border border-[#a3a6ff]/20 px-2 py-0.5 text-[10px] text-[#adaaad]">
+                  {(project.technologies ?? []).slice(0, 3).map((tech) => (
+                    <span key={tech} className="px-2.5 py-1 rounded-lg bg-[#0B0F14] border border-[#3B82F6]/10 text-[10px] font-bold text-[#4A5568] uppercase tracking-tighter">
                       {tech}
                     </span>
                   ))}
+                  {(project.technologies ?? []).length > 3 && (
+                    <span className="text-[10px] font-bold text-[#4A5568] self-center">+{(project.technologies ?? []).length - 3}</span>
+                  )}
                 </div>
 
-                <div className="flex items-center justify-between pt-2">
-                  <button onClick={() => openEdit(project)} className="inline-flex items-center gap-1 text-sm text-[#a3a6ff]">
-                    <Edit size={14} /> Edit
-                  </button>
-                  <button onClick={() => removeProject(project)} className="rounded-lg border border-[#ff6e84]/20 bg-[#19191c] p-1.5 text-[#adaaad] hover:text-[#ff6e84]">
-                    <Trash2 size={15} />
+                <div className="flex items-center justify-between pt-4 border-t border-[#3B82F6]/5">
+                  <div className="flex items-center gap-3">
+                    <button 
+                      onClick={() => openEdit(project)} 
+                      className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#94A3B8] hover:text-[#3B82F6] transition-colors"
+                    >
+                      <Edit size={14} /> Edit
+                    </button>
+                  </div>
+                  <button 
+                    onClick={() => removeProject(project)} 
+                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#0B0F14] border border-transparent hover:border-[#ef4444]/20 text-[#4A5568] hover:text-[#ef4444] transition-all"
+                  >
+                    <Trash2 size={16} />
                   </button>
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       )}
