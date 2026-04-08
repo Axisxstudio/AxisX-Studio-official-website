@@ -10,6 +10,7 @@ import { Lock, ArrowLeft, ShieldCheck, Cpu, Zap, Layout } from "lucide-react";
 import { isAdminUser } from "@/lib/admin";
 import BrandLogo from "@/components/BrandLogo";
 import { motion, AnimatePresence } from "framer-motion";
+import { TypingText } from "@/components/TypingText";
 
 function getLoginErrorMessage(error: unknown): string {
   const code = typeof error === "object" && error && "code" in error ? String(error.code) : "";
@@ -73,7 +74,7 @@ export default function Login() {
   return (
     <main className="h-screen bg-[#0B0F14] flex flex-col lg:flex-row relative overflow-hidden">
       {/* ── Visual Branding Panel (Large screens only) ── */}
-      <div className="hidden lg:flex w-1/2 relative flex-col justify-between p-16 overflow-hidden border-r border-[#3B82F6]/10">
+      <div className="hidden lg:flex w-1/2 relative flex-col p-12 overflow-hidden border-r border-[#3B82F6]/10 h-screen">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[#0B0F14] opacity-90 z-10" />
           <div className="grid-bg absolute inset-0 z-20 opacity-40" />
@@ -89,36 +90,41 @@ export default function Login() {
 
         <motion.div
           initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
-          className="relative z-30"
+          className="relative z-30 mt-2 mb-20"
         >
           <Link href="/" className="inline-block transition-transform hover:scale-105">
-            <img src="/admin-logo.png" alt="AxisX" className="h-10 w-auto object-contain" />
+            <img src="/site-logo.png" alt="AxisX" className="w-[180px] md:w-[200px] h-auto object-contain object-left" />
           </Link>
         </motion.div>
 
-        <div className="relative z-30 max-w-lg">
+        <div className="relative z-30 max-w-lg flex-1">
           <motion.div
             initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-4">
               <div className="h-[1px] w-12 bg-gradient-to-r from-[#3B82F6] to-transparent" />
               <span className="text-xs uppercase tracking-widest font-bold text-[#3B82F6]">Secure Administration</span>
             </div>
-            <h2 className="text-5xl font-bold font-outfit text-[#F8FAFC] leading-tight mb-6">
-              Management Portal for <span className="gradient-text">AxisX Studio</span>
+            <h2 className="text-4xl xl:text-5xl font-bold font-outfit text-[#F8FAFC] leading-tight mb-4">
+              Management Portal for{" "}
+              <TypingText 
+                text="AxisX Studio" 
+                className="gradient-text-alt animate-pulse-glow inline-block" 
+                delay={0.8}
+              />
             </h2>
-            <p className="text-[#94A3B8] text-lg leading-relaxed mb-10">
-              Access the mission control for your digital infrastructure. Manage projects, analyze performance, and govern your technical ecosystem with high-fidelity control.
+            <p className="text-[#94A3B8] text-base xl:text-lg leading-relaxed mb-6">
+              Access the mission control for your digital infrastructure. Manage projects, analyze performance, and govern your technical ecosystem.
             </p>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }}
-            className="grid grid-cols-1 gap-5"
+            className="grid grid-cols-1 gap-4"
           >
             {features.map((f, i) => (
               <div key={i} className="flex items-center gap-4 text-sm font-medium text-[#F8FAFC]/80 group">
-                <div className="w-10 h-10 rounded-xl bg-[#111827] border border-[#3B82F6]/20 flex items-center justify-center text-[#3B82F6] group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                <div className="w-8 h-8 rounded-lg bg-[#111827] border border-[#3B82F6]/20 flex items-center justify-center text-[#3B82F6] group-hover:scale-110 transition-transform">
                   {f.icon}
                 </div>
                 {f.label}
@@ -129,7 +135,8 @@ export default function Login() {
 
         <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} transition={{ delay: 1 }}
-          className="relative z-30 text-xs text-[#94A3B8] font-medium tracking-tight"
+          className="relative z-30 text-[10px] text-[#94A3B8] font-medium tracking-tight mt-10"
+          suppressHydrationWarning
         >
           © {new Date().getFullYear()} AxisX Studio. Technical Governance Systems.
         </motion.p>
@@ -149,7 +156,7 @@ export default function Login() {
           >
             <div className="lg:hidden text-center mb-6">
               <Link href="/" className="inline-block mb-4 transition-transform hover:scale-105">
-                <img src="/admin-logo.png" alt="AxisX" className="h-8 w-auto mx-auto object-contain" />
+                <img src="/site-logo.png" alt="AxisX" className="w-[160px] h-auto mx-auto object-contain" />
               </Link>
               <h1 className="text-3xl font-bold font-outfit text-white mb-2">Admin Portal</h1>
               <p className="text-[#94A3B8] text-sm">Secure access for the AxisX engineering team.</p>
@@ -179,6 +186,7 @@ export default function Login() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className={inputCls}
+                    suppressHydrationWarning
                   />
                 </div>
 
@@ -193,6 +201,7 @@ export default function Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className={inputCls}
+                    suppressHydrationWarning
                   />
                 </div>
 
@@ -201,6 +210,7 @@ export default function Login() {
                     type="submit"
                     disabled={loading}
                     className="btn-ltr-white w-full py-3 rounded-xl font-bold text-sm tracking-wide transition-all disabled:opacity-50 flex justify-center items-center gap-2"
+                    suppressHydrationWarning
                   >
                     {loading ? "Authenticating..." : "Authorize Access"}
                   </button>
@@ -211,6 +221,7 @@ export default function Login() {
                 <Link
                   href="/"
                   className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#94A3B8] hover:text-[#3B82F6] transition-all group"
+                  suppressHydrationWarning
                 >
                   <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
                   Back to main infrastructure

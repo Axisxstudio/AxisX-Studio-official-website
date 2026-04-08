@@ -38,7 +38,7 @@ function MaintenanceScreen({ message }: { message: string }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="relative z-10 flex flex-col items-center gap-10 md:gap-14"
+        className="relative z-10 flex flex-col items-center gap-0"
       >
         {/* Logo Section */}
         <div className="relative">
@@ -50,15 +50,15 @@ function MaintenanceScreen({ message }: { message: string }) {
             transition={{ duration: 4, repeat: Infinity }}
             className="absolute -inset-10 bg-[#3B82F6]/10 blur-3xl rounded-full"
           />
-          <BrandLogo 
-            className="h-16 md:h-20 w-auto relative drop-shadow-[0_0_25px_rgba(59,130,246,0.2)]" 
-            variant="mark" 
-            priority
+          <img 
+            src="/site-logo.png" 
+            alt="AxisX Studio"
+            className="w-[180px] md:w-[220px] h-auto relative drop-shadow-[0_0_25px_rgba(59,130,246,0.2)] object-contain" 
           />
         </div>
 
-        <div className="space-y-6 md:space-y-8">
-          <div className="flex flex-col items-center gap-3">
+        <div className="space-y-2 mt-[-1rem] mb-20">
+          <div className="flex flex-col items-center gap-1">
             <TypingText 
               text="WELCOME TO AXISX STUDIO" 
               className="text-[10px] md:text-xs font-bold tracking-[0.4em] text-[#3B82F6] uppercase opacity-80"
@@ -111,7 +111,7 @@ function MaintenanceScreen({ message }: { message: string }) {
           </div>
           
           <p className="text-[#94A3B8] text-sm md:text-lg max-w-lg mx-auto leading-relaxed font-light">
-            {message || "We are currently undergoing a scheduled maintenance to improve our digital infrastructure. Thank you for your patience."}
+            {message || "System update in process, Anything Else contact admin"}
           </p>
         </div>
 
@@ -145,7 +145,7 @@ function MaintenanceScreen({ message }: { message: string }) {
           <Lock size={12} className="group-hover:text-[#3B82F6] transition-colors" />
           <span>Admin Access Only</span>
         </Link>
-        <p className="text-[10px] text-[#4a4a5a] uppercase tracking-widest">© {new Date().getFullYear()} AxisX Studio. All rights reserved.</p>
+        <p className="text-[10px] text-[#4a4a5a] uppercase tracking-widest" suppressHydrationWarning>© {new Date().getFullYear()} AxisX Studio. All rights reserved.</p>
       </div>
     </div>
   );

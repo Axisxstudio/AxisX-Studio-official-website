@@ -63,8 +63,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
          <aside className={`fixed top-0 left-0 h-screen w-72 bg-[#0B0F14] border-r border-[#3B82F6]/10 flex flex-col transition-transform duration-300 z-50 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:relative'}`}>
             <div className="p-8 h-24 flex items-center justify-between border-b border-[#3B82F6]/5">
                <Link href="/admin" className="font-outfit text-xl font-bold flex items-center gap-3">
-               <div className="w-20 h-20 flex items-center justify-center">
-                  <img src="/admin-logo.png" alt="AxisX" className="h-16 w-auto object-contain" />
+               <div className="w-32 h-20 flex items-center justify-center">
+                  <img src="/site-logo.png" alt="AxisX" className="w-full h-auto object-contain" />
                </div>
                   <span className="text-[#F8FAFC]">Admin<span className="text-[#3B82F6] font-black uppercase text-xs tracking-widest ml-1">OS</span></span>
                </Link>
@@ -137,8 +137,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         <p className="text-[10px] font-bold text-[#4A5568] uppercase tracking-widest">Root Auth</p>
                      </div>
                   </div>
-                  <div className="w-16 h-16 flex items-center justify-center">
-                     <img src="/admin-logo.png" alt="Admin" className="h-14 w-auto object-contain pl-2" />
+                  <div className="w-28 h-20 flex items-center justify-center">
+                     <img src="/site-logo.png" alt="Admin" className="w-full h-auto object-contain pl-2" />
                   </div>
                </div>
             </header>

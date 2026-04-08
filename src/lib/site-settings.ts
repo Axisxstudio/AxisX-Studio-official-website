@@ -5,7 +5,7 @@ import type { SiteSettings } from "@/types";
 const SITE_SETTINGS_TABLE = "site_settings";
 const SITE_SETTINGS_ROW_ID = "global";
 
-export const DEFAULT_MAINTENANCE_MESSAGE = "Temporary maintenance work";
+export const DEFAULT_MAINTENANCE_MESSAGE = "System update in process, Anything Else contact admin";
 
 export const defaultSiteSettings: SiteSettings = {
   id: SITE_SETTINGS_ROW_ID,

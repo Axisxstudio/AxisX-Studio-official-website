@@ -44,7 +44,7 @@ export const TypingText = ({ text, className, delay = 0 }: TypingTextProps) => {
 
   return (
     <motion.span
-      style={{ overflow: "hidden", display: "inline-flex", flexWrap: "wrap", justifyContent: "center" }}
+      style={{ overflow: "hidden", display: "inline-flex", flexWrap: "wrap", justifyContent: "flex-start" }}
       variants={container}
       initial="hidden"
       whileInView="visible"
