@@ -77,22 +77,22 @@ export default function Login() {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[#0B0F14] opacity-90 z-10" />
           <div className="grid-bg absolute inset-0 z-20 opacity-40" />
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2 }}
-            className="absolute -top-1/4 -left-1/4 w-[600px] h-[600px] bg-[#3B82F6]/10 rounded-full blur-[140px] z-0" 
+            className="absolute -top-1/4 -left-1/4 w-[600px] h-[600px] bg-[#3B82F6]/10 rounded-full blur-[140px] z-0"
           />
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 2, delay: 0.5 }}
-            className="absolute -bottom-1/4 -right-1/4 w-[500px] h-[500px] bg-[#1F2937]/10 rounded-full blur-[120px] z-0" 
+            className="absolute -bottom-1/4 -right-1/4 w-[500px] h-[500px] bg-[#1F2937]/10 rounded-full blur-[120px] z-0"
           />
         </div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
           className="relative z-30"
         >
-          <Link href="/" className="inline-block">
-            <BrandLogo className="h-10 w-auto" />
+          <Link href="/" className="inline-block transition-transform hover:scale-105">
+            <img src="/admin-logo.png" alt="AxisX" className="h-10 w-auto object-contain" />
           </Link>
         </motion.div>
 
@@ -112,7 +112,7 @@ export default function Login() {
             </p>
           </motion.div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1, delay: 0.5 }}
             className="grid grid-cols-1 gap-5"
           >
@@ -127,7 +127,7 @@ export default function Login() {
           </motion.div>
         </div>
 
-        <motion.p 
+        <motion.p
           initial={{ opacity: 0 }} animate={{ opacity: 0.5 }} transition={{ delay: 1 }}
           className="relative z-30 text-xs text-[#94A3B8] font-medium tracking-tight"
         >
@@ -148,8 +148,8 @@ export default function Login() {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}
           >
             <div className="lg:hidden text-center mb-6">
-              <Link href="/" className="inline-block mb-4">
-                <BrandLogo className="h-8 w-auto" />
+              <Link href="/" className="inline-block mb-4 transition-transform hover:scale-105">
+                <img src="/admin-logo.png" alt="AxisX" className="h-8 w-auto mx-auto object-contain" />
               </Link>
               <h1 className="text-3xl font-bold font-outfit text-white mb-2">Admin Portal</h1>
               <p className="text-[#94A3B8] text-sm">Secure access for the AxisX engineering team.</p>
@@ -181,7 +181,7 @@ export default function Login() {
                     className={inputCls}
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <div className="flex justify-between items-center px-1">
                     <label className="text-xs font-bold uppercase tracking-wider text-[#94A3B8]">Secret Key</label>
@@ -208,8 +208,8 @@ export default function Login() {
               </form>
 
               <div className="mt-6 pt-6 border-t border-[#3B82F6]/10 text-center">
-                <Link 
-                  href="/" 
+                <Link
+                  href="/"
                   className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#94A3B8] hover:text-[#3B82F6] transition-all group"
                 >
                   <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
