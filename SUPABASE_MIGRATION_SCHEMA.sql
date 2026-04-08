@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS public.feedback (
   id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
   clientname text NOT NULL,
   companyname text,
-  email text NOT NULL,
+  email text,
+  rating integer DEFAULT 5,
   projectname text NOT NULL,
   message text NOT NULL,
   imageurls text[] DEFAULT '{}',
@@ -54,6 +55,7 @@ ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS id uuid DEFAULT gen_random_
 ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS clientname text;
 ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS companyname text;
 ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS email text;
+ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS rating integer DEFAULT 5;
 ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS projectname text;
 ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS message text;
 ALTER TABLE public.feedback ADD COLUMN IF NOT EXISTS imageurls text[] DEFAULT '{}';

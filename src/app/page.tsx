@@ -13,7 +13,10 @@ import {
 import { motion, type Variants, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import ProjectModal from "@/components/ProjectModal";
 import FeedbackSection from "@/components/FeedbackSection";
+import { TypingText } from "@/components/TypingText";
+import { CountUp } from "@/components/CountUp";
 import { supabase } from "@/lib/supabase";
 import { selectClause, toDatabaseField, toDatabasePayload } from "@/lib/supabase-api";
 import { CONTACT_INFO } from "@/lib/contact-info";
@@ -77,6 +80,8 @@ function ContactForm() {
     if (!p.name || !p.email || !p.subject || !p.message) { toast.error("Please fill all required fields."); return; }
     setLoading(true);
     try {
+      // Premium loading feel
+      await new Promise(resolve => setTimeout(resolve, 1000));
       const { error } = await supabase
         .from("contacts")
         .insert([toDatabasePayload("contacts", { ...p, status: "unread", createdAt: new Date().toISOString() })]);
@@ -130,10 +135,16 @@ function ContactForm() {
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.5 }}
             type="submit" disabled={loading}
-            className="btn-ltr-blue w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-70"
+            style={{ 
+              backgroundPosition: loading ? '0 0' : '',
+              transitionDuration: loading ? '1000ms' : ''
+            }}
+            className="btn-ltr-blue w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-70 transition-all shadow-xl shadow-blue-500/10"
           >
-            {loading ? "Sending…" : "Send Message"}
-            {!loading && <Send size={18} />}
+            {loading ? (
+               <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : <Send size={18} />}
+            {loading ? "Sending..." : "Send Message"}
           </motion.button>
         </motion.form>
       ) : (
@@ -160,6 +171,7 @@ function ContactForm() {
 function ProjectsSection() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
 
   useEffect(() => {
     const fetch = async () => {
@@ -210,7 +222,8 @@ function ProjectsSection() {
               <motion.div
                 key={project.id}
                 variants={fadeUp}
-                className="group glass-strong rounded-3xl border border-[#3B82F6]/10 overflow-hidden hover:border-[#3B82F6]/30 transition-all duration-500 hover:-translate-y-2"
+                onClick={() => setActiveProject(project)}
+                className="group glass-strong rounded-3xl border border-[#3B82F6]/10 overflow-hidden hover:border-[#3B82F6]/30 transition-all duration-500 hover:-translate-y-2 cursor-pointer"
               >
                 <div className="relative h-56 md:h-72 w-full overflow-hidden bg-[#111827]">
                   {project.coverImageUrl ? (
@@ -234,15 +247,32 @@ function ProjectsSection() {
                       <span className="text-xs px-3 py-1 rounded-full bg-[#161F2C] border border-[#3B82F6]/10 text-[#94A3B8]">+{project.technologies.length - 4}</span>
                     )}
                   </div>
-                  <Link href={`/projects/[slug]?slug=${project.slug}`} as={`/projects/${project.slug}`} className="inline-flex items-center gap-2 text-[#3B82F6] font-medium text-sm group-hover:gap-3 transition-all pt-2">
-                    View Case Study <ArrowRight size={16} />
-                  </Link>
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-xs text-[#94A3B8] font-medium">Click to view details</span>
+                    {project.slug && project.slug.startsWith("http") && (
+                      <a
+                        href={project.slug}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1.5 text-[#3B82F6] font-medium text-sm group-hover:gap-2 transition-all"
+                      >
+                        Live Site <ArrowRight size={16} />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}
           </motion.div>
         )}
       </div>
+      
+      <AnimatePresence>
+        {activeProject && (
+          <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
@@ -284,9 +314,12 @@ export default function Home() {
               </span>
               Premium Web Development Services
             </motion.div>
-            <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 font-outfit">
-              Engineering <span className="gradient-text text-glow">Digital Excellence</span>{" "}
-              <br className="hidden md:block" />for Modern Brands
+            <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 font-outfit flex flex-col items-center">
+              <span>
+                <TypingText text="Engineering" />{" "}
+                <TypingText text="Digital Excellence" className="gradient-text text-glow" delay={0.3} />
+              </span>
+              <TypingText text="for Modern Brands" delay={0.8} />
             </motion.h1>
             <motion.p variants={fadeUp} className="text-lg md:text-xl text-[#94A3B8] max-w-3xl mx-auto mb-10 leading-relaxed">
               AxisX is a boutique digital agency specialising in high-performance web applications, stunning user interfaces, and scalable architectures. We do not just write code; we build businesses.
@@ -404,13 +437,15 @@ export default function Home() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { val: "5+", label: "Years Exp", color: "text-[#3B82F6]" },
-                    { val: "100%", label: "In-House", color: "text-[#F8FAFC]" },
-                    { val: "30+", label: "Projects", color: "text-[#F8FAFC]" },
-                    { val: "24h", label: "Response", color: "text-[#3B82F6]" },
+                    { to: 2, suffix: "+", label: "Years Exp", color: "text-[#3B82F6]" },
+                    { to: 100, suffix: "%", label: "In-House", color: "text-[#F8FAFC]" },
+                    { to: 3, suffix: "+", label: "Projects", color: "text-[#F8FAFC]" },
+                    { to: 24, suffix: "h", label: "Response", color: "text-[#3B82F6]" },
                   ].map((stat, i) => (
                     <div key={i} className="glass p-5 rounded-2xl border border-[#3B82F6]/10 text-center hover:-translate-y-1 transition-transform">
-                      <span className={`block text-3xl font-bold ${stat.color} mb-1`}>{stat.val}</span>
+                      <span className={`block text-3xl font-bold ${stat.color} mb-1`}>
+                        <CountUp to={stat.to} suffix={stat.suffix} />
+                      </span>
                       <span className="text-xs text-[#94A3B8] uppercase tracking-wider">{stat.label}</span>
                     </div>
                   ))}

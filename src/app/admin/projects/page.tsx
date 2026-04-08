@@ -18,7 +18,8 @@ import {
   ExternalLink,
   Cpu,
   Monitor,
-  CheckCircle2
+  CheckCircle2,
+  Globe,
 } from "lucide-react";
 import { Project } from "@/types";
 import { supabase } from "@/lib/supabase";
@@ -130,15 +131,9 @@ export default function AdminProjects() {
 
     setFormData((current) => {
       if (name === "title") {
-        const nextSlug = value
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)+/g, "");
-
         return {
           ...current,
           title: value,
-          slug: current.slug || nextSlug,
         };
       }
 
@@ -196,19 +191,19 @@ export default function AdminProjects() {
             updatedAt: new Date().toISOString(),
           }))
           .eq("id", editingProjectId);
-        
+
         if (error) throw error;
 
         setProjects((current) =>
           current.map((project) =>
             project.id === editingProjectId
               ? {
-                  ...project,
-                  ...payload,
-                  coverImageUrl: coverImageUrl || project.coverImageUrl,
-                  galleryImageUrls: [...(project.galleryImageUrls ?? []), ...galleryImageUrls],
-                  videoUrls: [...(project.videoUrls ?? []), ...projectVideoUrls],
-                }
+                ...project,
+                ...payload,
+                coverImageUrl: coverImageUrl || project.coverImageUrl,
+                galleryImageUrls: [...(project.galleryImageUrls ?? []), ...galleryImageUrls],
+                videoUrls: [...(project.videoUrls ?? []), ...projectVideoUrls],
+              }
               : project,
           ),
         );
@@ -227,7 +222,7 @@ export default function AdminProjects() {
           })])
           .select(selectClause("projects"))
           .single();
-        
+
         if (error) throw error;
         const inserted = data as unknown as Project;
 
@@ -318,20 +313,20 @@ export default function AdminProjects() {
 
       <AnimatePresence>
         {isFormOpen && (
-          <motion.form 
+          <motion.form
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            onSubmit={persistProject} 
+            onSubmit={persistProject}
             className="glass-strong rounded-[32px] border border-[#3B82F6]/15 p-8 md:p-10 space-y-8 relative overflow-hidden"
           >
             <div className="flex items-center gap-3 mb-2">
-               <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] border border-[#3B82F6]/10">
-                  {editingProjectId ? <Edit size={16} /> : <Plus size={16} />}
-               </div>
-               <h2 className="text-xl font-bold font-outfit text-[#F8FAFC]">
-                 {editingProjectId ? "Update Infrastructure" : "New Asset Initialization"}
-               </h2>
+              <div className="w-8 h-8 rounded-lg bg-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] border border-[#3B82F6]/10">
+                {editingProjectId ? <Edit size={16} /> : <Plus size={16} />}
+              </div>
+              <h2 className="text-xl font-bold font-outfit text-[#F8FAFC]">
+                {editingProjectId ? "Update Infrastructure" : "New Asset Initialization"}
+              </h2>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
@@ -340,8 +335,8 @@ export default function AdminProjects() {
                 <input name="title" value={formData.title} onChange={handleChange} className={inputCls} placeholder="e.g. AxisX Cloud Gateway" />
               </div>
               <div>
-                <label className="text-[10px) font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">URL Identifier (Slug) *</label>
-                <input name="slug" value={formData.slug} onChange={handleChange} className={inputCls} placeholder="axisx-cloud-gateway" />
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">Live Site URL *</label>
+                <input name="slug" value={formData.slug} onChange={handleChange} className={inputCls} placeholder="https://..." type="url" />
               </div>
             </div>
 
@@ -402,7 +397,7 @@ export default function AdminProjects() {
                 <Save size={16} /> {submitLoading ? "Processing..." : editingProjectId ? "Sync Update" : "Deploy Asset"}
               </button>
             </div>
-            
+
             <div className="absolute top-0 right-0 w-64 h-64 bg-[#3B82F6]/5 rounded-full blur-[100px] -z-10" />
           </motion.form>
         )}
@@ -421,12 +416,12 @@ export default function AdminProjects() {
       ) : (
         <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
           {projects.map((project) => (
-            <motion.article 
+            <motion.article
               layout
-              key={project.id} 
-              className="group glass-strong rounded-[32px] border border-[#3B82F6]/10 overflow-hidden hover:border-[#3B82F6]/30 transition-all duration-300 relative"
+              key={project.id}
+              className="group glass-strong rounded-3xl border border-[#3B82F6]/10 overflow-hidden hover:border-[#3B82F6]/30 transition-all duration-300 relative"
             >
-              <div className="relative h-56 bg-[#0B0F14] overflow-hidden">
+              <div className="relative h-48 bg-[#0B0F14] overflow-hidden">
                 {project.coverImageUrl ? (
                   <Image
                     src={project.coverImageUrl}
@@ -434,29 +429,28 @@ export default function AdminProjects() {
                     fill
                     unoptimized
                     sizes="(max-width: 1280px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                   />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center text-[10px] font-bold uppercase tracking-widest text-[#4A5568]">Abstract Pending</div>
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B0F14] to-transparent opacity-60" />
-                
+
                 <div className="absolute top-4 right-4">
-                  <button 
-                    onClick={() => togglePublish(project)} 
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all backdrop-blur-md ${
-                      project.isPublished 
-                        ? 'bg-[#3B82F6]/20 border border-[#3B82F6]/30 text-[#3B82F6]' 
-                        : 'bg-[#0B0F14]/60 border border-[#ef4444]/20 text-[#ef4444]'
-                    }`}
+                  <button
+                    onClick={() => togglePublish(project)}
+                    className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all backdrop-blur-md ${project.isPublished
+                      ? 'bg-[#3B82F6]/20 border border-[#3B82F6]/30 text-[#3B82F6]'
+                      : 'bg-[#0B0F14]/60 border border-[#ef4444]/20 text-[#ef4444]'
+                      }`}
                   >
-                    {project.isPublished ? <CheckCircle2 size={18} /> : <EyeOff size={18} />}
+                    {project.isPublished ? <CheckCircle2 size={16} /> : <EyeOff size={16} />}
                   </button>
                 </div>
               </div>
 
-              <div className="p-8 space-y-5">
-                <div className="space-y-1">
+              <div className="p-6 md:p-7 space-y-4">
+                <div className="space-y-1.5">
                   <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#3B82F6]">
                     <Cpu size={12} />
                     {project.category}
@@ -465,34 +459,33 @@ export default function AdminProjects() {
                 </div>
 
                 <p className="text-sm text-[#94A3B8] line-clamp-2 leading-relaxed">
+                  {project.slug && project.slug.startsWith("http") && <Globe className="inline-block mr-1.5 -mt-0.5" size={12} />}
                   {project.description}
                 </p>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2 pt-1">
                   {(project.technologies ?? []).slice(0, 3).map((tech) => (
-                    <span key={tech} className="px-2.5 py-1 rounded-lg bg-[#0B0F14] border border-[#3B82F6]/10 text-[10px] font-bold text-[#4A5568] uppercase tracking-tighter">
+                    <span key={tech} className="px-2 py-1 rounded-md bg-[#111827] border border-[#3B82F6]/10 text-[9px] font-bold text-[#94A3B8] uppercase tracking-wider">
                       {tech}
                     </span>
                   ))}
                   {(project.technologies ?? []).length > 3 && (
-                    <span className="text-[10px] font-bold text-[#4A5568] self-center">+{(project.technologies ?? []).length - 3}</span>
+                    <span className="text-[9px] font-bold text-[#4A5568] self-center">+{(project.technologies ?? []).length - 3}</span>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-[#3B82F6]/5">
-                  <div className="flex items-center gap-3">
-                    <button 
-                      onClick={() => openEdit(project)} 
-                      className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#94A3B8] hover:text-[#3B82F6] transition-colors"
-                    >
-                      <Edit size={14} /> Edit
-                    </button>
-                  </div>
-                  <button 
-                    onClick={() => removeProject(project)} 
-                    className="w-10 h-10 flex items-center justify-center rounded-xl bg-[#0B0F14] border border-transparent hover:border-[#ef4444]/20 text-[#4A5568] hover:text-[#ef4444] transition-all"
+                <div className="flex items-center justify-between pt-5 border-t border-white/5">
+                  <button
+                    onClick={() => openEdit(project)}
+                    className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#94A3B8] hover:text-[#F8FAFC] transition-colors"
                   >
-                    <Trash2 size={16} />
+                    <Edit size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => removeProject(project)}
+                    className="w-9 h-9 flex items-center justify-center rounded-lg bg-[#0B0F14] border border-white/5 hover:border-[#ef4444]/20 text-[#4A5568] hover:text-[#ef4444] transition-all"
+                  >
+                    <Trash2 size={15} />
                   </button>
                 </div>
               </div>

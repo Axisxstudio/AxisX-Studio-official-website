@@ -235,7 +235,7 @@ function FeedbackModal({ fb, onClose }: { fb: Feedback; onClose: () => void }) {
                 <span>Project: <span className="text-[#F8FAFC]">{fb.projectName}</span></span>
               </div>
               <div className="flex items-center gap-3 mt-2">
-                <Stars />
+                <Stars count={fb.rating ?? 5} />
                 <span className="text-xs text-[#94A3B8]">{formatTimestamp(fb.createdAt)}</span>
               </div>
             </div>
@@ -519,7 +519,7 @@ function FeedbackLibraryModal({
                     </div>
 
                     <div className="mb-4 flex items-center justify-between gap-4">
-                      <Stars />
+                      <Stars count={fb.rating ?? 5} />
                       <span className="rounded-full border border-[#3B82F6]/10 bg-[#0B0F14]/50 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-[#94A3B8]">
                         Review
                       </span>
@@ -573,7 +573,7 @@ function FeedbackCard({ fb, onClick }: { fb: Feedback; onClick: () => void }) {
       <div className="p-5">
         {/* Stars */}
         <div className="flex items-center justify-between mb-3">
-          <Stars />
+          <Stars count={fb.rating ?? 5} />
           <span className="text-[10px] text-[#94A3B8]">{formatTimestamp(fb.createdAt)}</span>
         </div>
 

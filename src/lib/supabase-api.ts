@@ -63,6 +63,7 @@ const tableColumnMaps = {
     clientName: "clientname",
     companyName: "companyname",
     email: "email",
+    rating: "rating",
     projectName: "projectname",
     message: "message",
     imageUrls: "imageurls",
@@ -151,9 +152,9 @@ function normalizeAuthError(error: unknown): AuthError {
 
   const message =
     typeof error === "object" &&
-    error !== null &&
-    "message" in error &&
-    typeof error.message === "string"
+      error !== null &&
+      "message" in error &&
+      typeof error.message === "string"
       ? error.message
       : "Unexpected authentication error.";
 

@@ -16,7 +16,8 @@ export interface Feedback {
   id?: string;
   clientName: string;
   companyName?: string;
-  email: string;
+  email?: string;
+  rating: number;
   projectName: string;
   message: string;
   imageUrls: string[];
