@@ -33,9 +33,11 @@ export default function Contact() {
   });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
 
     const payload = {
       name: formData.name.trim(),
@@ -45,8 +47,18 @@ export default function Contact() {
       message: formData.message.trim(),
     };
 
-    if (!payload.name || !payload.email || !payload.subject || !payload.message) {
-      toast.error("Please fill all required fields.");
+    const newErrors: Record<string, string> = {};
+    if (!payload.name) newErrors.name = "Name is required";
+    if (!payload.email) {
+      newErrors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(payload.email)) {
+      newErrors.email = "Please enter a valid email address";
+    }
+    if (!payload.subject) newErrors.subject = "Subject is required";
+    if (!payload.message) newErrors.message = "Message is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
@@ -73,8 +85,31 @@ export default function Contact() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+    setFormData({ ...formData, [name]: value });
   };
+
+  const FieldError = ({ error }: { error?: string }) => (
+    <AnimatePresence shadow-sm>
+      {error && (
+        <motion.p
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          className="text-[#ff6e84] text-xs font-medium mt-1.5 ml-1"
+        >
+          {error}
+        </motion.p>
+      )}
+    </AnimatePresence>
+  );
 
   return (
     <>
@@ -107,7 +142,7 @@ export default function Contact() {
                  </motion.p>
              </div>
         </section>
-
+        
         <section className="pb-32">
           <div className="container mx-auto px-6 max-w-6xl">
              <AnimatePresence mode="wait">
@@ -183,7 +218,7 @@ export default function Contact() {
                     <motion.div variants={itemVariants} className="glass p-10 md:p-14 rounded-3xl border border-[#a3a6ff]/10">
                        <form onSubmit={handleSubmit} className="space-y-6">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                              <div>
+                               <div>
                                  <label htmlFor="name" className="block text-sm font-medium text-[#adaaad] mb-2">Name</label>
                                  <input 
                                    type="text" 
@@ -192,9 +227,10 @@ export default function Contact() {
                                    required
                                    value={formData.name}
                                    onChange={handleChange}
-                                   className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-colors" 
+                                   className={`w-full bg-[#0e0e10] border ${errors.name ? 'border-[#ff6e84]/50 focus:border-[#ff6e84]' : 'border-[#a3a6ff]/20 focus:border-[#a3a6ff]/60'} rounded-xl px-4 py-3 text-[#f9f5f8] transition-colors`} 
                                    placeholder="Nuwan Perera"
                                  />
+                                 <FieldError error={errors.name} />
                               </div>
                               <div>
                                  <label htmlFor="email" className="block text-sm font-medium text-[#adaaad] mb-2">Email</label>
@@ -205,9 +241,10 @@ export default function Contact() {
                                    required
                                    value={formData.email}
                                    onChange={handleChange}
-                                   className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-colors" 
+                                   className={`w-full bg-[#0e0e10] border ${errors.email ? 'border-[#ff6e84]/50 focus:border-[#ff6e84]' : 'border-[#a3a6ff]/20 focus:border-[#a3a6ff]/60'} rounded-xl px-4 py-3 text-[#f9f5f8] transition-colors`} 
                                    placeholder="hello@example.com"
                                  />
+                                 <FieldError error={errors.email} />
                               </div>
                           </div>
                           
@@ -233,9 +270,10 @@ export default function Contact() {
                                    required
                                    value={formData.subject}
                                    onChange={handleChange}
-                                   className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-colors" 
+                                   className={`w-full bg-[#0e0e10] border ${errors.subject ? 'border-[#ff6e84]/50 focus:border-[#ff6e84]' : 'border-[#a3a6ff]/20 focus:border-[#a3a6ff]/60'} rounded-xl px-4 py-3 text-[#f9f5f8] transition-colors`} 
                                    placeholder="Project inquiry"
                                  />
+                                 <FieldError error={errors.subject} />
                               </div>
                           </div>
 
@@ -248,9 +286,10 @@ export default function Contact() {
                                rows={5}
                                value={formData.message}
                                onChange={handleChange}
-                               className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-colors resize-none" 
+                               className={`w-full bg-[#0e0e10] border ${errors.message ? 'border-[#ff6e84]/50 focus:border-[#ff6e84]' : 'border-[#a3a6ff]/20 focus:border-[#a3a6ff]/60'} rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-colors resize-none`} 
                                placeholder="Tell us about your project..."
                              ></textarea>
+                             <FieldError error={errors.message} />
                           </div>
 
                           <motion.button 

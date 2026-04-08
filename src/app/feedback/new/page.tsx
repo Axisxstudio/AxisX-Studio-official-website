@@ -80,6 +80,7 @@ export default function NewFeedback() {
   const [videos, setVideos] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const { getRootProps: getImageProps, getInputProps: getImageInputProps, isDragActive: isImageDragActive } = useDropzone({
     accept: { 'image/*': [] },
@@ -100,6 +101,15 @@ export default function NewFeedback() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
+    // Clear error when user changes value
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+    
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
       setFormData(prev => ({ ...prev, [name]: checked }));
@@ -109,14 +119,24 @@ export default function NewFeedback() {
   };
 
   const handleNext = () => {
-    if (step === 1 && (!formData.clientName.trim() || !formData.projectName.trim())) {
-      toast.error("Please provide your name and project name.");
-      return;
+    setErrors({});
+    
+    if (step === 1) {
+      const newErrors: Record<string, string> = {};
+      if (!formData.clientName.trim()) newErrors.clientName = "Client name is required";
+      if (!formData.projectName.trim()) newErrors.projectName = "Project name is required";
+      
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
     }
+    
     if (step === 2 && !formData.message.trim()) {
-      toast.error("Please provide your feedback message.");
+      setErrors({ message: "Feedback message is required" });
       return;
     }
+    
     setStep(prev => prev + 1);
   };
 
@@ -128,7 +148,14 @@ export default function NewFeedback() {
     // Safety check: only allow submission on the final step
     if (step < 3) return;
 
-    if (!formData.clientName.trim() || !formData.projectName.trim() || !formData.message.trim()) {
+    setErrors({});
+    const newErrors: Record<string, string> = {};
+    if (!formData.clientName.trim()) newErrors.clientName = "Client name is required";
+    if (!formData.projectName.trim()) newErrors.projectName = "Project name is required";
+    if (!formData.message.trim()) newErrors.message = "Feedback message is required";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       toast.error("Please complete all required fields.");
       return;
     }
@@ -213,6 +240,21 @@ export default function NewFeedback() {
     }
   };
 
+  const FieldError = ({ error }: { error?: string }) => (
+    <AnimatePresence>
+      {error && (
+        <motion.p
+          initial={{ opacity: 0, height: 0, y: -10 }}
+          animate={{ opacity: 1, height: "auto", y: 0 }}
+          exit={{ opacity: 0, height: 0, y: -10 }}
+          className="text-[#ff6e84] text-xs font-medium mt-1.5 ml-1"
+        >
+          {error}
+        </motion.p>
+      )}
+    </AnimatePresence>
+  );
+
   return (
     <>
       <Navigation />
@@ -275,15 +317,35 @@ export default function NewFeedback() {
                         <div className="space-y-6">
                           <div>
                             <label className="block text-sm font-medium text-[#adaaad] mb-2">Client Name <span className="text-[#ff6e84]">*</span></label>
-                            <input suppressHydrationWarning required type="text" name="clientName" value={formData.clientName} onChange={handleChange} className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-all hover:bg-[#15151a]" />
+                            <input 
+                              suppressHydrationWarning 
+                              required 
+                              type="text" 
+                              name="clientName" 
+                              value={formData.clientName} 
+                              onChange={handleChange} 
+                              className={`w-full bg-[#0e0e10] border ${errors.clientName ? 'border-[#ff6e84]/50 focus:border-[#ff6e84]' : 'border-[#a3a6ff]/20 focus:border-[#a3a6ff]/60'} rounded-xl px-4 py-3 text-[#f9f5f8] transition-all hover:bg-[#15151a]`} 
+                              placeholder="AxisX Studio"
+                            />
+                            <FieldError error={errors.clientName} />
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-[#adaaad] mb-2">Project Name <span className="text-[#ff6e84]">*</span></label>
-                            <input suppressHydrationWarning required type="text" name="projectName" value={formData.projectName} onChange={handleChange} className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-all hover:bg-[#15151a]" />
+                            <input 
+                              suppressHydrationWarning 
+                              required 
+                              type="text" 
+                              name="projectName" 
+                              value={formData.projectName} 
+                              onChange={handleChange} 
+                              className={`w-full bg-[#0e0e10] border ${errors.projectName ? 'border-[#ff6e84]/50 focus:border-[#ff6e84]' : 'border-[#a3a6ff]/20 focus:border-[#a3a6ff]/60'} rounded-xl px-4 py-3 text-[#f9f5f8] transition-all hover:bg-[#15151a]`} 
+                              placeholder="Mobile App MVP"
+                            />
+                            <FieldError error={errors.projectName} />
                           </div>
                           <div>
                             <label className="block text-sm font-medium text-[#adaaad] mb-2">Company / Project Link</label>
-                            <input suppressHydrationWarning type="text" name="companyName" value={formData.companyName} onChange={handleChange} className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-all hover:bg-[#15151a]" />
+                            <input suppressHydrationWarning type="text" name="companyName" value={formData.companyName} onChange={handleChange} className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-all hover:bg-[#15151a]" placeholder="https://axisxstudio.com or AxisX Studio" />
                           </div>
                         </div>
                       </motion.div>
@@ -323,7 +385,16 @@ export default function NewFeedback() {
 
                         <div>
                           <label className="block text-sm font-medium text-[#adaaad] mb-2">Your Feedback <span className="text-[#ff6e84]">*</span></label>
-                          <textarea required name="message" rows={4} value={formData.message} onChange={handleChange} className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 resize-none transition-all hover:bg-[#15151a]" placeholder="We'd love to hear your thoughts..."></textarea>
+                          <textarea 
+                            required 
+                            name="message" 
+                            rows={4} 
+                            value={formData.message} 
+                            onChange={handleChange} 
+                            className={`w-full bg-[#0e0e10] border ${errors.message ? 'border-[#ff6e84]/50 focus:border-[#ff6e84]' : 'border-[#a3a6ff]/20 focus:border-[#a3a6ff]/60'} rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 resize-none transition-all hover:bg-[#15151a]`} 
+                            placeholder="We'd love to hear your thoughts..."
+                          ></textarea>
+                          <FieldError error={errors.message} />
                         </div>
                       </motion.div>
                     )}
