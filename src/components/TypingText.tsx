@@ -9,7 +9,7 @@ interface TypingTextProps {
 }
 
 export const TypingText = ({ text, className, delay = 0 }: TypingTextProps) => {
-  const letters = Array.from(text);
+  const words = text.split(" ");
 
   const container: Variants = {
     hidden: { opacity: 0 },
@@ -51,10 +51,19 @@ export const TypingText = ({ text, className, delay = 0 }: TypingTextProps) => {
       viewport={{ once: true }}
       className={className}
     >
-      {letters.map((letter, index) => (
-        <motion.span variants={child} key={index} style={{ display: "inline-block" }}>
-          {letter === " " ? "\u00A0" : letter}
-        </motion.span>
+      {words.map((word, wordIdx) => (
+        <span key={wordIdx} className="inline-block whitespace-nowrap">
+          {Array.from(word).map((letter, letterIdx) => (
+            <motion.span variants={child} key={letterIdx} style={{ display: "inline-block" }}>
+              {letter}
+            </motion.span>
+          ))}
+          {wordIdx < words.length - 1 && (
+            <motion.span variants={child} style={{ display: "inline-block" }}>
+              &nbsp;
+            </motion.span>
+          )}
+        </span>
       ))}
     </motion.span>
   );
