@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata = {
-  title: "AxisX | Premium Web Development Services",
+  title: "AxisX Studio | Web Development Company",
   description: "Modern web development and technical solutions for modern businesses.",
 };
 

@@ -4,6 +4,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Users, Zap, Code } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
+import { TypingText } from "@/components/TypingText";
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 30 },
@@ -27,7 +28,7 @@ export default function About() {
                className="container mx-auto px-6 max-w-4xl relative z-10"
             >
                 <h1 className="text-5xl md:text-6xl font-bold font-outfit mb-6">
-                   About <span className="gradient-text">AxisX</span>
+                   About <TypingText text="AxisX Studio" className="gradient-text" />
                 </h1>
                 <p className="text-xl text-[#adaaad] max-w-2xl mx-auto">
                    We are a collective of digital craftsmen focused on engineering modern, high-performance web applications that drive real business growth.
@@ -46,7 +47,7 @@ export default function About() {
                    <div>
                       <h2 className="text-3xl font-bold font-outfit mb-6">Our Mission</h2>
                       <p className="text-[#adaaad] leading-relaxed mb-6">
-                         At AxisX, we believe that the web should be fast, beautiful, and accessible. In a sea of templates and bloated codebases, we stand for bespoke engineering and meticulous attention to detail.
+                         At <TypingText text="AxisX Studio" className="font-bold" />, we believe that the web should be fast, beautiful, and accessible. In a sea of templates and bloated codebases, we stand for bespoke engineering and meticulous attention to detail.
                       </p>
                       <p className="text-[#adaaad] leading-relaxed">
                          Our goal is to partner with forward-thinking brands and translate their vision into robust digital products. From complex SaaS architectures to dazzling marketing sites, we build technology that empowers.

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useDropzone } from "react-dropzone";
@@ -13,6 +14,7 @@ import toast from "react-hot-toast";
 import { appConfig } from "@/lib/env";
 import { deleteFilesByUrl } from "@/lib/media";
 import { motion, AnimatePresence } from "framer-motion";
+import { TypingText } from "@/components/TypingText";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -86,6 +88,13 @@ export default function NewFeedback() {
     accept: { 'image/*': [] },
     onDrop: acceptedFiles => {
       setImages(prev => [...prev, ...acceptedFiles].slice(0, appConfig.maxFeedbackImages));
+      if (errors.media) {
+        setErrors(prev => {
+          const newErrors = { ...prev };
+          delete newErrors.media;
+          return newErrors;
+        });
+      }
     }
   });
 
@@ -161,7 +170,7 @@ export default function NewFeedback() {
     }
 
     if (images.length === 0) {
-      toast.error("Please upload at least one image of your project.");
+      setErrors({ media: "Please upload at least one image of your project." });
       return;
     }
 
@@ -280,13 +289,13 @@ export default function NewFeedback() {
               transition={{ delay: 0.1 }}
               className="text-[#adaaad] max-w-2xl mx-auto"
             >
-              Share your experience working with AxisX. Your insights are invaluable to our continuous improvement.
+              Share your experience working with <TypingText text="AxisX Studio" className="font-bold" />. Your insights are invaluable to our continuous improvement.
             </motion.p>
           </div>
         </section>
 
         <section className="pb-32">
-          <div className="container mx-auto px-4 md:px-6 max-w-4xl">
+          <div className="container mx-auto px-4 md:px-6 max-w-2xl">
             <AnimatePresence mode="wait">
               {!submitted ? (
                 <motion.div
@@ -295,13 +304,65 @@ export default function NewFeedback() {
                   initial="hidden"
                   animate="visible"
                   exit={{ opacity: 0, y: -20 }}
-                  className="glass p-5 md:p-12 rounded-3xl border border-[#a3a6ff]/20"
+                  className="glass p-6 md:p-10 rounded-3xl border border-[#a3a6ff]/20"
                 >
-                  <div className="flex justify-center mb-8">
-                    <div className="flex items-center gap-2">
-                      <div className={`h-1.5 w-16 rounded-full transition-colors ${step >= 1 ? 'bg-[#a3a6ff]' : 'bg-white/10'}`} />
-                      <div className={`h-1.5 w-16 rounded-full transition-colors ${step >= 2 ? 'bg-[#a3a6ff]' : 'bg-white/10'}`} />
-                      <div className={`h-1.5 w-16 rounded-full transition-colors ${step >= 3 ? 'bg-[#a3a6ff]' : 'bg-white/10'}`} />
+                  {/* Professional Step Indicator */}
+                  <div className="flex justify-center mb-12">
+                    <div className="flex items-center w-full max-w-md">
+                      {[
+                        { id: 1, label: "Client" },
+                        { id: 2, label: "Feedback" },
+                        { id: 3, label: "Media" }
+                      ].map((s, i) => (
+                        <div key={s.id} className="flex-1 flex items-center relative">
+                          <div className="flex flex-col items-center relative z-10 w-full">
+                            <motion.div
+                              className="relative"
+                              animate={{
+                                scale: step === s.id ? [1, 1.05, 1] : 1,
+                              }}
+                              transition={{ repeat: Infinity, duration: 2.5 }}
+                            >
+                              {/* Rotating Border for Active Step */}
+                              {step === s.id && (
+                                <motion.div 
+                                  animate={{ rotate: 360 }}
+                                  transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+                                  className="absolute inset-[-4px] rounded-full border border-dashed border-[#a3a6ff]/40"
+                                />
+                              )}
+                              
+                              <div
+                                className={`
+                                  relative z-10 w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-500
+                                  ${step === s.id 
+                                    ? 'bg-[#a3a6ff] border-[#a3a6ff] text-[#0e0e10] shadow-[0_0_25px_rgba(163,166,255,0.4)]' 
+                                    : step > s.id 
+                                      ? 'bg-[#a3a6ff]/20 border-[#a3a6ff] text-[#a3a6ff]' 
+                                      : 'bg-[#19191c] border-white/10 text-[#adaaad]'
+                                  }
+                                `}
+                              >
+                                {step > s.id ? <CheckCircle size={18} /> : s.id}
+                              </div>
+                            </motion.div>
+                            <span className={`text-[11px] font-bold uppercase tracking-widest mt-3 transition-colors duration-500 ${step >= s.id ? 'text-[#a3a6ff]' : 'text-[#4a4a5a]'}`}>
+                              {s.label}
+                            </span>
+                          </div>
+                          
+                          {/* Connector Line */}
+                          {i < 2 && (
+                            <div className="absolute top-5 left-1/2 w-full h-[1px] bg-white/5 -z-0">
+                              <motion.div 
+                                initial={{ width: "0%" }}
+                                animate={{ width: step > s.id ? "100%" : "0%" }}
+                                className="h-full bg-gradient-to-r from-[#a3a6ff] to-[#c180ff]"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -410,50 +471,91 @@ export default function NewFeedback() {
                         <div className="space-y-6">
                           <h3 className="text-xl font-bold font-outfit text-[#f9f5f8]">Attach Media (Optional)</h3>
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                              <div {...getImageProps()} className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${isImageDragActive ? 'drag-over' : 'border-white/10 hover:border-[#a3a6ff]/40 bg-[#19191c]/50'}`}>
+                            <div className="space-y-4">
+                              <div 
+                                {...getImageProps()} 
+                                className={`
+                                  border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300
+                                  ${isImageDragActive 
+                                    ? 'border-[#a3a6ff] bg-[#a3a6ff]/5' 
+                                    : errors.media 
+                                      ? 'border-[#ff6e84]/40 bg-[#ff6e84]/5' 
+                                      : 'border-white/10 hover:border-[#a3a6ff]/40 bg-[#111827]/50'
+                                  }
+                                `}
+                              >
                                 <input {...getImageInputProps()} />
-                                <UploadCloud className="mx-auto text-[#a3a6ff] mb-3" size={32} />
-                                <p className="text-sm text-[#adaaad] font-medium mb-1">Upload Images</p>
-                                <p className="text-xs text-[#adaaad]/60">Max {appConfig.maxFeedbackImages} images, {feedbackImageMaxMb}MB each</p>
+                                <div className="w-12 h-12 bg-[#a3a6ff]/10 rounded-xl flex items-center justify-center mx-auto mb-4 border border-[#a3a6ff]/20">
+                                  <UploadCloud className="text-[#a3a6ff]" size={24} />
+                                </div>
+                                <p className="text-sm text-[#f9f5f8] font-bold mb-1">Upload Images <span className="text-[#ff6e84]">*</span></p>
+                                <p className="text-[11px] text-[#adaaad]/60 font-medium">Max {appConfig.maxFeedbackImages} images, {feedbackImageMaxMb}MB each</p>
                               </div>
+                              
                               {images.length > 0 && (
-                                <div className="mt-4 space-y-2">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                                   {images.map((file, idx) => (
-                                    <div key={idx} className="flex items-center justify-between p-2 bg-[#0e0e10] rounded-lg border border-[#a3a6ff]/10">
-                                      <div className="flex items-center gap-2 overflow-hidden">
-                                        <ImageIcon size={14} className="text-[#a3a6ff] shrink-0" />
-                                        <span className="text-xs text-[#adaaad] truncate">{file.name}</span>
+                                    <div key={idx} className="group relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-[#0e0e10]">
+                                      <Image 
+                                        src={URL.createObjectURL(file)} 
+                                        alt="preview" 
+                                        fill 
+                                        className="object-cover transition-transform duration-500 group-hover:scale-110" 
+                                      />
+                                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <button 
+                                          type="button" 
+                                          onClick={() => removeImage(idx)} 
+                                          className="w-7 h-7 bg-[#ff6e84] text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+                                        >
+                                          <X size={14} />
+                                        </button>
                                       </div>
-                                      <button type="button" onClick={() => removeImage(idx)} className="text-[#ff6e84] hover:text-red-400 p-1"><X size={14} /></button>
                                     </div>
                                   ))}
                                 </div>
                               )}
                             </div>
 
-                            <div>
-                              <div {...getVideoProps()} className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${isVideoDragActive ? 'drag-over border-[#c180ff]' : 'border-white/10 hover:border-[#c180ff]/40 bg-[#19191c]/50'}`}>
+                            <div className="space-y-4">
+                              <div 
+                                {...getVideoProps()} 
+                                className={`
+                                  border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300
+                                  ${isVideoDragActive 
+                                    ? 'border-[#c180ff] bg-[#c180ff]/5' 
+                                    : 'border-white/10 hover:border-[#c180ff]/40 bg-[#111827]/50'
+                                  }
+                                `}
+                              >
                                 <input {...getVideoInputProps()} />
-                                <UploadCloud className="mx-auto text-[#c180ff] mb-3" size={32} />
-                                <p className="text-sm text-[#adaaad] font-medium mb-1">Upload Videos</p>
-                                <p className="text-xs text-[#adaaad]/60">Max {appConfig.maxFeedbackVideos} videos, {feedbackVideoMaxMb}MB each</p>
+                                <div className="w-12 h-12 bg-[#c180ff]/10 rounded-xl flex items-center justify-center mx-auto mb-4 border border-[#c180ff]/20">
+                                  <UploadCloud className="text-[#c180ff]" size={24} />
+                                </div>
+                                <p className="text-sm text-[#f9f5f8] font-bold mb-1">Upload Videos</p>
+                                <p className="text-[11px] text-[#adaaad]/60 font-medium">Max {appConfig.maxFeedbackVideos} videos, {feedbackVideoMaxMb}MB each</p>
                               </div>
+
                               {videos.length > 0 && (
-                                <div className="mt-4 space-y-2">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                                   {videos.map((file, idx) => (
-                                    <div key={idx} className="flex items-center justify-between p-2 bg-[#0e0e10] rounded-lg border border-[#c180ff]/10">
-                                      <div className="flex items-center gap-2 overflow-hidden">
-                                        <Video size={14} className="text-[#c180ff] shrink-0" />
-                                        <span className="text-xs text-[#adaaad] truncate">{file.name}</span>
-                                      </div>
-                                      <button type="button" onClick={() => removeVideo(idx)} className="text-[#ff6e84] hover:text-red-400 p-1"><X size={14} /></button>
+                                    <div key={idx} className="group relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-[#0e0e10] flex flex-col items-center justify-center p-2 text-center">
+                                      <Video size={18} className="text-[#c180ff] mb-1" />
+                                      <span className="text-[10px] text-[#adaaad] font-medium truncate w-full px-1">{file.name}</span>
+                                      <button 
+                                        type="button" 
+                                        onClick={() => removeVideo(idx)} 
+                                        className="absolute top-1 right-1 w-5 h-5 bg-[#ff6e84] text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                      >
+                                        <X size={10} />
+                                      </button>
                                     </div>
                                   ))}
                                 </div>
                               )}
                             </div>
                           </div>
+                          <FieldError error={errors.media} />
                         </div>
 
                         <div className="pt-4 border-t border-white/5">
@@ -468,7 +570,7 @@ export default function NewFeedback() {
                               />
                             </div>
                             <span className="text-sm text-[#adaaad] leading-relaxed group-hover:text-[#f9f5f8] transition-colors">
-                              I consent to AxisX publicly displaying this feedback, including my name, company, and project details across their portfolio. (Uncheck to keep private)
+                              I consent to AxisX Studio publicly displaying this feedback, including my name, company, and project details across their portfolio. (Uncheck to keep private)
                             </span>
                           </label>
                         </div>
@@ -516,28 +618,61 @@ export default function NewFeedback() {
               ) : (
                 <motion.div
                   key="feedback-success"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="max-w-xl mx-auto py-20 px-10 glass-strong border border-[#a3a6ff]/20 rounded-3xl text-center"
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    hidden: { opacity: 0, scale: 0.9 },
+                    visible: { 
+                      opacity: 1, 
+                      scale: 1,
+                      transition: { staggerChildren: 0.2, duration: 0.5 } 
+                    }
+                  }}
+                  className="max-w-md mx-auto py-12 px-8 glass-strong border border-[#a3a6ff]/20 rounded-3xl text-center shadow-2xl shadow-[#a3a6ff]/5"
                 >
-                  <div className="w-20 h-20 bg-[#a3a6ff]/10 border border-[#a3a6ff]/20 rounded-full flex items-center justify-center mx-auto mb-8 text-[#a3a6ff]">
-                    <CheckCircle size={40} />
-                  </div>
-                  <h2 className="text-3xl font-bold font-outfit mb-4 text-[#f9f5f8]">Thank You!</h2>
-                  <p className="text-[#adaaad] mb-10 text-lg leading-relaxed">
-                    Your feedback has been successfully submitted. We appreciate you taking the time to share your experience with AxisX.
-                  </p>
-                  <div className="flex flex-col gap-3 justify-center">
-                    <Link href="/#feedback" className="btn-ltr-white relative inline-flex items-center justify-center border border-[#3B82F6]/25 px-8 py-3.5 rounded-full text-[15px] font-bold text-[#0e0e10] w-full">
+                  <motion.div 
+                    variants={{
+                      hidden: { scale: 0, rotate: -45 },
+                      visible: { scale: 1, rotate: 0 }
+                    }}
+                    className="w-16 h-16 bg-[#a3a6ff]/10 border border-[#a3a6ff]/20 rounded-full flex items-center justify-center mx-auto mb-6 text-[#a3a6ff] relative"
+                  >
+                    <motion.div 
+                      animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.2, 0.5] }}
+                      transition={{ repeat: Infinity, duration: 2.5 }}
+                      className="absolute inset-0 bg-[#a3a6ff] rounded-full blur-xl"
+                    />
+                    <CheckCircle size={32} className="relative z-10" />
+                  </motion.div>
+
+                  <motion.h2 
+                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                    className="text-3xl font-bold font-outfit mb-3 text-[#f9f5f8]"
+                  >
+                    Thank You!
+                  </motion.h2>
+
+                  <motion.p 
+                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                    className="text-[#adaaad] mb-8 text-base leading-relaxed max-w-xs mx-auto"
+                  >
+                    Your feedback has been successfully submitted. We appreciate you taking the time to share your experience with <TypingText text="AxisX Studio" className="gradient-text font-bold" />.
+                  </motion.p>
+                  
+                  <motion.div 
+                    variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
+                    className="flex flex-col gap-4 justify-center"
+                  >
+                    <Link href="/#feedback" className="btn-ltr-white relative inline-flex items-center justify-center border border-[#3B82F6]/25 px-8 py-4 rounded-full text-[15px] font-bold text-[#0e0e10] w-full transform hover:scale-[1.02] transition-transform">
                       View Library
                     </Link>
                     <button
                       onClick={() => setSubmitted(false)}
-                      className="inline-flex items-center justify-center gap-2 rounded-full border border-white/5 bg-transparent px-8 py-3.5 text-sm font-bold text-[#94A3B8] transition-all hover:text-[#F8FAFC] hover:bg-white/5 w-full"
+                      className="inline-flex items-center justify-center gap-2 rounded-full border border-white/5 bg-[#111827]/50 px-8 py-3.5 text-sm font-bold text-[#94A3B8] transition-all hover:text-[#F8FAFC] hover:bg-white/10 w-full"
                     >
                       <ArrowLeft size={16} /> Submit Another
                     </button>
-                  </div>
+                  </motion.div>
                 </motion.div>
               )}
             </AnimatePresence>

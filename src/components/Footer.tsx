@@ -5,6 +5,7 @@ import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
 import { CONTACT_INFO } from "@/lib/contact-info";
 import { usePathname, useRouter } from "next/navigation";
+import { TypingText } from "@/components/TypingText";
 
 /* ── Social SVG Icons (pure SVG, no extra dependencies) ── */
 const InstagramIcon = () => (
@@ -33,19 +34,19 @@ const socialLinks = [
   {
     icon: <InstagramIcon />,
     label: "Instagram",
-    href: "#", // User will update
+    href: CONTACT_INFO.socials.instagram,
     hoverColor: "hover:border-[#E1306C]/40 hover:text-[#E1306C] hover:shadow-[0_0_12px_rgba(225,48,108,0.25)]",
   },
   {
     icon: <FacebookIcon />,
     label: "Facebook",
-    href: "#", // User will update
+    href: CONTACT_INFO.socials.facebook,
     hoverColor: "hover:border-[#1877F2]/40 hover:text-[#1877F2] hover:shadow-[0_0_12px_rgba(24,119,242,0.25)]",
   },
   {
     icon: <LinkedInIcon />,
     label: "LinkedIn",
-    href: "#", // User will update
+    href: CONTACT_INFO.socials.linkedin,
     hoverColor: "hover:border-[#0A66C2]/40 hover:text-[#0A66C2] hover:shadow-[0_0_12px_rgba(10,102,194,0.25)]",
   },
 ];
@@ -74,7 +75,7 @@ export default function Footer() {
               <BrandLogo className="h-auto w-[10.5rem]" />
             </Link>
             <p className="leading-relaxed mb-6">
-              Premium web development services. We build exceptional digital experiences for modern brands.
+              <TypingText text="AxisX Studio" className="font-bold text-[#f8fafc]" /> | Web Development Company. We build exceptional digital experiences for modern brands.
             </p>
 
             {/* Social icons */}
@@ -160,7 +161,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between border-t border-[#3B82F6]/10 mt-14 pt-8 text-sm text-[#94A3B8]">
-          <p>© {currentYear} AxisX Studio. All rights reserved.</p>
+          <p>© {currentYear} <TypingText text="AxisX Studio" className="font-semibold" />. All rights reserved.</p>
           <div className="mt-4 sm:mt-0 flex items-center gap-3">
             <span className="text-[#2A3545] text-xs hidden sm:block">Engineered with precision.</span>
             <Link

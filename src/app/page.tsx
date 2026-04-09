@@ -135,14 +135,14 @@ function ContactForm() {
             whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.5 }}
             type="submit" disabled={loading}
-            style={{ 
+            style={{
               backgroundPosition: loading ? '0 0' : '',
               transitionDuration: loading ? '1000ms' : ''
             }}
             className="btn-ltr-blue w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-70 transition-all shadow-xl shadow-blue-500/10"
           >
             {loading ? (
-               <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : <Send size={18} />}
             {loading ? "Sending..." : "Send Message"}
           </motion.button>
@@ -267,7 +267,7 @@ function ProjectsSection() {
           </motion.div>
         )}
       </div>
-      
+
       <AnimatePresence>
         {activeProject && (
           <ProjectModal project={activeProject} onClose={() => setActiveProject(null)} />
@@ -292,10 +292,10 @@ export default function Home() {
   return (
     <>
       <Navigation />
-      <main className="flex-grow pt-28 overflow-x-hidden">
+      <main className="flex-grow pt-20 md:pt-28 overflow-x-hidden">
 
         {/* ── HERO ── */}
-        <section id="home" className="relative min-h-[92vh] flex items-center justify-center overflow-hidden">
+        <section id="home" className="relative min-h-[85vh] md:min-h-[92vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-[#0B0F14]/80 z-10" />
             <div className="grid-bg absolute inset-0 z-20" />
@@ -312,17 +312,19 @@ export default function Home() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3B82F6] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3B82F6]" />
               </span>
-              Premium Web Development Services
+              <TypingText text="AxisX Studio | Web Development Company" />
             </motion.div>
-            <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl font-bold tracking-tighter mb-8 font-outfit flex flex-col items-center">
-              <span>
+            <motion.h1 variants={fadeUp} className="text-4xl md:text-7xl font-bold tracking-tighter mb-8 font-outfit text-center leading-[1.15] max-w-[90vw] mx-auto">
+              <span className="block mb-2 md:mb-0 md:inline">
                 <TypingText text="Engineering" />{" "}
                 <TypingText text="Digital Excellence" className="gradient-text text-glow" delay={0.3} />
               </span>
-              <TypingText text="for Modern Brands" delay={0.8} />
+              <span className="block md:inline">
+                <TypingText text="for Modern Brands" delay={0.8} />
+              </span>
             </motion.h1>
             <motion.p variants={fadeUp} className="text-lg md:text-xl text-[#94A3B8] max-w-3xl mx-auto mb-10 leading-relaxed">
-              AxisX is a boutique digital agency specialising in high-performance web applications, stunning user interfaces, and scalable architectures. We do not just write code; we build businesses.
+              <TypingText text="AxisX Studio" className="font-bold" /> is a boutique digital agency specialising in high-performance web applications, stunning user interfaces, and scalable architectures. We do not just write code; we build businesses.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
@@ -417,7 +419,7 @@ export default function Home() {
           <div className="container mx-auto px-6 max-w-7xl">
 
             <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold font-outfit mb-4">About <span className="gradient-text">AxisX</span></h2>
+              <h2 className="text-3xl md:text-5xl font-bold font-outfit mb-4">About <TypingText text="AxisX Studio" className="gradient-text" /></h2>
               <p className="text-[#94A3B8] max-w-2xl mx-auto">
                 A collective of digital craftsmen focused on engineering modern, high-performance web applications that drive real business growth.
               </p>
@@ -429,7 +431,7 @@ export default function Home() {
                 <div>
                   <h3 className="text-2xl font-bold font-outfit mb-5">Our Mission</h3>
                   <p className="text-[#94A3B8] leading-relaxed mb-4">
-                    At AxisX, we believe the web should be fast, beautiful, and accessible. In a sea of templates and bloated codebases, we stand for bespoke engineering and meticulous attention to detail.
+                    At <TypingText text="AxisX Studio" className="font-bold" />, we believe the web should be fast, beautiful, and accessible. In a sea of templates and bloated codebases, we stand for bespoke engineering and meticulous attention to detail.
                   </p>
                   <p className="text-[#94A3B8] leading-relaxed">
                     Our goal is to partner with forward-thinking brands and translate their vision into robust digital products—from complex SaaS architectures to dazzling marketing sites.
@@ -575,7 +577,7 @@ export default function Home() {
                 Ready to transform your <br className="hidden md:block" /> digital presence?
               </h2>
               <p className="text-[#94A3B8] text-lg mb-10 max-w-2xl mx-auto relative z-10">
-                Partner with AxisX to build technology that moves the needle.
+                Partner with <TypingText text="AxisX Studio" className="font-bold gradient-text" /> to build technology that moves the needle.
               </p>
               <button
                 onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}

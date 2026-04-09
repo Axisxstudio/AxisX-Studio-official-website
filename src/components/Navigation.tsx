@@ -73,7 +73,7 @@ export default function Navigation() {
       <header
         className={`fixed top-0 w-full z-50 transition-all duration-500 ease-in-out ${isScrolled
           ? "bg-[#0B0F14]/85 backdrop-blur-xl border-b border-[#3B82F6]/10 py-3 shadow-[0_1px_0_rgba(43,127,255,0.08)]"
-          : "bg-transparent py-5"
+          : "bg-transparent py-4"
           }`}
       >
         <div className="container mx-auto px-6 max-w-7xl">

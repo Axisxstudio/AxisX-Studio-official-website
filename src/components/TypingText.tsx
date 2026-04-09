@@ -15,7 +15,7 @@ export const TypingText = ({ text, className, delay = 0 }: TypingTextProps) => {
     hidden: { opacity: 0 },
     visible: (i = 1) => ({
       opacity: 1,
-      transition: { staggerChildren: 0.03, delayChildren: delay * i },
+      transition: { staggerChildren: 0.08, delayChildren: delay * i },
     }),
   };
 
@@ -26,8 +26,8 @@ export const TypingText = ({ text, className, delay = 0 }: TypingTextProps) => {
       y: 0,
       transition: {
         type: "spring",
-        damping: 12,
-        stiffness: 100,
+        damping: 15,
+        stiffness: 50,
       },
     },
     hidden: {
@@ -36,15 +36,15 @@ export const TypingText = ({ text, className, delay = 0 }: TypingTextProps) => {
       y: 0,
       transition: {
         type: "spring",
-        damping: 12,
-        stiffness: 100,
+        damping: 15,
+        stiffness: 50,
       },
     },
   };
 
   return (
     <motion.span
-      style={{ overflow: "hidden", display: "inline-flex", flexWrap: "wrap", justifyContent: "flex-start" }}
+      style={{ overflow: "hidden", display: "inline-flex", flexWrap: "wrap", justifyContent: "center" }}
       variants={container}
       initial="hidden"
       whileInView="visible"
