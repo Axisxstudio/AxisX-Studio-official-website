@@ -6,7 +6,7 @@ import Image from "next/image";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { useDropzone } from "react-dropzone";
-import { UploadCloud, X, CheckCircle, ArrowLeft, Image as ImageIcon, Video, Star } from "lucide-react";
+import { UploadCloud, X, CheckCircle, Check, ArrowLeft, Image as ImageIcon, Video, Star } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { MediaKind, uploadFilesToStorage, validateFiles } from "@/lib/media";
 import { toDatabasePayload } from "@/lib/supabase-api";
@@ -423,23 +423,25 @@ export default function NewFeedback() {
                         <div>
                           <label className="block text-sm font-medium text-[#adaaad] mb-3 text-center">Overall Rating <span className="text-[#ff6e84]">*</span></label>
                           <div className="flex flex-col items-center justify-center w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-5 transition-all hover:bg-[#15151a]">
-                            <div className="flex flex-col sm:flex-row items-center gap-3">
-                              <div className="flex gap-1.5" onMouseLeave={() => setHoverRating(0)}>
+                            <div className="flex flex-col items-center gap-5 w-full">
+                              <div className="flex gap-2.5" onMouseLeave={() => setHoverRating(0)}>
                                 {[1, 2, 3, 4, 5].map((star) => (
                                   <Star
                                     key={star}
-                                    size={30}
+                                    size={32}
                                     onMouseEnter={() => setHoverRating(star)}
                                     onClick={() => setFormData(p => ({ ...p, rating: star }))}
                                     fill={(hoverRating || formData.rating) >= star ? "#a3a6ff" : "transparent"}
                                     stroke={(hoverRating || formData.rating) >= star ? "#a3a6ff" : "#4a4a5a"}
-                                    className="cursor-pointer transition-all hover:scale-110"
+                                    className="cursor-pointer transition-colors duration-200 flex-shrink-0"
                                   />
                                 ))}
                               </div>
-                              <span className="text-[13px] font-bold text-[#a3a6ff] bg-[#a3a6ff]/10 px-3 py-1 rounded-full mt-2 sm:mt-0">
-                                {ratingSuggestions[hoverRating || formData.rating]}
-                              </span>
+                              <div className="h-8 flex items-center justify-center">
+                                <span className="text-[13px] font-bold text-[#a3a6ff] bg-[#a3a6ff]/10 px-4 py-1.5 rounded-full border border-[#a3a6ff]/10 transition-all duration-300">
+                                  {ratingSuggestions[hoverRating || formData.rating]}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -559,18 +561,30 @@ export default function NewFeedback() {
                         </div>
 
                         <div className="pt-4 border-t border-white/5">
-                          <label className="flex items-start gap-3 cursor-pointer group">
-                            <div className="relative pt-1">
+                          <label className="flex items-center gap-3 cursor-pointer group select-none">
+                            <div className="relative flex items-center justify-center">
                               <input
                                 type="checkbox"
                                 name="consentToPublish"
                                 checked={formData.consentToPublish}
                                 onChange={handleChange}
-                                className="w-5 h-5 accent-[#a3a6ff] rounded border-[#a3a6ff]/20 cursor-pointer"
+                                className="peer sr-only"
                               />
+                              <div className={`
+                                w-5 h-5 rounded-md border transition-all duration-300 flex items-center justify-center
+                                ${formData.consentToPublish 
+                                  ? 'bg-[#3B82F6] border-[#3B82F6] shadow-[0_0_12px_rgba(59,130,246,0.3)]' 
+                                  : 'bg-[#0e0e10] border-white/10 group-hover:border-[#3B82F6]/50'}
+                              `}>
+                                <Check 
+                                  size={14} 
+                                  className={`text-[#0e0e10] transition-all duration-300 ${formData.consentToPublish ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} 
+                                  strokeWidth={4}
+                                />
+                              </div>
                             </div>
-                            <span className="text-sm text-[#adaaad] leading-relaxed group-hover:text-[#f9f5f8] transition-colors">
-                              I consent to AxisX Studio publicly displaying this feedback, including my name, company, and project details across their portfolio. (Uncheck to keep private)
+                            <span className="text-sm text-[#adaaad] group-hover:text-[#f9f5f8] transition-colors">
+                              I consent to AxisX Studio publicly displaying this feedback in their portfolio.
                             </span>
                           </label>
                         </div>

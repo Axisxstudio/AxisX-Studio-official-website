@@ -11,32 +11,32 @@ const services = [
   {
     icon: <FileCode2 className="text-[#a3a6ff]" size={40} />,
     title: "Full-Stack Development",
-    desc: "End-to-end web applications built with Next.js, React, Node, and scalable databases. We handle the frontend UI and the complex backend business logic."
+    desc: "Eliminate technical debt before it starts. We architect end-to-end web applications designed for scale, utilizing robust serverless backends to handle traffic spikes effortlessly."
   },
   {
     icon: <Palette className="text-[#c180ff]" size={40} />,
     title: "UI/UX Engineering",
-    desc: "Beautiful, intuitive interfaces that convert users. We design from scratch or implement your existing Figma designs with pixel-perfect accuracy."
+    desc: "Stop losing users to confusion. We engineer intuitive, high-conversion interfaces rooted in buyer psychology, mapping complex user journeys to reduce bounce rates and increase sales."
   },
   {
     icon: <Server className="text-[#a3a6ff]" size={40} />,
     title: "API & Backend Systems",
-    desc: "Robust REST and GraphQL APIs, headless CMS integrations, and scalable serverless architectures centered on Supabase and modern cloud tooling."
+    desc: "Robust, secure APIs and microservices architecture designed to integrate seamlessly and scale effortlessly with your business growth and data demands."
   },
   {
     icon: <Zap className="text-[#c180ff]" size={40} />,
     title: "Performance Optimization",
-    desc: "Core Web Vitals auditing, code splitting, image optimization, and caching strategies to ensure your site is lightning fast."
+    desc: "Make speed your competitive advantage. We forensically audit your codebase, implementing advanced caching to deliver sub-second loading speeds that actively boost SEO."
   },
   {
     icon: <LayoutDashboard className="text-[#a3a6ff]" size={40} />,
     title: "Admin Tools & Dashboards",
-    desc: "Custom internal tools to manage your data, inventory, or users. Say goodbye to spreadsheets and generic CRMs."
+    desc: "Reclaim wasted operational hours. We build bespoke internal tools tailored precisely to your workflow, automating repetitive tasks and turning raw data into actionable insights."
   },
   {
     icon: <Search className="text-[#c180ff]" size={40} />,
     title: "Technical SEO Validation",
-    desc: "Server-side rendering, valid semantic HTML, dynamic sitemaps, and structured data implementation for maximum visibility."
+    desc: "Semantic markup, dynamic sitemaps, server-side rendering, and structured JSON-LD data implementations to guarantee maximum visibility across search engine algorithms."
   }
 ];
 

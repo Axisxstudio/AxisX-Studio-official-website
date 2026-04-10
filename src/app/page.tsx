@@ -50,19 +50,19 @@ const businessTypes = [
 
 /* ─── Services Data ─── */
 const services = [
-  { icon: <FileCode2 className="text-[#3B82F6]" size={36} />, title: "Full-Stack Development", desc: "End-to-end web applications with powerful frontends, robust backends, and scalable databases — all crafted bespoke for your business." },
-  { icon: <Palette className="text-[#94A3B8]" size={36} />, title: "UI/UX Engineering", desc: "Pixel-perfect, conversion-focused interfaces designed from scratch or built faithfully to your design files." },
-  { icon: <Server className="text-[#3B82F6]" size={36} />, title: "API & Backend Systems", desc: "Robust, secure APIs and serverless infrastructure designed to scale effortlessly with your business growth." },
-  { icon: <Zap className="text-[#94A3B8]" size={36} />, title: "Performance Optimization", desc: "Core Web Vitals auditing, smart caching, and architecture improvements to make your site blazing fast." },
-  { icon: <LayoutDashboard className="text-[#3B82F6]" size={36} />, title: "Admin Tools & Dashboards", desc: "Custom internal tools built precisely for your workflow — replace spreadsheets with powerful, intuitive dashboards." },
-  { icon: <Search className="text-[#94A3B8]" size={36} />, title: "Technical SEO", desc: "Semantic markup, dynamic sitemaps, server-side rendering, and structured data for maximum search visibility." },
+  { icon: <FileCode2 className="text-[#3B82F6]" size={36} />, title: "Full-Stack Development", desc: "Eliminate technical debt before it starts. We architect end-to-end web applications designed for scale, utilizing robust serverless backends to handle traffic spikes effortlessly." },
+  { icon: <Palette className="text-[#94A3B8]" size={36} />, title: "UI/UX Engineering", desc: "Stop losing users to confusion. We engineer intuitive, high-conversion interfaces rooted in buyer psychology, mapping complex user journeys to reduce bounce rates and increase sales." },
+  { icon: <Server className="text-[#3B82F6]" size={36} />, title: "API & Backend Systems", desc: "Robust, secure APIs and microservices architecture designed to integrate seamlessly and scale effortlessly with your business growth and data demands." },
+  { icon: <Zap className="text-[#94A3B8]" size={36} />, title: "Performance Optimization", desc: "Make speed your competitive advantage. We forensically audit your codebase, implementing advanced caching to deliver sub-second loading speeds that actively boost SEO." },
+  { icon: <LayoutDashboard className="text-[#3B82F6]" size={36} />, title: "Admin Tools & Dashboards", desc: "Reclaim wasted operational hours. We build bespoke internal tools tailored precisely to your workflow, automating repetitive tasks and turning raw data into actionable insights." },
+  { icon: <Search className="text-[#94A3B8]" size={36} />, title: "Technical SEO", desc: "Semantic markup, dynamic sitemaps, server-side rendering, and structured JSON-LD data implementations to guarantee maximum visibility across search engine algorithms." },
 ];
 
 /* ─── About Values ─── */
 const values = [
-  { icon: <Code size={24} />, title: "Engineering Excellence", text: "We write clean, semantic, and highly optimized code tailored for scale." },
-  { icon: <Zap size={24} />, title: "Performance First", text: "Speed is a feature. We architect our stack to guarantee zero friction." },
-  { icon: <Users size={24} />, title: "Radical Transparency", text: "No black boxes. We act as an extension of your internal team." },
+  { icon: <Code size={24} />, title: "Engineering Excellence", text: "We write clean, strongly-typed, and modular code that ensures your digital infrastructure is stable today and easily extensible tomorrow." },
+  { icon: <Zap size={24} />, title: "Performance First", text: "Speed is a critical business metric. We architect every layer of our stack to guarantee zero friction for your users." },
+  { icon: <Users size={24} />, title: "Radical Transparency", text: "No black boxes. We provide continuous visibility into our cycles, acting directly as an extension of your command team." },
 ];
 
 /* ─── Contact Form ─── */
@@ -429,12 +429,12 @@ export default function Home() {
             <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="glass-strong rounded-3xl p-8 md:p-14 border border-[#3B82F6]/20 mb-16">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div>
-                  <h3 className="text-2xl font-bold font-outfit mb-5">Our Mission</h3>
+                  <h3 className="text-2xl font-bold font-outfit mb-5">Architecting Predictable Growth</h3>
                   <p className="text-[#94A3B8] leading-relaxed mb-4">
-                    At <TypingText text="AxisX Studio" className="font-bold" />, we believe the web should be fast, beautiful, and accessible. In a sea of templates and bloated codebases, we stand for bespoke engineering and meticulous attention to detail.
+                    Too many digital projects fail because of a communication gap between business strategy and technical execution. Developers often build what was asked, but not what was <span className="text-[#F8FAFC] font-semibold">needed</span>.
                   </p>
                   <p className="text-[#94A3B8] leading-relaxed">
-                    Our goal is to partner with forward-thinking brands and translate their vision into robust digital products—from complex SaaS architectures to dazzling marketing sites.
+                    At <TypingText text="AxisX Studio" className="font-bold" />, our mission is to eliminate that gap. We interrogate your requirements and take ownership of the technical complexity, allowing you to focus entirely on scaling your business.
                   </p>
                 </div>
                 <div className="grid grid-cols-2 gap-4">

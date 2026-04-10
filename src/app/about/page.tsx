@@ -31,7 +31,7 @@ export default function About() {
                    About <TypingText text="AxisX Studio" className="gradient-text" />
                 </h1>
                 <p className="text-xl text-[#adaaad] max-w-2xl mx-auto">
-                   We are a collective of digital craftsmen focused on engineering modern, high-performance web applications that drive real business growth.
+                   In a saturated market filled with bloated templates and fragile codebases, AxisX Studio acts as your dedicated engineering partner. We solve complex organizational bottlenecks through deep technical expertise.
                 </p>
             </motion.div>
         </section>
@@ -45,12 +45,12 @@ export default function About() {
              >
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                    <div>
-                      <h2 className="text-3xl font-bold font-outfit mb-6">Our Mission</h2>
+                      <h2 className="text-3xl font-bold font-outfit mb-6">Architecting Predictable Growth</h2>
                       <p className="text-[#adaaad] leading-relaxed mb-6">
-                         At <TypingText text="AxisX Studio" className="font-bold" />, we believe that the web should be fast, beautiful, and accessible. In a sea of templates and bloated codebases, we stand for bespoke engineering and meticulous attention to detail.
+                         Too many digital projects fail because of a communication gap between business strategy and technical execution. Developers often build what was asked, but not what was needed.
                       </p>
                       <p className="text-[#adaaad] leading-relaxed">
-                         Our goal is to partner with forward-thinking brands and translate their vision into robust digital products. From complex SaaS architectures to dazzling marketing sites, we build technology that empowers.
+                         At <TypingText text="AxisX Studio" className="font-bold" />, our mission is to eliminate that gap. We interrogate your requirements and take ownership of the technical complexity, allowing you to focus entirely on scaling your business.
                       </p>
                    </div>
                    <div className="pl-0 md:pl-10 grid grid-cols-2 gap-4">
@@ -93,9 +93,9 @@ export default function About() {
                  className="grid grid-cols-1 md:grid-cols-3 gap-8"
              >
                  {[
-                   { icon: <Code />, title: "Engineering Excellence", text: "We write clean, semantic, and highly optimized code tailored for scale." },
-                   { icon: <Zap />, title: "Performance First", text: "Speed is a feature. We architect our stack to guarantee zero friction." },
-                   { icon: <Users />, title: "Radical Transparency", text: "No black boxes. We act as an extension of your internal team." }
+                   { icon: <Code />, title: "Engineering Excellence", text: "We write clean, strongly-typed, and modular code that ensures your digital infrastructure is stable today and easily extensible tomorrow." },
+                   { icon: <Zap />, title: "Performance First", text: "Speed is a critical business metric. We architect every layer of our stack to guarantee zero friction for your users." },
+                   { icon: <Users />, title: "Radical Transparency", text: "No black boxes. We provide continuous visibility into our cycles, acting directly as an extension of your command team." }
                  ].map((val, i) => (
                     <motion.div key={i} variants={fadeUp} className="glass p-8 rounded-2xl border border-transparent hover:border-[#a3a6ff]/20 transition-all text-center">
                         <div className="w-14 h-14 mx-auto rounded-full bg-[#19191c] border border-[#a3a6ff]/10 flex items-center justify-center mb-6 text-[#a3a6ff] glow-accent">
