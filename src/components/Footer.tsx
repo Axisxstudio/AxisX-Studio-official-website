@@ -75,7 +75,7 @@ export default function Footer() {
               <BrandLogo className="h-auto w-[10.5rem]" />
             </Link>
             <p className="leading-relaxed mb-6">
-              <TypingText text="AxisX Studio" className="font-bold text-[#f8fafc]" /> | Web Development Company. We build exceptional digital experiences for modern brands.
+              <TypingText text="AxisX Studio" className="font-bold text-[#f8fafc]" /> | Specializing in high-performance web applications and modern UI/UX design.
             </p>
 
             {/* Social icons */}

@@ -314,17 +314,17 @@ export default function Home() {
               </span>
               <TypingText text="AxisX Studio | Web Development Company" />
             </motion.div>
-            <motion.h1 variants={fadeUp} className="text-4xl md:text-7xl font-bold tracking-tighter mb-8 font-outfit text-center leading-[1.15] max-w-[90vw] mx-auto">
-              <span className="block mb-2 md:mb-0 md:inline">
-                <TypingText text="Engineering" />{" "}
-                <TypingText text="Digital Excellence" className="gradient-text text-glow" delay={0.3} />
+            <motion.h1 variants={fadeUp} className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 font-outfit text-center leading-[1.1] max-w-[95vw] lg:max-w-[1400px] mx-auto">
+              <span className="block mb-2 md:mb-4 lg:whitespace-nowrap">
+                <TypingText text="Engineering" className="gradient-text" />{" "}
+                <TypingText text="Digital Excellence" className="gradient-text-alt text-glow" delay={0.3} />
               </span>
-              <span className="block md:inline">
+              <span className="block lg:whitespace-nowrap">
                 <TypingText text="for Modern Brands" delay={0.8} />
               </span>
             </motion.h1>
-            <motion.p variants={fadeUp} className="text-lg md:text-xl text-[#94A3B8] max-w-3xl mx-auto mb-10 leading-relaxed">
-              <TypingText text="AxisX Studio" className="font-bold" /> is a boutique digital agency specialising in high-performance web applications, stunning user interfaces, and scalable architectures. We do not just write code; we build businesses.
+            <motion.p variants={fadeUp} className="text-base md:text-lg text-[#94A3B8] max-w-3xl mx-auto mb-10 leading-relaxed">
+              <TypingText text="AxisX Studio" className="font-bold" /> specializes in high-performance web application development, modern UI/UX design, and scalable software solutions tailored for businesses and startups.
             </motion.p>
             <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button

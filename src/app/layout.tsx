@@ -12,7 +12,7 @@ const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata = {
   title: "AxisX Studio | Web Development Company",
-  description: "Modern web development and technical solutions for modern businesses.",
+  description: "AxisX Studio specializes in high-performance web application development, modern UI/UX design, and scalable software solutions tailored for businesses and startups.",
 };
 
 export default function RootLayout({
