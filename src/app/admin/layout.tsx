@@ -61,15 +61,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
          {/* Sidebar */}
          <aside className={`fixed top-0 left-0 h-screen w-72 bg-[#0B0F14] border-r border-[#3B82F6]/10 flex flex-col transition-transform duration-300 z-50 lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:relative'}`}>
-            <div className="p-8 h-24 flex items-center justify-between border-b border-[#3B82F6]/5">
-               <Link href="/admin" className="font-outfit text-xl font-bold flex items-center gap-3">
-               <div className="w-32 h-20 flex items-center justify-center">
-                  <img src="/site-logo.png" alt="AxisX" className="w-full h-auto object-contain" />
-               </div>
-                  <span className="text-[#F8FAFC]">Admin<span className="text-[#3B82F6] font-black uppercase text-xs tracking-widest ml-1">OS</span></span>
+            <div className="p-6 h-32 flex flex-col justify-center border-b border-[#3B82F6]/5 relative">
+               <Link href="/admin" className="flex flex-col items-start gap-2.5 group">
+                  <div className="h-7 w-auto flex items-center">
+                     <img src="/site-logo.png" alt="AxisX" className="h-full w-auto object-contain brightness-110 transition-all group-hover:brightness-125" />
+                  </div>
+                  <div className="flex items-center gap-2 px-0.5">
+                     <span className="text-[#F8FAFC] font-outfit font-bold text-base leading-tight">Admin<span className="text-[#3B82F6] font-black uppercase text-[10px] tracking-[0.2em] ml-1.5">OS</span></span>
+                  </div>
                </Link>
-               <button className="lg:hidden text-[#94A3B8] hover:text-white" onClick={() => setSidebarOpen(false)}>
-                  <X size={24} />
+               <button className="absolute top-8 right-6 lg:hidden text-[#94A3B8] hover:text-[#F8FAFC] transition-colors p-1" onClick={() => setSidebarOpen(false)}>
+                  <X size={20} />
                </button>
             </div>
 
@@ -80,8 +82,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                      key={item.href}
                      href={item.href}
                      className={`flex items-center gap-4 px-4 py-3.5 rounded-2xl transition-all group ${pathname === item.href
-                           ? 'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]'
-                           : 'text-[#94A3B8] hover:bg-[#3B82F6]/5 hover:text-[#F8FAFC]'
+                        ? 'bg-[#3B82F6]/10 text-[#3B82F6] border border-[#3B82F6]/20 shadow-[0_0_20px_rgba(59,130,246,0.1)]'
+                        : 'text-[#94A3B8] hover:bg-[#3B82F6]/5 hover:text-[#F8FAFC]'
                         }`}
                      onClick={() => setSidebarOpen(false)}
                   >
@@ -121,26 +123,30 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
          {/* Main Content */}
          <main className="flex-1 flex flex-col h-screen overflow-hidden bg-[#0e0e10]">
-            <header className="h-24 border-b border-[#3B82F6]/5 bg-[#0B0F14]/80 backdrop-blur-xl flex items-center justify-between px-8 lg:px-12 shrink-0 z-30">
-               <button
-                  className="lg:hidden text-[#F8FAFC] p-3 -ml-3 bg-[#3B82F6]/10 rounded-xl"
-                  onClick={() => setSidebarOpen(true)}
-               >
-                  <Menu size={24} />
-               </button>
-
-               <div className="flex items-center gap-6 ml-auto">
-                  <div className="text-right hidden sm:block">
-                     <p className="text-xs font-black text-[#F8FAFC] uppercase tracking-widest">{user?.email?.split('@')[0]}</p>
-                     <div className="flex items-center gap-1.5 justify-end mt-0.5">
+            <header className="h-16 border-b border-[#3B82F6]/5 bg-[#0B0F14]/80 backdrop-blur-xl flex items-center justify-between px-8 lg:px-12 shrink-0 z-30">
+               <div className="flex items-center gap-8">
+                  <div className="w-28 h-10 flex items-center justify-center">
+                     <img 
+                        src="/site-logo.png" 
+                        alt="Admin" 
+                        className="w-full h-auto object-contain drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] filter brightness-115 transition-all duration-300 hover:scale-105" 
+                     />
+                  </div>
+                  <div className="text-left hidden sm:block">
+                     <p className="text-[10px] font-black text-[#F8FAFC] uppercase tracking-widest">{user?.email?.split('@')[0]}</p>
+                     <div className="flex items-center gap-1.5 justify-start mt-0.5">
                         <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] shadow-[0_0_5px_#10B981]"></span>
                         <p className="text-[10px] font-bold text-[#4A5568] uppercase tracking-widest">Root Auth</p>
                      </div>
                   </div>
-                  <div className="w-28 h-20 flex items-center justify-center">
-                     <img src="/site-logo.png" alt="Admin" className="w-full h-auto object-contain pl-2" />
-                  </div>
                </div>
+
+               <button
+                  className="lg:hidden text-[#F8FAFC] p-2.5 bg-[#3B82F6]/10 rounded-xl ml-auto border border-[#3B82F6]/20"
+                  onClick={() => setSidebarOpen(true)}
+               >
+                  <Menu size={22} />
+               </button>
             </header>
 
             <div className="flex-1 overflow-y-auto p-8 md:p-12 relative scroll-smooth">

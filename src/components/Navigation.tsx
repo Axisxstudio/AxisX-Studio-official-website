@@ -82,10 +82,10 @@ export default function Navigation() {
             <Link
               href="/"
               aria-label="AxisX home"
-              className="flex items-center opacity-90 hover:opacity-100 transition-opacity duration-200"
+              className="flex items-center opacity-95 hover:opacity-100 transition-opacity duration-200"
             >
               <BrandLogo
-                className="h-auto w-[9.5rem] sm:w-[10.75rem]"
+                className="h-auto w-[12.5rem] sm:w-[14.5rem] drop-shadow-[0_0_15px_rgba(59,130,246,0.35)] filter brightness-110"
                 priority
               />
             </Link>

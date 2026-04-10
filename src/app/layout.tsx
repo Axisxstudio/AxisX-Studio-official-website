@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import PageProgressBar from "@/components/PageProgressBar";
 import SiteMaintenanceGate from "@/components/SiteMaintenanceGate";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
+import Preloader from "@/components/Preloader";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -23,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${inter.variable} ${outfit.variable} antialiased bg-[#0B0F14] text-[#F8FAFC] min-h-screen flex flex-col`}>
+        <Preloader />
         <Suspense fallback={null}>
           <PageProgressBar />
         </Suspense>

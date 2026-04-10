@@ -57,19 +57,19 @@ export default function AdminDashboard() {
       </header>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-         {statCards.map((stat, i) => (
-            <Link key={i} href={stat.link} className="glass-strong rounded-[24px] p-6 border border-[#3B82F6]/10 hover:border-[#3B82F6]/30 transition-all group relative overflow-hidden">
-               <div className="relative z-10">
-                  <div className="flex items-center justify-between mb-4">
-                     <div className="w-10 h-10 bg-[#0B0F14] rounded-xl border border-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] group-hover:scale-110 transition-transform">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          {statCards.map((stat, i) => (
+            <Link key={i} href={stat.link} className="glass-strong rounded-[24px] p-4 md:p-6 border border-[#3B82F6]/10 hover:border-[#3B82F6]/30 transition-all group relative overflow-hidden h-full flex flex-col justify-between">
+               <div className="relative z-10 w-full">
+                  <div className="flex items-center justify-between mb-3 md:mb-4">
+                     <div className="w-9 h-9 md:w-10 md:h-10 bg-[#0B0F14] rounded-xl border border-[#3B82F6]/10 flex items-center justify-center text-[#3B82F6] group-hover:scale-110 transition-transform">
                         {stat.icon}
                      </div>
-                     <span className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568]">{stat.detail}</span>
+                     <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-widest text-[#4A5568] truncate ml-2">{stat.detail}</span>
                   </div>
-                  <h3 className="text-[#94A3B8] text-xs font-bold uppercase tracking-wider mb-1">{stat.title}</h3>
+                  <h3 className="text-[#94A3B8] text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1">{stat.title}</h3>
                   <div className="flex items-end justify-between">
-                     <p className="text-4xl font-bold font-outfit text-[#F8FAFC] tracking-tight">
+                     <p className="text-2xl md:text-4xl font-bold font-outfit text-[#F8FAFC] tracking-tight">
                         {loading ? "..." : stat.value}
                      </p>
                      <div className="text-[#3B82F6] opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">

@@ -13,25 +13,46 @@ export default function Preloader() {
   useEffect(() => {
     if (!show) return;
 
+    let isLoaded = false;
+    const handleLoad = () => { isLoaded = true; };
+    if (document.readyState === "complete") {
+      isLoaded = true;
+    } else {
+      window.addEventListener("load", handleLoad);
+    }
+
     const start = performance.now();
     let frameId = 0;
 
     const tick = (now: number) => {
       const elapsed = now - start;
-      const ratio = Math.min(elapsed / PRELOADER_DURATION_MS, 1);
-      setProgress(Math.round(ratio * 100));
+      const progressRatio = Math.min(elapsed / PRELOADER_DURATION_MS, 0.99);
+      
+      // If window is loaded, we can finish the progress, otherwise we slow down at 99%
+      let currentProgress;
+      if (isLoaded) {
+        const exitRatio = Math.min((elapsed - 200) / 400, 1); // Extra time to finish quickly after load
+        currentProgress = Math.round(Math.max(99 * progressRatio, 100 * exitRatio));
+      } else {
+        currentProgress = Math.round(progressRatio * 100);
+      }
 
-      if (ratio < 1) {
+      setProgress(currentProgress);
+
+      if (currentProgress < 100) {
         frameId = window.requestAnimationFrame(tick);
         return;
       }
 
-      window.setTimeout(() => setShow(false), 180);
+      window.setTimeout(() => setShow(false), 300);
     };
 
     frameId = window.requestAnimationFrame(tick);
 
-    return () => window.cancelAnimationFrame(frameId);
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.removeEventListener("load", handleLoad);
+    };
   }, [show]);
 
   return (
@@ -62,26 +83,38 @@ export default function Preloader() {
               />
             </motion.div>
 
-            <div className="mx-auto mb-6 h-[2px] w-64 overflow-hidden rounded-full bg-[#a3a6ff]/10">
-              <motion.div
-                className="h-full bg-gradient-to-r from-[#a3a6ff] to-[#c180ff]"
-                animate={{ width: `${progress}%` }}
-                transition={{ ease: "linear", duration: 0.1 }}
-              />
-            </div>
-
-            <div className="flex items-center justify-center gap-10">
-              <p className="text-4xl font-outfit font-black text-[#f9f5f8]">
-                {progress}%
-              </p>
-              <div className="h-10 w-px bg-[#a3a6ff]/20" />
-              <div className="text-left">
-                <p className="mb-1 text-xs font-bold uppercase tracking-[0.2em] text-[#a3a6ff]">
-                  AXISX STUDIO
-                </p>
-                <p className="text-[10px] font-medium uppercase tracking-wider text-[#adaaad]">
-                  Loading Excellence...
-                </p>
+            <div className="mt-8 flex flex-col items-center">
+              <div className="flex items-center gap-[2px]">
+                {"AXISX STUDIO".split("").map((char, i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0, y: 10, filter: "blur(10px)" }}
+                    animate={{ 
+                      opacity: progress > (i * 8) ? 1 : 0, 
+                      y: progress > (i * 8) ? 0 : 10,
+                      filter: progress > (i * 8) ? "blur(0px)" : "blur(10px)"
+                    }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
+                    className={`text-xl font-outfit font-black tracking-[0.3em] ${char === " " ? "ml-4" : ""} ${i < 5 ? "text-[#3B82F6]" : "text-[#F8FAFC]"}`}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </div>
+              
+              {/* Animated underline */}
+              <div className="mt-4 h-[1px] w-48 bg-[#3B82F6]/10 relative overflow-hidden">
+                <motion.div 
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-[#3B82F6] to-transparent w-full"
+                  animate={{ 
+                    x: ["-100%", "100%"] 
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity, 
+                    ease: "linear" 
+                  }}
+                />
               </div>
             </div>
           </div>
