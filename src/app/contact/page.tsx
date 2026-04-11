@@ -297,7 +297,7 @@ export default function Contact() {
                              whileTap={{ scale: 0.98 }}
                              type="submit" 
                              disabled={loading}
-                             className="w-full py-4 rounded-xl bg-gradient-to-r from-[#a3a6ff] to-[#c180ff] text-[#0e0e10] font-bold text-lg hover:shadow-[0_0_30px_rgba(163,166,255,0.4)] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none"
+                             className="w-full py-4 rounded-full bg-gradient-to-r from-[#a3a6ff] to-[#c180ff] text-[#0e0e10] font-bold text-lg hover:shadow-[0_0_30px_rgba(163,166,255,0.4)] transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:pointer-events-none"
                           >
                              {loading ? "Sending..." : "Send Message"}
                              {!loading && <Send size={20} />}

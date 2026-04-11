@@ -77,7 +77,7 @@ export default function ProjectModal({ project, onClose }: { project: Project; o
           >
             {isVisiting ? (
               <div className="h-3 w-3 border-2 border-[#3B82F6]/30 border-t-[#3B82F6] rounded-full animate-spin" />
-            ) : <Globe size={13} />} 
+            ) : <Globe size={13} />}
             {isVisiting ? "Opening..." : "Live Site"}
           </button>
         )}
@@ -138,9 +138,9 @@ export default function ProjectModal({ project, onClose }: { project: Project; o
               <button
                 onClick={handleVisit}
                 disabled={isVisiting}
-                style={{ 
-                   backgroundPosition: isVisiting ? '0 0' : '',
-                   transitionDuration: isVisiting ? '1000ms' : ''
+                style={{
+                  backgroundPosition: isVisiting ? '0 0' : '',
+                  transitionDuration: isVisiting ? '1000ms' : ''
                 }}
                 className={`btn-ltr-white relative inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-[#0e0e10] text-sm font-bold border border-[#3B82F6]/25 transition-all w-full sm:w-auto text-center justify-center disabled:opacity-70 ${isVisiting ? 'text-[#0B0F14]' : ''}`}
               >

@@ -76,7 +76,7 @@ export default function Navigation() {
           : "bg-transparent py-4"
           }`}
       >
-        <div className="container mx-auto px-6 max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link
@@ -85,7 +85,7 @@ export default function Navigation() {
               className="flex items-center opacity-95 hover:opacity-100 transition-opacity duration-200"
             >
               <BrandLogo
-                className="h-auto w-[12.5rem] sm:w-[14.5rem] drop-shadow-[0_0_15px_rgba(59,130,246,0.35)] filter brightness-110"
+                className="h-auto w-[8.75rem] sm:w-[12.5rem] md:w-[14.5rem] drop-shadow-[0_0_15px_rgba(59,130,246,0.35)] filter brightness-110"
                 priority
               />
             </Link>
@@ -183,7 +183,7 @@ export default function Navigation() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="md:hidden absolute top-full left-0 w-full border-b border-[#3B82F6]/10 py-4 px-6 flex flex-col gap-1"
+              className="md:hidden absolute top-full left-0 w-full border-b border-[#3B82F6]/10 py-4 px-4 sm:px-6 flex flex-col gap-1"
               style={{
                 background: "rgba(11, 15, 20, 0.97)",
                 backdropFilter: "blur(20px)",

@@ -66,7 +66,7 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-[#3B82F6]/10 bg-[#0B0F14] py-12 mt-4 relative">
-      <div className="container mx-auto px-6 max-w-7xl">
+      <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 text-[#94A3B8] text-sm">
 
           {/* Brand + social */}

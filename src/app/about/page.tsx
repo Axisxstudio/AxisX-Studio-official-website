@@ -16,7 +16,7 @@ export default function About() {
     <>
       <Navigation />
       
-      <main className="flex-grow pt-28 overflow-x-hidden">
+      <main className="flex-grow pt-16 sm:pt-20 md:pt-28 overflow-x-hidden">
         {/* Header */}
         <section className="relative py-20 overflow-hidden text-center">
              <motion.div 
@@ -25,12 +25,12 @@ export default function About() {
              />
             <motion.div 
                initial="hidden" animate="visible" variants={fadeUp}
-               className="container mx-auto px-6 max-w-4xl relative z-10"
+               className="container mx-auto px-4 sm:px-6 max-w-4xl relative z-10"
             >
-                <h1 className="text-5xl md:text-6xl font-bold font-outfit mb-6">
+                <h1 className="text-[2.2rem] leading-[1.15] sm:text-5xl md:text-6xl font-bold font-outfit mb-4 sm:mb-6">
                    About <TypingText text="AxisX Studio" className="gradient-text" />
                 </h1>
-                <p className="text-xl text-[#adaaad] max-w-2xl mx-auto">
+                <p className="text-base sm:text-xl text-[#adaaad] max-w-2xl mx-auto">
                    In a saturated market filled with bloated templates and fragile codebases, AxisX Studio acts as your dedicated engineering partner. We solve complex organizational bottlenecks through deep technical expertise.
                 </p>
             </motion.div>
@@ -38,7 +38,7 @@ export default function About() {
 
         {/* Mission */}
         <section className="py-16">
-          <div className="container mx-auto px-6 max-w-5xl">
+          <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
              <motion.div 
                 initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp}
                 className="glass-strong rounded-3xl p-10 md:p-16 border border-[#a3a6ff]/20"
@@ -77,8 +77,8 @@ export default function About() {
         </section>
 
         {/* Values */}
-        <section className="py-24 border-t border-[#a3a6ff]/10">
-          <div className="container mx-auto px-6 max-w-6xl">
+        <section className="py-14 sm:py-20 md:py-24 border-t border-[#a3a6ff]/10">
+          <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
              <motion.div 
                  initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={fadeUp}
                  className="text-center mb-16"

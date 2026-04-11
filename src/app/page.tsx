@@ -139,7 +139,7 @@ function ContactForm() {
               backgroundPosition: loading ? '0 0' : '',
               transitionDuration: loading ? '1000ms' : ''
             }}
-            className="btn-ltr-blue w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 disabled:opacity-70 transition-all shadow-xl shadow-blue-500/10"
+            className="btn-ltr-blue w-full py-4 rounded-full font-bold flex items-center justify-center gap-2 disabled:opacity-70 transition-all shadow-xl shadow-blue-500/10"
           >
             {loading ? (
               <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -292,10 +292,10 @@ export default function Home() {
   return (
     <>
       <Navigation />
-      <main className="flex-grow pt-20 md:pt-28 overflow-x-hidden">
+      <main className="flex-grow pt-16 sm:pt-20 md:pt-28 overflow-x-hidden">
 
         {/* ── HERO ── */}
-        <section id="home" className="relative min-h-[85vh] md:min-h-[92vh] flex items-center justify-center overflow-hidden">
+        <section id="home" className="relative min-h-[88vh] md:min-h-[92vh] flex items-center justify-center overflow-hidden">
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-[#0B0F14]/80 z-10" />
             <div className="grid-bg absolute inset-0 z-20" />
@@ -306,15 +306,28 @@ export default function Home() {
           </div>
 
           <motion.div initial="hidden" animate="visible" variants={stagger}
-            className="container mx-auto px-6 relative z-30 max-w-5xl text-center">
-            <motion.div variants={fadeUp} className="inline-flex items-center px-4 py-1.5 rounded-full border border-[#3B82F6]/30 bg-[#3B82F6]/5 text-[#3B82F6] text-sm font-medium mb-8">
-              <span className="relative flex h-2 w-2 mr-2">
+            className="container mx-auto px-4 sm:px-6 relative z-30 max-w-5xl text-center">
+            <motion.div variants={fadeUp} className="inline-flex items-center max-w-[calc(100vw-2rem)] px-3 py-1.5 rounded-full border border-[#3B82F6]/30 bg-[#3B82F6]/5 text-[#3B82F6] text-xs sm:text-sm font-medium mb-6 sm:mb-8 overflow-hidden">
+              <span className="relative flex h-2 w-2 mr-2 shrink-0">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3B82F6] opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-[#3B82F6]" />
               </span>
-              <TypingText text="AxisX Studio | Web Development Company" />
+              <span className="truncate"><TypingText text="AxisX Studio | Web Development Company" /></span>
             </motion.div>
-            <motion.h1 variants={fadeUp} className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 font-outfit text-center leading-[1.1] max-w-[95vw] lg:max-w-[1400px] mx-auto">
+            {/* ── Mobile hero heading: explicit 5 lines (iPhone SE → 14 Pro Max) ── */}
+            <motion.h1
+              variants={fadeUp}
+              className="sm:hidden text-[2.4rem] min-[420px]:text-[3.5rem] leading-[1.1] font-bold tracking-tight mb-6 font-outfit text-center mx-auto"
+            >
+              <span className="block gradient-text">Engineering</span>
+              <span className="block gradient-text-alt">Digital</span>
+              <span className="block gradient-text-alt text-glow mb-1 md:mb-2">Excellence</span>
+              <span className="block text-[#F8FAFC]">for Modern</span>
+              <span className="block text-[#F8FAFC]">Brands</span>
+            </motion.h1>
+
+            {/* ── Desktop / tablet hero heading: original animated 2-line ── */}
+            <motion.h1 variants={fadeUp} className="hidden sm:block text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 font-outfit text-center leading-[1.1] max-w-[95vw] lg:max-w-[1400px] mx-auto">
               <span className="block mb-2 md:mb-4 lg:whitespace-nowrap">
                 <TypingText text="Engineering" className="gradient-text" />{" "}
                 <TypingText text="Digital Excellence" className="gradient-text-alt text-glow" delay={0.3} />
@@ -323,19 +336,19 @@ export default function Home() {
                 <TypingText text="for Modern Brands" delay={0.8} />
               </span>
             </motion.h1>
-            <motion.p variants={fadeUp} className="text-base md:text-lg text-[#94A3B8] max-w-3xl mx-auto mb-10 leading-relaxed">
+            <motion.p variants={fadeUp} className="text-sm sm:text-base md:text-lg text-[#94A3B8] max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed px-1">
               <TypingText text="AxisX Studio" className="font-bold" /> specializes in high-performance web application development, modern UI/UX design, and scalable software solutions tailored for businesses and startups.
             </motion.p>
-            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full">
               <button
                 onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-                className="btn-ltr-white px-8 py-4 rounded-full font-semibold w-full sm:w-auto flex items-center justify-center gap-2 group"
+                className="btn-ltr-white px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold w-full sm:w-auto flex items-center justify-center gap-2 group"
               >
-                Start a Project <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                Start a Project <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </button>
               <button
                 onClick={() => document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" })}
-                className="btn-ltr-dark px-8 py-4 rounded-full font-semibold w-full sm:w-auto border border-[#3B82F6]/20"
+                className="btn-ltr-dark px-6 sm:px-8 py-3.5 sm:py-4 rounded-full text-sm sm:text-base font-semibold w-full sm:w-auto border border-[#3B82F6]/20"
               >
                 View Our Work
               </button>
@@ -344,12 +357,12 @@ export default function Home() {
         </section>
 
         {/* ── SERVICES ── */}
-        <section id="services" className="py-24 border-t border-[#3B82F6]/10 relative">
+        <section id="services" className="py-14 sm:py-20 md:py-24 border-t border-[#3B82F6]/10 relative">
           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#3B82F6]/5 rounded-full blur-[120px] pointer-events-none" />
-          <div className="container mx-auto px-6 max-w-7xl">
-            <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold font-outfit mb-4">Engineering <span className="gradient-text">Solutions</span></h2>
-              <p className="text-[#94A3B8] max-w-2xl mx-auto">From MVPs to enterprise-grade platforms, we deliver technical excellence at every layer of the stack.</p>
+          <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+            <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-10 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-outfit mb-3 sm:mb-4">Engineering <span className="gradient-text">Solutions</span></h2>
+              <p className="text-[#94A3B8] max-w-2xl mx-auto text-sm sm:text-base">From MVPs to enterprise-grade platforms, we deliver technical excellence at every layer of the stack.</p>
             </motion.div>
             <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {services.map((s, i) => (
@@ -379,18 +392,18 @@ export default function Home() {
 
               <motion.div
                 initial="hidden" whileInView="visible" viewport={vp} variants={stagger}
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"
+                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-4"
               >
                 {businessTypes.map((bt, i) => (
                   <motion.div
                     key={i} variants={fadeUp}
                     onClick={() => setActiveBusiness(bt)}
-                    className="flex items-center gap-4 p-5 rounded-[24px] border border-white/5 bg-[#0B0F14]/60 hover:bg-[#0B0F14] hover:border-[#3B82F6]/30 transition-all duration-500 group cursor-pointer shadow-xl"
+                    className="flex items-center gap-3 p-4 rounded-[20px] border border-white/5 bg-[#0B0F14]/60 hover:bg-[#0B0F14] hover:border-[#3B82F6]/30 transition-all duration-500 group cursor-pointer shadow-xl"
                   >
-                    <div className={`w-11 h-11 shrink-0 rounded-xl bg-[#111827] flex items-center justify-center ${bt.color} ${bt.shadow} shadow-[inset_0_0_12px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform border border-white/5`}>
+                    <div className={`w-9 h-9 sm:w-11 sm:h-11 shrink-0 rounded-xl bg-[#111827] flex items-center justify-center ${bt.color} ${bt.shadow} shadow-[inset_0_0_12px_rgba(0,0,0,0.5)] group-hover:scale-110 transition-transform border border-white/5`}>
                       {bt.icon}
                     </div>
-                    <span className="text-sm font-bold text-[#F8FAFC] font-outfit tracking-tight">{bt.label}</span>
+                    <span className="text-xs sm:text-sm font-bold text-[#F8FAFC] font-outfit tracking-tight leading-snug">{bt.label}</span>
                   </motion.div>
                 ))}
               </motion.div>
@@ -413,20 +426,20 @@ export default function Home() {
         </section>
 
         {/* ── ABOUT ── */}
-        <section id="about" className="py-24 border-t border-[#3B82F6]/10 relative overflow-hidden">
+        <section id="about" className="py-14 sm:py-20 md:py-24 border-t border-[#3B82F6]/10 relative overflow-hidden">
           <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={vp} transition={{ duration: 1.5 }}
             className="absolute top-0 right-1/3 w-[300px] h-[300px] bg-[#3B82F6]/8 rounded-full blur-[100px] pointer-events-none" />
-          <div className="container mx-auto px-6 max-w-7xl">
+          <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
 
-            <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold font-outfit mb-4">About <TypingText text="AxisX Studio" className="gradient-text" /></h2>
-              <p className="text-[#94A3B8] max-w-2xl mx-auto">
+            <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-10 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-outfit mb-3 sm:mb-4">About <TypingText text="AxisX Studio" className="gradient-text" /></h2>
+              <p className="text-[#94A3B8] max-w-2xl mx-auto text-sm sm:text-base">
                 A collective of digital craftsmen focused on engineering modern, high-performance web applications that drive real business growth.
               </p>
             </motion.div>
 
             {/* Mission */}
-            <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="glass-strong rounded-3xl p-8 md:p-14 border border-[#3B82F6]/20 mb-16">
+            <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="glass-strong rounded-3xl p-6 sm:p-8 md:p-14 border border-[#3B82F6]/20 mb-10 sm:mb-16">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                 <div>
                   <h3 className="text-2xl font-bold font-outfit mb-5">Architecting Predictable Growth</h3>
@@ -477,22 +490,22 @@ export default function Home() {
         <FeedbackSection />
 
         {/* ── CONTACT ── */}
-        <section id="contact" className="py-24 border-t border-[#3B82F6]/10 relative overflow-hidden">
+        <section id="contact" className="py-14 sm:py-20 md:py-24 border-t border-[#3B82F6]/10 relative overflow-hidden">
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }} whileInView={{ opacity: 1, scale: 1 }} viewport={vp} transition={{ duration: 1.5 }}
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#1F2937]/8 rounded-full blur-[100px] pointer-events-none"
           />
-          <div className="container mx-auto px-6 max-w-6xl relative z-10">
-            <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-bold font-outfit mb-4">Let&apos;s <span className="gradient-text-alt">Connect</span></h2>
-              <p className="text-[#94A3B8] max-w-2xl mx-auto">
+          <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
+            <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-10 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-outfit mb-3 sm:mb-4">Let&apos;s <span className="gradient-text-alt">Connect</span></h2>
+              <p className="text-[#94A3B8] max-w-2xl mx-auto text-sm sm:text-base">
                 Tell us about your next project, idea, or technical challenge. We&apos;re ready to engineer the solution.
               </p>
             </motion.div>
 
             <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger} className="grid grid-cols-1 lg:grid-cols-2 gap-10">
               {/* Info */}
-              <motion.div variants={fadeUp} className="glass-strong rounded-3xl p-8 md:p-12 border border-[#3B82F6]/20 flex flex-col justify-between">
+              <motion.div variants={fadeUp} className="glass-strong rounded-3xl p-6 sm:p-8 md:p-12 border border-[#3B82F6]/20 flex flex-col justify-between">
                 <div>
                   <h3 className="text-2xl font-bold font-outfit mb-5">Reach Out</h3>
                   <p className="text-[#94A3B8] mb-10 text-base leading-relaxed">
@@ -559,7 +572,7 @@ export default function Home() {
               </motion.div>
 
               {/* Form */}
-              <motion.div variants={fadeUp} className="glass rounded-3xl p-8 md:p-12 border border-[#3B82F6]/10">
+              <motion.div variants={fadeUp} className="glass rounded-3xl p-6 sm:p-8 md:p-12 border border-[#3B82F6]/10">
                 <ContactForm />
               </motion.div>
             </motion.div>
@@ -567,23 +580,23 @@ export default function Home() {
         </section>
 
         {/* ── CTA Banner ── */}
-        <section className="py-20 relative overflow-hidden">
+        <section className="py-12 sm:py-16 md:py-20 relative overflow-hidden">
           <div className="absolute inset-0 bg-[#3B82F6]/5 z-0" />
           <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp}
-            className="container mx-auto px-6 max-w-5xl relative z-10">
-            <div className="glass-strong rounded-3xl p-10 md:p-16 border border-[#3B82F6]/20 text-center glow-accent-2 relative overflow-hidden">
+            className="container mx-auto px-4 sm:px-6 max-w-5xl relative z-10">
+            <div className="glass-strong rounded-3xl p-7 sm:p-10 md:p-16 border border-[#3B82F6]/20 text-center glow-accent-2 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#1F2937]/20 rounded-full blur-[80px]" />
-              <h2 className="text-4xl md:text-5xl font-bold font-outfit mb-6 text-[#F8FAFC] relative z-10">
+              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-outfit mb-4 sm:mb-6 text-[#F8FAFC] relative z-10">
                 Ready to transform your <br className="hidden md:block" /> digital presence?
               </h2>
-              <p className="text-[#94A3B8] text-lg mb-10 max-w-2xl mx-auto relative z-10">
+              <p className="text-[#94A3B8] text-sm sm:text-base md:text-lg mb-7 sm:mb-10 max-w-2xl mx-auto relative z-10">
                 Partner with <TypingText text="AxisX Studio" className="font-bold gradient-text" /> to build technology that moves the needle.
               </p>
               <button
                 onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-                className="inline-flex px-8 py-4 rounded-full bg-gradient-to-r from-[#3B82F6] to-[#1F2937] text-[#0B0F14] font-bold hover:scale-105 transition-transform items-center justify-center gap-2 relative z-10 shadow-[0_0_30px_rgba(163,166,255,0.4)]"
+                className="inline-flex px-6 sm:px-8 py-3.5 sm:py-4 rounded-full bg-gradient-to-r from-[#3B82F6] to-[#1F2937] text-[#0B0F14] font-bold hover:scale-105 transition-transform items-center justify-center gap-2 relative z-10 shadow-[0_0_30px_rgba(163,166,255,0.4)] text-sm sm:text-base"
               >
-                Contact Our Team <ArrowRight size={18} />
+                Contact Our Team <ArrowRight size={16} />
               </button>
             </div>
           </motion.div>
