@@ -270,3 +270,39 @@ WITH CHECK (
   bucket_id = 'media'
   AND public.is_admin()
 );
+
+-- 4. Pricing Packages
+CREATE TABLE IF NOT EXISTS public.pricing_packages (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  category text NOT NULL,
+  title text NOT NULL,
+  slug text UNIQUE NOT NULL,
+  displayprice text NOT NULL,
+  rawprice integer NOT NULL,
+  ispopular boolean DEFAULT false,
+  badge text,
+  bestfor text NOT NULL,
+  features text[] DEFAULT '{}',
+  contactsubject text,
+  enabled boolean DEFAULT true,
+  sortorder integer DEFAULT 0,
+  createdat timestamp with time zone DEFAULT now(),
+  updatedat timestamp with time zone DEFAULT now()
+);
+
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS id uuid DEFAULT gen_random_uuid();
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS category text;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS title text;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS slug text;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS displayprice text;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS rawprice integer;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS ispopular boolean DEFAULT false;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS badge text;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS bestfor text;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS features text[] DEFAULT '{}';
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS contactsubject text;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS enabled boolean DEFAULT true;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS sortorder integer DEFAULT 0;
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS createdat timestamp with time zone DEFAULT now();
+ALTER TABLE public.pricing_packages ADD COLUMN IF NOT EXISTS updatedat timestamp with time zone DEFAULT now();
+CREATE UNIQUE INDEX IF NOT EXISTS pricing_packages_slug_key ON public.pricing_packages (slug);

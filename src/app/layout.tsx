@@ -28,6 +28,14 @@ export const metadata = {
   metadataBase: new URL('https://axisxstudio.com'),
   alternates: {
     canonical: '/',
+    languages: {
+      'en-US': '/en-US',
+    },
+  },
+  icons: {
+    icon: '/icon.png',
+    shortcut: '/icon.png',
+    apple: '/icon.png',
   },
   openGraph: {
     type: "website",
@@ -36,15 +44,25 @@ export const metadata = {
     title: "AxisX Studio | Engineering Digital Excellence",
     description: "High-performance web applications and digital experiences tailored for modern brands.",
     siteName: "AxisX Studio",
+    images: [
+      {
+        url: '/og-image.png', // Fallback to provided branding image if exists
+        width: 1200,
+        height: 630,
+        alt: 'AxisX Studio - Project Engineering',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AxisX Studio",
+    title: "AxisX Studio | Modern Software Agency",
     description: "High-performance web applications and digital experiences.",
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
     follow: true,
+    nocache: true,
     googleBot: {
       index: true,
       follow: true,
@@ -53,6 +71,17 @@ export const metadata = {
       'max-snippet': -1,
     },
   },
+  category: 'technology',
+  verification: {
+    google: "CCzHTDFAa3_oyPo3Od67DGlkUG8LAFHs2HV9iUxE8MA",
+  },
+};
+
+export const viewport = {
+  themeColor: '#0B0F14',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -63,22 +92,72 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${inter.variable} ${outfit.variable} antialiased bg-[#0B0F14] text-[#F8FAFC] min-h-screen flex flex-col`}>
-        <Script id="schema-org" type="application/ld+json" strategy="beforeInteractive">
-          {JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "ProfessionalService",
-            "name": "AxisX Studio",
-            "image": "https://axisxstudio.com/logo.png",
-            "url": "https://axisxstudio.com",
-            "telephone": "+94771234567",
-            "address": {
-              "@type": "PostalAddress",
-              "addressLocality": "Galle",
-              "addressCountry": "LK"
+        <Script id="schema-org" type="application/ld+json" strategy="afterInteractive">
+          {JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "AxisX Studio",
+              "url": "https://axisxstudio.com",
+              "logo": "https://axisxstudio.com/icon.png",
+              "sameAs": [
+                "https://github.com/axisxstudio",
+                "https://linkedin.com/company/axisxstudio",
+                "https://twitter.com/axisxstudio"
+              ],
+              "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "+94771234567",
+                "contactType": "customer service",
+                "availableLanguage": "English"
+              }
             },
-            "description": "High-performance web application development, modern UI/UX design, and scalable software solutions.",
-            "priceRange": "$$$$"
-          })}
+            {
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              "url": "https://axisxstudio.com",
+              "potentialAction": {
+                "@type": "SearchAction",
+                "target": "https://axisxstudio.com/projects?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+              }
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "ProfessionalService",
+              "name": "AxisX Studio",
+              "image": "https://axisxstudio.com/og-image.png",
+              "url": "https://axisxstudio.com",
+              "telephone": "+94771234567",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Main Street",
+                "addressLocality": "Galle",
+                "addressRegion": "Southern",
+                "postalCode": "80000",
+                "addressCountry": "LK"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": 6.0535,
+                "longitude": 80.2210
+              },
+              "openingHoursSpecification": {
+                "@type": "OpeningHoursSpecification",
+                "dayOfWeek": [
+                  "Monday",
+                  "Tuesday",
+                  "Wednesday",
+                  "Thursday",
+                  "Friday"
+                ],
+                "opens": "09:00",
+                "closes": "18:00"
+              },
+              "description": "Premium software engineering and digital transformation agency.",
+              "priceRange": "$$$"
+            }
+          ])}
         </Script>
         <Preloader />
         <Suspense fallback={null}>

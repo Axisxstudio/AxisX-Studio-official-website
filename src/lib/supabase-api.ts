@@ -87,6 +87,23 @@ const tableColumnMaps = {
     createdAt: "createdat",
     updatedAt: "updatedat",
   },
+  pricing_packages: {
+    id: "id",
+    category: "category",
+    title: "title",
+    slug: "slug",
+    hasPlus: "hasplus",
+    rawPrice: "rawprice",
+    isPopular: "ispopular",
+    badge: "badge",
+    bestFor: "bestfor",
+    features: "features",
+    contactSubject: "contactsubject",
+    enabled: "enabled",
+    sortOrder: "sortorder",
+    createdAt: "createdat",
+    updatedAt: "updatedat",
+  },
 } as const satisfies Record<string, Record<string, string>>;
 
 export type DocumentReference = {
@@ -485,3 +502,4 @@ export async function updatePassword(_user: User, newPassword: string): Promise<
 
   currentUser = normalizeUser(data.user) ?? currentUser;
 }
+

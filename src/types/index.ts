@@ -49,3 +49,22 @@ export interface SiteSettings extends Record<string, unknown> {
   maintenanceMessage: string;
   updatedAt?: AppTimestamp;
 }
+
+export interface PricingPackage {
+  id?: string;
+  category: 'WebsitePackages' | 'eCommercePackages' | string;
+  title: string;
+  slug: string;
+  hasPlus: boolean;
+  rawPrice: number;
+  isPopular: boolean;
+  badge?: string;
+  bestFor: string;
+  features: string[];
+  contactSubject: string;
+  enabled: boolean;
+  sortOrder: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+

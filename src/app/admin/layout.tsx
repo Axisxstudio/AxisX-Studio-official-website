@@ -5,7 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { auth, signOut } from "@/lib/supabase-api";
-import { LayoutDashboard, MessageSquare, Briefcase, Mail, LogOut, Settings, Menu, X, ExternalLink, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { LayoutDashboard, MessageSquare, Briefcase, Mail, LogOut, Settings, Menu, X, ExternalLink, ShieldCheck, CheckCircle2, Tag } from "lucide-react";
 import toast from "react-hot-toast";
 import BrandLogo from "@/components/BrandLogo";
 
@@ -44,6 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
    const navItems = [
       { href: "/admin", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
       { href: "/admin/projects", label: "Projects", icon: <Briefcase size={20} /> },
+      { href: "/admin/pricing", label: "Pricing", icon: <Tag size={20} /> },
       { href: "/admin/feedback", label: "Feedback", icon: <MessageSquare size={20} /> },
       { href: "/admin/contacts", label: "Inbox", icon: <Mail size={20} /> },
       { href: "/admin/settings", label: "Settings", icon: <Settings size={20} /> },
@@ -132,21 +133,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         className="w-full h-auto object-contain drop-shadow-[0_0_12px_rgba(59,130,246,0.3)] filter brightness-115 transition-all duration-300 hover:scale-105" 
                      />
                   </div>
-                  <div className="text-left hidden sm:block">
-                     <p className="text-[10px] font-black text-[#F8FAFC] uppercase tracking-widest">{user?.email?.split('@')[0]}</p>
-                     <div className="flex items-center gap-1.5 justify-start mt-0.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] shadow-[0_0_5px_#10B981]"></span>
-                        <p className="text-[10px] font-bold text-[#4A5568] uppercase tracking-widest">Root Auth</p>
-                     </div>
-                  </div>
                </div>
 
-               <button
-                  className="lg:hidden text-[#F8FAFC] p-2.5 bg-[#3B82F6]/10 rounded-xl ml-auto border border-[#3B82F6]/20"
-                  onClick={() => setSidebarOpen(true)}
-               >
-                  <Menu size={22} />
-               </button>
+               <div className="flex items-center gap-6">
+                  <div className="text-right hidden sm:block">
+                     <p className="text-[10px] font-black text-[#F8FAFC] uppercase tracking-widest">{user?.email?.split('@')[0]}</p>
+                     <div className="flex items-center gap-1.5 justify-end mt-0.5">
+                        <p className="text-[10px] font-bold text-[#4A5568] uppercase tracking-widest">Root Auth</p>
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#10B981] shadow-[0_0_5px_#10B981]"></span>
+                     </div>
+                  </div>
+
+                  <button
+                     className="lg:hidden text-[#F8FAFC] p-2.5 bg-[#3B82F6]/10 rounded-xl border border-[#3B82F6]/20"
+                     onClick={() => setSidebarOpen(true)}
+                  >
+                     <Menu size={22} />
+                  </button>
+               </div>
             </header>
 
             <div className="flex-1 overflow-y-auto p-8 md:p-12 relative scroll-smooth">

@@ -15,6 +15,7 @@ import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import ProjectModal from "@/components/ProjectModal";
 import FeedbackSection from "@/components/FeedbackSection";
+import PricingSection from "@/components/PricingSection";
 import { TypingText } from "@/components/TypingText";
 import { CountUp } from "@/components/CountUp";
 import { supabase } from "@/lib/supabase";
@@ -70,6 +71,22 @@ function ContactForm() {
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", subject: "", message: "" });
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    const handleSetSubject = (e: Event) => {
+      const customEvent = e as CustomEvent<string>;
+      if (customEvent.detail) {
+        setFormData(prev => ({ ...prev, subject: customEvent.detail }));
+        
+        // Let's also focus the subject input softly after the scroll finishes
+        setTimeout(() => {
+          document.getElementById('subject')?.focus();
+        }, 800);
+      }
+    };
+    window.addEventListener("set-contact-subject", handleSetSubject);
+    return () => window.removeEventListener("set-contact-subject", handleSetSubject);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -485,6 +502,9 @@ export default function Home() {
 
         {/* ── PROJECTS ── */}
         <ProjectsSection />
+
+        {/* ── PRICING ── */}
+        <PricingSection />
 
         {/* ── FEEDBACK MARQUEE ── */}
         <FeedbackSection />

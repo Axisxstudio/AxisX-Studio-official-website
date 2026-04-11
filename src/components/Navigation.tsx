@@ -85,7 +85,7 @@ export default function Navigation() {
               className="flex items-center opacity-95 hover:opacity-100 transition-opacity duration-200"
             >
               <BrandLogo
-                className="h-auto w-[8.75rem] sm:w-[12.5rem] md:w-[14.5rem] drop-shadow-[0_0_15px_rgba(59,130,246,0.35)] filter brightness-110"
+                className="h-auto w-[8.75rem] sm:w-[10.5rem] drop-shadow-[0_0_15px_rgba(59,130,246,0.35)] filter brightness-110"
                 priority
               />
             </Link>
