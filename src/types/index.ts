@@ -27,7 +27,7 @@ export interface Feedback {
   updatedAt?: AppTimestamp;
 }
 
-export interface Project {
+export interface Project extends Record<string, any> {
   id?: string;
   title: string;
   slug: string;
@@ -50,7 +50,7 @@ export interface SiteSettings extends Record<string, unknown> {
   updatedAt?: AppTimestamp;
 }
 
-export interface PricingPackage {
+export interface PricingPackage extends Record<string, any> {
   id?: string;
   category: 'WebsitePackages' | 'eCommercePackages' | string;
   title: string;

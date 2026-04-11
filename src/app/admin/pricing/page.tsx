@@ -396,7 +396,7 @@ export default function AdminPricing() {
         
       if (error) throw error;
       
-      setPackages(fromDatabaseRows<PricingPackage>("pricing_packages", data));
+      setPackages(fromDatabaseRows<PricingPackage>("pricing_packages", data as any));
       toast.success("Default packages synced to database!");
     } catch (err) {
       console.error(err);

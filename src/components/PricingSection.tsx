@@ -203,7 +203,7 @@ export default function PricingSection() {
         }
 
         if (data && data.length > 0) {
-          setPackages(fromDatabaseRows<PricingPackage>("pricing_packages", data));
+          setPackages(fromDatabaseRows<PricingPackage>("pricing_packages", data as any));
         } else {
           // If DB table is completely empty, default to the initial packages
           setPackages(initialPackages);
