@@ -30,7 +30,9 @@ const initialPackages: PricingPackage[] = [
       "Contact form with email notifications",
       "Basic SEO setup",
       "Fast loading optimization",
-      "1 revision"
+      "1 revision",
+      "1 year free hosting",
+      "Domain name not included"
     ],
     contactSubject: "Starter Website",
     enabled: true,
@@ -53,7 +55,9 @@ const initialPackages: PricingPackage[] = [
       "On-page SEO optimization",
       "Speed & performance optimization",
       "Google indexing setup",
-      "2–3 revision rounds"
+      "2–3 revision rounds",
+      "1 year free hosting",
+      "Domain name not included"
     ],
     contactSubject: "Business Website",
     enabled: true,
@@ -75,7 +79,9 @@ const initialPackages: PricingPackage[] = [
       "Admin panel optional",
       "Advanced performance optimization",
       "SEO-ready architecture",
-      "Priority support"
+      "Priority support",
+      "1 year free hosting",
+      "Domain name not included"
     ],
     contactSubject: "Premium Website",
     enabled: true,
@@ -95,7 +101,9 @@ const initialPackages: PricingPackage[] = [
       "Payment gateway integration",
       "Mobile responsive design",
       "Basic SEO",
-      "Order management system"
+      "Order management system",
+      "1 year free hosting",
+      "Domain name not included"
     ],
     contactSubject: "Starter eCommerce",
     enabled: true,
@@ -117,7 +125,9 @@ const initialPackages: PricingPackage[] = [
       "Customer accounts",
       "Inventory management",
       "Speed optimization",
-      "SEO optimization"
+      "SEO optimization",
+      "1 year free hosting",
+      "Domain name not included"
     ],
     contactSubject: "Business eCommerce",
     enabled: true,
@@ -138,7 +148,9 @@ const initialPackages: PricingPackage[] = [
       "Advanced analytics",
       "API integrations",
       "Multi-vendor optional",
-      "High-performance architecture"
+      "High-performance architecture",
+      "1 year free hosting",
+      "Domain name not included"
     ],
     contactSubject: "Advanced eCommerce",
     enabled: true,
@@ -399,6 +411,22 @@ function PricingCard({ pkg, onContactClick, onWhatsAppClick, idx }: {
   idx: number 
 }) {
   const isDisabled = pkg.enabled === false;
+  
+  const colorConfig = (pkg.title === "Premium Website" || pkg.title === "Advanced eCommerce")
+    ? { title: "text-[#F59E0B]", shadow: "rgba(245, 158, 11, 0.15)", border: "border-[#F59E0B]/30" }
+    : pkg.isPopular 
+      ? { title: "gradient-text-alt", shadow: "rgba(59, 130, 246, 0.15)", border: "border-[#3B82F6]/40" }
+      : { title: "gradient-text", shadow: "rgba(148, 163, 184, 0.08)", border: "border-white/5" };
+
+  const titleColor = colorConfig.title;
+
+  const displayFeatures = [...pkg.features];
+  if (!displayFeatures.some(f => f.toLowerCase().includes("hosting"))) {
+    displayFeatures.push("1 year free hosting");
+  }
+  if (!displayFeatures.some(f => f.toLowerCase().includes("not included"))) {
+    displayFeatures.push("Domain name not included");
+  }
 
   return (
     <motion.div
@@ -406,13 +434,12 @@ function PricingCard({ pkg, onContactClick, onWhatsAppClick, idx }: {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: idx * 0.1, duration: 0.5 }}
-      whileHover={!isDisabled ? { y: -8 } : {}}
+      whileHover={!isDisabled ? { y: -8, boxShadow: `0 0 40px ${colorConfig.shadow}` } : {}}
+      style={{ boxShadow: `0 0 25px ${colorConfig.shadow}` }}
       className={`glass-strong rounded-3xl p-8 relative flex flex-col h-full border transition-all duration-300 group ${
         isDisabled 
           ? 'border-[#ef4444]/50 bg-[#0e0e11] opacity-75'
-          : pkg.isPopular 
-            ? 'border-[#3B82F6]/50 shadow-[0_0_30px_rgba(59,130,246,0.15)] bg-[#0B0F14]/80' 
-            : 'border-[#3B82F6]/10 hover:border-[#3B82F6]/30 hover:shadow-xl hover:bg-[#0B0F14]/60'
+          : `${colorConfig.border} bg-[#0B0F14]/80`
       }`}
     >
       {isDisabled && (
@@ -441,7 +468,7 @@ function PricingCard({ pkg, onContactClick, onWhatsAppClick, idx }: {
       )}
 
       <div className={`mb-6 pt-2 ${isDisabled ? 'opacity-60 grayscale' : ''}`}>
-        <h4 className="text-xl font-bold font-outfit text-[#F8FAFC] mb-1">{pkg.title}</h4>
+        <h4 className={`text-xl font-bold font-outfit mb-1 ${titleColor}`}>{pkg.title}</h4>
         <p className="text-[#94A3B8] text-xs font-medium tracking-tight">{pkg.bestFor}</p>
       </div>
 
@@ -453,18 +480,27 @@ function PricingCard({ pkg, onContactClick, onWhatsAppClick, idx }: {
       </div>
 
       <div className={`space-y-4 mb-10 flex-grow ${isDisabled ? 'opacity-60 grayscale' : ''}`}>
-        {pkg.features.map((feature, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <CheckCircle2 size={18} className="text-[#3B82F6] shrink-0 mt-0.5" />
-            <span className="text-[#CBD5E1] text-sm leading-snug">{feature}</span>
-          </div>
-        ))}
+        {displayFeatures.map((feature, i) => {
+          const isNotIncluded = feature.toLowerCase().includes("not included");
+          return (
+            <div key={i} className="flex items-start gap-3">
+              <CheckCircle2 size={18} className={isNotIncluded ? "text-[#94A3B8]/40 shrink-0 mt-0.5" : "text-[#3B82F6] shrink-0 mt-0.5"} />
+              <span className={`text-sm leading-snug ${isNotIncluded ? "text-[#94A3B8]/60 italic" : "text-[#CBD5E1]"}`}>
+                {feature}
+                {feature.toLowerCase().includes("hosting") && (
+                  <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold bg-[#3B82F6]/20 text-[#3B82F6] border border-[#3B82F6]/30 uppercase">Limited Time</span>
+                )}
+              </span>
+            </div>
+          );
+        })}
       </div>
 
       <div className="mt-auto pt-6 border-t border-white/5 flex items-center justify-between">
         <button
           disabled={isDisabled}
           onClick={() => onContactClick(pkg.contactSubject)}
+          style={!isDisabled ? { boxShadow: `0 4px 20px ${colorConfig.shadow}` } : {}}
           className={`w-full py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all ${
              isDisabled 
                ? 'bg-[#111827] text-[#4A5568] cursor-not-allowed border border-white/5'

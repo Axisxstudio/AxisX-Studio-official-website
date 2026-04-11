@@ -64,6 +64,7 @@ export default function NewFeedback() {
     companyName: "",
     rating: 5,
     projectName: "",
+    liveUrl: "",
     message: "",
     consentToPublish: true,
   });
@@ -218,6 +219,7 @@ export default function NewFeedback() {
             consentToPublish: formData.consentToPublish,
             imageUrls,
             videoUrls,
+            liveUrl: formData.liveUrl.trim(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           })]);
@@ -236,6 +238,7 @@ export default function NewFeedback() {
         companyName: "",
         rating: 5,
         projectName: "",
+        liveUrl: "",
         message: "",
         consentToPublish: true,
       });
@@ -405,8 +408,13 @@ export default function NewFeedback() {
                             <FieldError error={errors.projectName} />
                           </div>
                           <div>
-                            <label className="block text-sm font-medium text-[#adaaad] mb-2">Company / Project Link</label>
-                            <input suppressHydrationWarning type="text" name="companyName" value={formData.companyName} onChange={handleChange} className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-all hover:bg-[#15151a]" placeholder="https://axisxstudio.com or AxisX Studio" />
+                            <label className="block text-sm font-medium text-[#adaaad] mb-2">Company / Agency Name</label>
+                            <input suppressHydrationWarning type="text" name="companyName" value={formData.companyName} onChange={handleChange} className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-all hover:bg-[#15151a]" placeholder="AxisX Studio" />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-[#adaaad] mb-2">Live Project URL</label>
+                            <input suppressHydrationWarning type="url" name="liveUrl" value={formData.liveUrl} onChange={handleChange} className="w-full bg-[#0e0e10] border border-[#a3a6ff]/20 rounded-xl px-4 py-3 text-[#f9f5f8] focus:border-[#a3a6ff]/60 transition-all hover:bg-[#15151a]" placeholder="https://project-url.com" />
+                            <p className="text-[10px] text-[#adaaad]/60 mt-1 ml-1 italic">Optional: Display a visit icon on your review</p>
                           </div>
                         </div>
                       </motion.div>
@@ -498,6 +506,11 @@ export default function NewFeedback() {
                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                                   {images.map((file, idx) => (
                                     <div key={idx} className="group relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-[#0e0e10]">
+                                      {idx === 0 && (
+                                        <div className="absolute top-2 left-2 z-10 px-2 py-0.5 bg-[#3B82F6] text-white text-[9px] font-bold rounded-md uppercase tracking-wider shadow-lg">
+                                          Thumbnail
+                                        </div>
+                                      )}
                                       <Image 
                                         src={URL.createObjectURL(file)} 
                                         alt="preview" 

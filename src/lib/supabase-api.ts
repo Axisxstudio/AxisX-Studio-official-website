@@ -68,6 +68,7 @@ const tableColumnMaps = {
     message: "message",
     imageUrls: "imageurls",
     videoUrls: "videourls",
+    liveUrl: "liveurl",
     consentToPublish: "consenttopublish",
     createdAt: "createdat",
     updatedAt: "updatedat",

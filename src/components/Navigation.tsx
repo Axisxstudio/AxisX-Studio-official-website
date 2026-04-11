@@ -32,6 +32,18 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Lock scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileMenuOpen]);
+
   const scrollTo = (id: string) => {
     setMobileMenuOpen(false);
     setIsNavigating(true);
@@ -77,7 +89,7 @@ export default function Navigation() {
           : "bg-transparent py-4"
           }`}
       >
-        <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 max-w-7xl relative z-50">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <Link
@@ -175,6 +187,20 @@ export default function Navigation() {
           </div>
         </div>
 
+        {/* Mobile Nav Overlay Backdrop */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 z-40 bg-[#0B0F14]/75 backdrop-blur-xl"
+              style={{ height: '100vh', width: '100vw' }}
+            />
+          )}
+        </AnimatePresence>
+
         {/* Mobile Nav — animated slide-down */}
         <AnimatePresence>
           {mobileMenuOpen && (
@@ -184,9 +210,9 @@ export default function Navigation() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="md:hidden absolute top-full left-0 w-full border-b border-[#3B82F6]/10 py-4 px-4 sm:px-6 flex flex-col gap-1"
+              className="md:hidden absolute top-full left-0 w-full border-b border-[#3B82F6]/10 py-4 px-4 sm:px-6 flex flex-col gap-1 z-50"
               style={{
-                background: "rgba(11, 15, 20, 0.97)",
+                background: "rgba(11, 15, 20, 0.98)",
                 backdropFilter: "blur(20px)",
               }}
             >
@@ -213,7 +239,7 @@ export default function Navigation() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: links.length * 0.05 }}
                 onClick={() => scrollTo("contact")}
-                className="btn-ltr-dark mt-3 w-full py-3 rounded-xl text-sm font-semibold border border-[#3B82F6]/25"
+                className="btn-ltr-white mt-3 w-full py-4 rounded-full text-base font-bold shadow-lg shadow-blue-500/10"
               >
                 Get Started
               </motion.button>

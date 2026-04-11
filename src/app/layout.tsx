@@ -17,11 +17,11 @@ export const metadata = {
     default: "AxisX Studio | High-Performance Web Development Company",
     template: "%s | AxisX Studio"
   },
-  description: "AxisX Studio specializes in high-performance web application development, modern UI/UX design, and scalable software solutions tailored for businesses and startups.",
+  description: "AxisX Studio engineered high-performance web applications, modern UI/UX design, and scalable eCommerce solutions. Get 1 year of free hosting with your professional website. Tailored for global startups and local brands.",
   keywords: [
-    "AxisX Studio", "AxisX", "Axis-X", "Web Development company", "UI/UX Design", "Software Agency", 
-    "Next.js Development", "React Agency", "Tech Startup", 
-    "Custom Web Applications", "Front-end Development"
+    "AxisX Studio", "AxisX", "Axis-X", "Web Development Sri Lanka", "UI/UX Design Galle", "Software Agency", 
+    "eCommerce development Sri Lanka", "Next.js Development Agency", "React Web Design", "Free Hosting Sri Lanka",
+    "Custom Web Applications", "Professional Web Design LK"
   ],
   authors: [{ name: "AxisX Studio" }],
   creator: "AxisX Studio",

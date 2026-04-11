@@ -8,7 +8,7 @@ import {
   Server, LayoutDashboard, Search, FileCode2, Palette,
   Mail, Phone, MapPin, Send, CheckCircle2,
   ExternalLink, Utensils, GraduationCap, ShoppingBag,
-  Briefcase, HeartPulse, Scissors, Hotel, CheckCircle, X,
+  Briefcase, HeartPulse, Scissors, Hotel, CheckCircle, X, ChevronDown
 } from "lucide-react";
 import { motion, type Variants, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -299,6 +299,7 @@ function ProjectsSection() {
 /* ─── Page Root ─── */
 export default function Home() {
   const [activeBusiness, setActiveBusiness] = useState<typeof businessTypes[0] | null>(null);
+  const [expandedService, setExpandedService] = useState<number | null>(null);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -336,7 +337,7 @@ export default function Home() {
             {/* ── Mobile hero heading: explicit 5 lines (iPhone SE → 14 Pro Max) ── */}
             <motion.h1
               variants={fadeUp}
-              className="sm:hidden text-[2.4rem] min-[420px]:text-[3.5rem] leading-[1.1] font-bold tracking-tight mb-6 font-outfit text-center mx-auto"
+              className="sm:hidden text-[2.6rem] min-[420px]:text-[3.8rem] leading-[1.05] font-bold tracking-tight mb-6 font-outfit text-center mx-auto"
             >
               <span className="block gradient-text">Engineering</span>
               <span className="block gradient-text-alt">Digital</span>
@@ -386,15 +387,64 @@ export default function Home() {
               <p className="text-[#94A3B8] max-w-2xl mx-auto text-sm sm:text-base">From MVPs to enterprise-grade platforms, we deliver technical excellence at every layer of the stack.</p>
             </motion.div>
             <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services.map((s, i) => (
-                <motion.div key={i} variants={fadeUp} className="glass-strong p-8 rounded-2xl border border-[#3B82F6]/10 hover:border-[#3B82F6]/30 transition-all duration-500 hover:-translate-y-2 group">
-                  <div className="w-14 h-14 rounded-xl bg-[#1F2937] border border-[#3B82F6]/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform glow-accent">
-                    {s.icon}
-                  </div>
-                  <h3 className="text-lg font-bold text-[#F8FAFC] mb-3">{s.title}</h3>
-                  <p className="text-[#94A3B8] text-sm leading-relaxed">{s.desc}</p>
-                </motion.div>
-              ))}
+              {services.map((s, i) => {
+                const isOpen = expandedService === i;
+                return (
+                  <motion.div
+                    key={i}
+                    variants={fadeUp}
+                    onClick={() => setExpandedService(isOpen ? null : i)}
+                    className={`glass-strong rounded-2xl border transition-all duration-500 group select-none ${
+                      isOpen ? 'border-[#3B82F6]/40 bg-[#111827]/60 shadow-lg shadow-[#3B82F6]/5' : 'border-[#3B82F6]/10 hover:border-[#3B82F6]/30'
+                    } ${!isOpen && 'hover:-translate-y-2'} cursor-pointer sm:cursor-default`}
+                  >
+                    <div className="p-6 sm:p-8">
+                      <div className="flex items-center gap-4 sm:block">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-[#1F2937] border border-[#3B82F6]/20 flex items-center justify-center sm:mb-6 group-hover:scale-110 transition-transform glow-accent shrink-0">
+                          <div className="flex items-center justify-center scale-75 sm:scale-100">
+                            {s.icon}
+                          </div>
+                        </div>
+                        
+                        <div className="flex-grow">
+                          <h3 className="text-base sm:text-lg font-bold text-[#F8FAFC] leading-snug">{s.title}</h3>
+                        </div>
+              
+                        <motion.div 
+                          animate={{ rotate: isOpen ? 180 : 0 }}
+                          className="sm:hidden text-[#4a4a5a] bg-white/5 p-1.5 rounded-full"
+                        >
+                          <ChevronDown size={14} />
+                        </motion.div>
+                      </div>
+              
+                      {/* Desktop Description */}
+                      <div className="hidden sm:block">
+                        <p className="text-[#94A3B8] text-sm leading-relaxed">{s.desc}</p>
+                      </div>
+              
+                      {/* Mobile Dropdown Description */}
+                      <AnimatePresence>
+                        {isOpen && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="sm:hidden overflow-hidden"
+                          >
+                            <div className="pt-6 mt-4 border-t border-white/5">
+                              <p className="text-[#94A3B8] text-[13px] leading-relaxed">
+                                {s.desc}
+                              </p>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </motion.div>
 
             {/* ── Business Types Sub-section ── */}

@@ -22,6 +22,7 @@ export interface Feedback {
   message: string;
   imageUrls: string[];
   videoUrls: string[];
+  liveUrl?: string;
   consentToPublish: boolean;
   createdAt: AppTimestamp;
   updatedAt?: AppTimestamp;

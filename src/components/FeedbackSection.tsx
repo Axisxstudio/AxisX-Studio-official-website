@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase";
 import { selectClause, toDatabaseField } from "@/lib/supabase-api";
 import { Feedback } from "@/types";
 import { formatTimestamp } from "@/lib/date";
-import { X, Play, Maximize2, Star, ImageIcon, Video, MessageSquarePlus, ChevronLeft, ChevronRight, LayoutGrid } from "lucide-react";
+import { X, Play, Maximize2, Star, ImageIcon, Video, MessageSquarePlus, ChevronLeft, ChevronRight, LayoutGrid, Globe } from "lucide-react";
 import Link from "next/link";
 
 const AUTO_SCROLL_DURATION_MS = 40000;
@@ -24,34 +24,11 @@ type FeedbackMediaItem = {
   type: "image" | "video";
 };
 
-function measureLoopMetrics(viewport: HTMLDivElement | null, feedbackCount: number): LoopMetrics | null {
-  if (!viewport || feedbackCount === 0) return null;
-
+function measureLoopMetrics(viewport: HTMLDivElement | null): number {
+  if (!viewport) return 0;
   const cards = viewport.querySelectorAll<HTMLElement>("[data-feedback-card]");
-  const middleCard = cards[feedbackCount];
-  const thirdCard = cards[feedbackCount * 2];
-  const nextCard = cards[feedbackCount + 1];
-
-  if (!middleCard || !thirdCard) return null;
-
-  return {
-    middleStart: middleCard.offsetLeft,
-    loopWidth: thirdCard.offsetLeft - middleCard.offsetLeft,
-    step: nextCard ? nextCard.offsetLeft - middleCard.offsetLeft : middleCard.offsetWidth,
-  };
-}
-
-function normalizeLoopScroll(viewport: HTMLDivElement | null, metrics: LoopMetrics) {
-  if (!viewport || metrics.loopWidth <= 0) return;
-
-  const min = metrics.middleStart - metrics.loopWidth / 2;
-  const max = metrics.middleStart + metrics.loopWidth / 2;
-
-  if (viewport.scrollLeft < min) {
-    viewport.scrollLeft += metrics.loopWidth;
-  } else if (viewport.scrollLeft > max) {
-    viewport.scrollLeft -= metrics.loopWidth;
-  }
+  if (cards.length < 2) return cards[0]?.offsetWidth ?? 0;
+  return cards[1].offsetLeft - cards[0].offsetLeft;
 }
 
 /* ─── Star Rating ─── */
@@ -549,7 +526,7 @@ function FeedbackCard({ fb, onClick }: { fb: Feedback; onClick: () => void }) {
   return (
     <div
       onClick={onClick}
-      className="feedback-card shrink-0 w-[320px] sm:w-[360px] glass-strong rounded-2xl border border-[#3B82F6]/10 hover:border-[#3B82F6]/35 transition-all cursor-pointer group overflow-hidden select-none"
+      className="feedback-card shrink-0 w-[calc(100vw-80px)] sm:w-[380px] glass-strong rounded-3xl border border-[#3B82F6]/10 hover:border-[#3B82F6]/35 transition-all cursor-pointer group overflow-hidden select-none"
     >
       {/* Top image strip */}
       {mainImage ? (
@@ -558,11 +535,25 @@ function FeedbackCard({ fb, onClick }: { fb: Feedback; onClick: () => void }) {
           <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-transparent to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-3 flex items-center justify-between">
             <span className="text-xs bg-[#0B0F14]/70 backdrop-blur-sm px-2 py-1 rounded-full text-[#94A3B8] border border-[#3B82F6]/10">{fb.projectName}</span>
-            {(fb.videoUrls?.length > 0) && (
-              <span className="text-xs bg-[#1F2937]/20 backdrop-blur-sm px-2 py-1 rounded-full text-[#1F2937] border border-[#1F2937]/20 flex items-center gap-1">
-                <Video size={9} /> Video
-              </span>
-            )}
+            <div className="flex items-center gap-2">
+              {fb.liveUrl && (
+                <a
+                  href={fb.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="p-1.5 rounded-lg bg-[#3B82F6]/20 text-[#3B82F6] hover:bg-[#3B82F6] hover:text-white transition-all border border-[#3B82F6]/30 backdrop-blur-sm"
+                  title="Visit Live Website"
+                >
+                  <Globe size={14} />
+                </a>
+              )}
+              {(fb.videoUrls?.length > 0) && (
+                <span className="text-xs bg-[#1F2937]/20 backdrop-blur-sm px-2 py-1 rounded-full text-[#1F2937] border border-[#1F2937]/20 flex items-center gap-1">
+                  <Video size={9} /> Video
+                </span>
+              )}
+            </div>
           </div>
         </div>
       ) : (
@@ -609,7 +600,7 @@ export default function FeedbackSection() {
   const [isManualPaused, setIsManualPaused] = useState(false);
   const viewportRef = useRef<HTMLDivElement>(null);
   const pauseTimerRef = useRef<number | null>(null);
-  const loopMetricsRef = useRef<LoopMetrics>({ middleStart: 0, loopWidth: 0, step: 0 });
+  const stepRef = useRef<number>(0);
 
   useEffect(() => {
     const fetch = async () => {
@@ -630,7 +621,8 @@ export default function FeedbackSection() {
     fetch();
   }, []);
 
-  const tripledFeedbacks = feedbacks.length > 0 ? [...feedbacks, ...feedbacks, ...feedbacks] : [];
+  // Single array, no repetition
+  const displayFeedbacks = feedbacks;
 
   const clearManualPauseTimer = () => {
     if (pauseTimerRef.current !== null) {
@@ -650,67 +642,55 @@ export default function FeedbackSection() {
 
   const scrollByReview = (direction: -1 | 1) => {
     const viewport = viewportRef.current;
-    const { step } = loopMetricsRef.current;
+    const step = stepRef.current;
     if (!viewport || step <= 0) return;
 
     pauseAutoplayTemporarily();
-    normalizeLoopScroll(viewport, loopMetricsRef.current);
-    viewport.scrollBy({ left: direction * step, behavior: "smooth" });
+
+    const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+    let targetScroll = viewport.scrollLeft + direction * step;
+
+    // Manual wrapping if at boundaries
+    if (targetScroll < -10) targetScroll = maxScroll;
+    else if (targetScroll > maxScroll + 10) targetScroll = 0;
+
+    viewport.scrollTo({ left: targetScroll, behavior: "smooth" });
   };
 
   useEffect(() => {
     if (feedbacks.length === 0) return;
 
-    const syncLoopMetrics = (alignToMiddle = false) => {
-      const metrics = measureLoopMetrics(viewportRef.current, feedbacks.length);
-      if (!metrics) return;
-
-      loopMetricsRef.current = metrics;
-
-      if (alignToMiddle && viewportRef.current) {
-        viewportRef.current.scrollLeft = metrics.middleStart;
-      }
+    const syncMetrics = () => {
+      stepRef.current = measureLoopMetrics(viewportRef.current);
     };
 
-    syncLoopMetrics(true);
-
-    const handleResize = () => {
-      syncLoopMetrics();
-      normalizeLoopScroll(viewportRef.current, loopMetricsRef.current);
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    syncMetrics();
+    window.addEventListener("resize", syncMetrics);
+    return () => window.removeEventListener("resize", syncMetrics);
   }, [feedbacks.length]);
 
   useEffect(() => {
     if (feedbacks.length <= 1) return;
 
-    let frameId = 0;
-    let lastTimestamp = 0;
+    const interval = setInterval(() => {
+      if (!isHoverPaused && !isManualPaused && viewportRef.current) {
+        const viewport = viewportRef.current;
+        const step = stepRef.current;
+        if (step > 0) {
+          const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+          // Left-to-right means moving toward lower scrollLeft
+          let targetScroll = viewport.scrollLeft - step;
 
-    const animate = (timestamp: number) => {
-      if (lastTimestamp === 0) {
-        lastTimestamp = timestamp;
-        frameId = window.requestAnimationFrame(animate);
-        return;
+          if (targetScroll < -10) {
+            targetScroll = maxScroll;
+          }
+
+          viewport.scrollTo({ left: targetScroll, behavior: "smooth" });
+        }
       }
+    }, 5000);
 
-      const viewport = viewportRef.current;
-      const { loopWidth } = loopMetricsRef.current;
-      const delta = timestamp - lastTimestamp;
-      lastTimestamp = timestamp;
-
-      if (viewport && loopWidth > 0 && !isHoverPaused && !isManualPaused) {
-        viewport.scrollLeft += delta * (loopWidth / AUTO_SCROLL_DURATION_MS);
-        normalizeLoopScroll(viewport, loopMetricsRef.current);
-      }
-
-      frameId = window.requestAnimationFrame(animate);
-    };
-
-    frameId = window.requestAnimationFrame(animate);
-    return () => window.cancelAnimationFrame(frameId);
+    return () => clearInterval(interval);
   }, [feedbacks.length, isHoverPaused, isManualPaused]);
 
   useEffect(() => () => clearManualPauseTimer(), []);
@@ -733,14 +713,14 @@ export default function FeedbackSection() {
       <div className="absolute left-1/4 top-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-[#3B82F6]/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="container mx-auto px-6 max-w-7xl mb-12">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
+        <div className="flex flex-col items-center text-center gap-8">
+          <div className="max-w-2xl">
             <h2 className="text-3xl md:text-5xl font-bold font-outfit text-[#F8FAFC] mb-6">
               Client, <span className="gradient-text-alt uppercase">Voices</span>
             </h2>
-            <p className="text-[#94A3B8] max-w-xl">What our clients say after partnering with AxisX. Swipe or drag to browse, or click any card to read the full review.</p>
+            <p className="text-[#94A3B8]">What our clients say after partnering with AxisX. {feedbacks.length > 1 && "Swipe or drag to browse, or "}click any card to read the full review.</p>
           </div>
-          <div className="relative z-20 flex flex-wrap items-center gap-3">
+          <div className="relative z-20 flex flex-wrap items-center justify-center gap-3">
             {feedbacks.length > 0 && (
               <button
                 type="button"
@@ -787,46 +767,59 @@ export default function FeedbackSection() {
           <div className="absolute right-0 top-0 bottom-0 w-24 sm:w-32 z-10 pointer-events-none"
             style={{ background: "linear-gradient(to left, #0B0F14, transparent)" }} />
 
-          <div className="absolute inset-y-0 left-4 z-20 hidden sm:flex items-center">
-            <button
-              type="button"
-              onClick={() => scrollByReview(-1)}
-              className="h-11 w-11 rounded-full border border-[#3B82F6]/20 bg-[#111827]/85 text-[#F8FAFC] backdrop-blur-sm transition-all hover:border-[#3B82F6]/45 hover:text-[#3B82F6]"
-              aria-label="Previous review"
-            >
-              <ChevronLeft size={18} className="mx-auto" />
-            </button>
-          </div>
+          {feedbacks.length > 1 && (
+            <div className="absolute inset-y-0 left-4 lg:left-12 z-20 hidden sm:flex items-center">
+              <button
+                type="button"
+                onClick={() => scrollByReview(-1)}
+                className="h-11 w-11 rounded-full border border-[#3B82F6]/20 bg-[#111827]/85 text-[#F8FAFC] backdrop-blur-sm transition-all hover:border-[#3B82F6]/45 hover:text-[#3B82F6]"
+                aria-label="Previous review"
+              >
+                <ChevronLeft size={18} className="mx-auto" />
+              </button>
+            </div>
+          )}
 
-          <div className="absolute inset-y-0 right-4 z-20 hidden sm:flex items-center">
-            <button
-              type="button"
-              onClick={() => scrollByReview(1)}
-              className="h-11 w-11 rounded-full border border-[#3B82F6]/20 bg-[#111827]/85 text-[#F8FAFC] backdrop-blur-sm transition-all hover:border-[#3B82F6]/45 hover:text-[#3B82F6]"
-              aria-label="Next review"
-            >
-              <ChevronRight size={18} className="mx-auto" />
-            </button>
-          </div>
+          {feedbacks.length > 1 && (
+            <div className="absolute inset-y-0 right-4 lg:right-12 z-20 hidden sm:flex items-center">
+              <button
+                type="button"
+                onClick={() => scrollByReview(1)}
+                className="h-11 w-11 rounded-full border border-[#3B82F6]/20 bg-[#111827]/85 text-[#F8FAFC] backdrop-blur-sm transition-all hover:border-[#3B82F6]/45 hover:text-[#3B82F6]"
+                aria-label="Next review"
+              >
+                <ChevronRight size={18} className="mx-auto" />
+              </button>
+            </div>
+          )}
 
           <div
             ref={viewportRef}
-            className="overflow-x-auto scrollbar-hide touch-pan-x cursor-grab active:cursor-grabbing"
+            className="overflow-x-auto scrollbar-hide touch-pan-x cursor-grab active:cursor-grabbing snap-x snap-mandatory"
             onPointerDown={() => pauseAutoplayTemporarily()}
-            onScroll={() => normalizeLoopScroll(viewportRef.current, loopMetricsRef.current)}
             style={{ WebkitOverflowScrolling: "touch" }}
           >
-            <div className="flex w-max gap-6 px-6 py-4">
-              {tripledFeedbacks.map((fb, idx) => (
+            <div className="flex w-max gap-8 py-6">
+              {/* Responsive Spacers to align with container */}
+              <div
+                className="shrink-0"
+                style={{ width: 'max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem))' }}
+              />
+
+              {displayFeedbacks.map((fb, idx) => (
                 <div
                   key={`${fb.id}-${idx}`}
                   data-feedback-card
-                  className="shrink-0"
-                  aria-hidden={idx < feedbacks.length || idx >= feedbacks.length * 2}
+                  className="shrink-0 snap-start"
                 >
                   <FeedbackCard fb={fb} onClick={() => setSelected(fb)} />
                 </div>
               ))}
+
+              <div
+                className="shrink-0"
+                style={{ width: 'max(1.5rem, calc((100vw - 80rem) / 2 + 1.5rem))' }}
+              />
             </div>
           </div>
         </div>
