@@ -300,15 +300,14 @@ function FeedbackModal({ fb, onClose }: { fb: Feedback; onClose: () => void }) {
 
                       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0B0F14]/65 via-transparent to-transparent" />
 
-                    <div className="absolute left-3 top-3 flex items-center gap-2">
-                      <div
-                        className={`flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)] ${
-                          activeMedia.type === "video" ? "text-[#1F2937]" : "text-[#3B82F6]"
-                        }`}
-                      >
-                        {activeMedia.type === "video" ? <Video size={16} /> : <ImageIcon size={16} />}
+                      <div className="absolute left-3 top-3 flex items-center gap-2">
+                        <div
+                          className={`flex h-10 w-10 items-center justify-center text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.55)] ${activeMedia.type === "video" ? "text-[#1F2937]" : "text-[#3B82F6]"
+                            }`}
+                        >
+                          {activeMedia.type === "video" ? <Video size={16} /> : <ImageIcon size={16} />}
+                        </div>
                       </div>
-                    </div>
 
                       <div className="absolute right-3 top-3 rounded-full bg-[#0B0F14]/70 px-3 py-1 text-[11px] font-medium text-[#F8FAFC] backdrop-blur-sm">
                         {activeMediaIndex + 1} / {mediaItems.length}
@@ -736,8 +735,8 @@ export default function FeedbackSection() {
       <div className="container mx-auto px-6 max-w-7xl mb-12">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
-            <h2 className="text-3xl md:text-5xl font-bold font-outfit mb-3">
-              Client <span className="gradient-text">Voices</span>
+            <h2 className="text-3xl md:text-5xl font-bold font-outfit text-[#F8FAFC] mb-6">
+              Client, <span className="gradient-text-alt uppercase">Voices</span>
             </h2>
             <p className="text-[#94A3B8] max-w-xl">What our clients say after partnering with AxisX. Swipe or drag to browse, or click any card to read the full review.</p>
           </div>

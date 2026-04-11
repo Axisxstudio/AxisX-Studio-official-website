@@ -77,7 +77,7 @@ function ContactForm() {
       const customEvent = e as CustomEvent<string>;
       if (customEvent.detail) {
         setFormData(prev => ({ ...prev, subject: customEvent.detail }));
-        
+
         // Let's also focus the subject input softly after the scroll finishes
         setTimeout(() => {
           document.getElementById('subject')?.focus();
@@ -211,7 +211,9 @@ function ProjectsSection() {
       <div className="absolute right-0 top-1/3 w-[400px] h-[400px] bg-[#1F2937]/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="container mx-auto px-6 max-w-7xl">
         <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold font-outfit mb-4">Our <span className="gradient-text-alt">Portfolio</span></h2>
+          <h2 className="text-3xl md:text-5xl font-bold font-outfit text-[#F8FAFC] mb-6">
+            Our, <span className="gradient-text-alt uppercase">Portfolio</span>
+          </h2>
           <p className="text-[#94A3B8] max-w-2xl mx-auto">A selection of web applications and digital experiences we&apos;ve engineered.</p>
         </motion.div>
 
@@ -378,7 +380,9 @@ export default function Home() {
           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-[#3B82F6]/5 rounded-full blur-[120px] pointer-events-none" />
           <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
             <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-10 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-outfit mb-3 sm:mb-4">Engineering <span className="gradient-text">Solutions</span></h2>
+              <h2 className="text-3xl md:text-5xl font-bold font-outfit text-[#F8FAFC] mb-6">
+                Engineering, <span className="gradient-text-alt uppercase">Solutions</span>
+              </h2>
               <p className="text-[#94A3B8] max-w-2xl mx-auto text-sm sm:text-base">From MVPs to enterprise-grade platforms, we deliver technical excellence at every layer of the stack.</p>
             </motion.div>
             <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -399,8 +403,8 @@ export default function Home() {
                 <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#3B82F6]/20 bg-[#3B82F6]/5 text-[#3B82F6] text-xs font-semibold uppercase tracking-widest mb-4">
                   <CheckCircle size={13} /> We Build For
                 </span>
-                <h3 className="text-2xl md:text-3xl font-bold font-outfit text-[#F8FAFC]">
-                  Websites &amp; Portfolios for <span className="gradient-text-alt">Every Business</span>
+                <h3 className="text-2xl md:text-3xl font-bold font-outfit text-[#F8FAFC] mb-4">
+                  Every Business, <span className="gradient-text-alt uppercase">Stunning Websites</span>
                 </h3>
                 <p className="text-[#94A3B8] mt-3 text-sm max-w-xl mx-auto">
                   Whether you run a restaurant, a tuition centre, a boutique shop, or a corporate firm — we craft a stunning online presence tailored to your audience.
@@ -449,7 +453,9 @@ export default function Home() {
           <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
 
             <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-10 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-outfit mb-3 sm:mb-4">About <TypingText text="AxisX Studio" className="gradient-text" /></h2>
+              <h2 className="text-3xl md:text-5xl font-bold font-outfit text-[#F8FAFC] mb-6">
+                About, <span className="gradient-text-alt uppercase">AxisX Studio</span>
+              </h2>
               <p className="text-[#94A3B8] max-w-2xl mx-auto text-sm sm:text-base">
                 A collective of digital craftsmen focused on engineering modern, high-performance web applications that drive real business growth.
               </p>
@@ -517,7 +523,9 @@ export default function Home() {
           />
           <div className="container mx-auto px-4 sm:px-6 max-w-6xl relative z-10">
             <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={fadeUp} className="text-center mb-10 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-outfit mb-3 sm:mb-4">Let&apos;s <span className="gradient-text-alt">Connect</span></h2>
+              <h2 className="text-3xl md:text-5xl font-bold font-outfit text-[#F8FAFC] mb-6">
+                Let&apos;s, <span className="gradient-text-alt uppercase">Connect</span>
+              </h2>
               <p className="text-[#94A3B8] max-w-2xl mx-auto text-sm sm:text-base">
                 Tell us about your next project, idea, or technical challenge. We&apos;re ready to engineer the solution.
               </p>
@@ -607,7 +615,7 @@ export default function Home() {
             <div className="glass-strong rounded-3xl p-7 sm:p-10 md:p-16 border border-[#3B82F6]/20 text-center glow-accent-2 relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-[#1F2937]/20 rounded-full blur-[80px]" />
               <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold font-outfit mb-4 sm:mb-6 text-[#F8FAFC] relative z-10">
-                Ready to transform your <br className="hidden md:block" /> digital presence?
+                Transform Your, <span className="gradient-text-alt uppercase">Digital Presence</span>
               </h2>
               <p className="text-[#94A3B8] text-sm sm:text-base md:text-lg mb-7 sm:mb-10 max-w-2xl mx-auto relative z-10">
                 Partner with <TypingText text="AxisX Studio" className="font-bold gradient-text" /> to build technology that moves the needle.

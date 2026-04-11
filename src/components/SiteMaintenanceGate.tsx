@@ -9,6 +9,51 @@ import { defaultSiteSettings, getSiteSettings, isSiteSettingsSchemaMissing } fro
 import type { SiteSettings } from "@/types";
 import BrandLogo from "./BrandLogo";
 import { TypingText } from "./TypingText";
+import { CONTACT_INFO } from "@/lib/contact-info";
+
+/* ── Social SVG Icons (pure SVG) ── */
+const InstagramIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <circle cx="12" cy="12" r="4.5" />
+    <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+const FacebookIcon = () => (
+  <svg viewBox="0 0 24 24" fill="currentColor" className="w-[18px] h-[18px]">
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const LinkedInIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
+
+const socialLinks = [
+  {
+    icon: <InstagramIcon />,
+    label: "Instagram",
+    href: CONTACT_INFO.socials.instagram,
+    className: "border-[#E1306C]/40 text-[#E1306C] shadow-[0_0_12px_rgba(225,48,108,0.20)] hover:shadow-[0_0_16px_rgba(225,48,108,0.35)] hover:border-[#E1306C]/60",
+  },
+  {
+    icon: <FacebookIcon />,
+    label: "Facebook",
+    href: CONTACT_INFO.socials.facebook,
+    className: "border-[#1877F2]/40 text-[#1877F2] shadow-[0_0_12px_rgba(24,119,242,0.20)] hover:shadow-[0_0_16px_rgba(24,119,242,0.35)] hover:border-[#1877F2]/60",
+  },
+  {
+    icon: <LinkedInIcon />,
+    label: "LinkedIn",
+    href: CONTACT_INFO.socials.linkedin,
+    className: "border-[#0A66C2]/40 text-[#0A66C2] shadow-[0_0_12px_rgba(10,102,194,0.20)] hover:shadow-[0_0_16px_rgba(10,102,194,0.35)] hover:border-[#0A66C2]/60",
+  },
+];
 
 type SiteMaintenanceGateProps = {
   children: ReactNode;
@@ -57,7 +102,7 @@ function MaintenanceScreen({ message }: { message: string }) {
           />
         </div>
 
-        <div className="space-y-2 mt-[-1rem] mb-20">
+        <div className="space-y-2 mt-6 mb-10">
           <div className="flex flex-col items-center gap-1">
             <TypingText 
               text="WELCOME TO AXISX STUDIO" 
@@ -116,7 +161,7 @@ function MaintenanceScreen({ message }: { message: string }) {
         </div>
 
         {/* Loading Indicator */}
-        <div className="flex gap-3">
+        <div className="flex gap-3 mt-12">
            {[0, 1, 2].map((i) => (
              <motion.div
                key={i}
@@ -136,7 +181,27 @@ function MaintenanceScreen({ message }: { message: string }) {
       </motion.div>
 
       {/* Admin Access & Legal */}
-      <div className="absolute bottom-10 left-0 right-0 z-10 flex flex-col items-center gap-6">
+      <div className="mt-auto w-full py-10 z-10 flex flex-col items-center gap-6">
+        {/* Social Links */}
+        <div className="flex items-center gap-4 mb-2">
+          {socialLinks.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              aria-label={s.label}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`
+                group relative w-10 h-10 rounded-xl flex items-center justify-center
+                bg-white/[0.03] transition-all duration-300 border hover:scale-110
+                ${s.className}
+              `}
+            >
+              {s.icon}
+            </a>
+          ))}
+        </div>
+
         <Link
           aria-label="Admin login"
           className="flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/5 bg-white/5 text-[10px] uppercase font-bold tracking-widest text-[#94A3B8] transition-all hover:border-[#3B82F6]/30 hover:text-white group active:scale-95"

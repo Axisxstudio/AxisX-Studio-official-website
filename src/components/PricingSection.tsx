@@ -265,7 +265,7 @@ export default function PricingSection() {
             <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-[#3B82F6]">Pricing & Packages</span>
           </div>
           <h2 className="text-3xl md:text-5xl font-bold font-outfit text-[#F8FAFC] mb-6">
-            Transparent Pricing, <br className="hidden md:block" /> <span className="gradient-text-alt uppercase">Unmatched Value</span>
+            Transparent Pricing, <span className="gradient-text-alt uppercase">Unmatched Value</span>
           </h2>
           <p className="text-[#94A3B8] max-w-2xl mx-auto text-sm sm:text-lg">
             Choose the perfect engineering package tailored exactly to the scale and vision of your modern brand.

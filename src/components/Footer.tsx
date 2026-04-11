@@ -35,19 +35,19 @@ const socialLinks = [
     icon: <InstagramIcon />,
     label: "Instagram",
     href: CONTACT_INFO.socials.instagram,
-    hoverColor: "hover:border-[#E1306C]/40 hover:text-[#E1306C] hover:shadow-[0_0_12px_rgba(225,48,108,0.25)]",
+    className: "border-[#E1306C]/40 text-[#E1306C] shadow-[0_0_12px_rgba(225,48,108,0.20)] hover:shadow-[0_0_16px_rgba(225,48,108,0.35)] hover:border-[#E1306C]/60",
   },
   {
     icon: <FacebookIcon />,
     label: "Facebook",
     href: CONTACT_INFO.socials.facebook,
-    hoverColor: "hover:border-[#1877F2]/40 hover:text-[#1877F2] hover:shadow-[0_0_12px_rgba(24,119,242,0.25)]",
+    className: "border-[#1877F2]/40 text-[#1877F2] shadow-[0_0_12px_rgba(24,119,242,0.20)] hover:shadow-[0_0_16px_rgba(24,119,242,0.35)] hover:border-[#1877F2]/60",
   },
   {
     icon: <LinkedInIcon />,
     label: "LinkedIn",
     href: CONTACT_INFO.socials.linkedin,
-    hoverColor: "hover:border-[#0A66C2]/40 hover:text-[#0A66C2] hover:shadow-[0_0_12px_rgba(10,102,194,0.25)]",
+    className: "border-[#0A66C2]/40 text-[#0A66C2] shadow-[0_0_12px_rgba(10,102,194,0.20)] hover:shadow-[0_0_16px_rgba(10,102,194,0.35)] hover:border-[#0A66C2]/60",
   },
 ];
 
@@ -90,8 +90,8 @@ export default function Footer() {
                   title={s.label}
                   className={`
                     group relative w-9 h-9 rounded-xl flex items-center justify-center
-                    border border-white/[0.08] bg-white/[0.03] text-[#4A5568]
-                    transition-all duration-300 ${s.hoverColor}
+                    bg-white/[0.03] transition-all duration-300 border hover:scale-110
+                    ${s.className}
                   `}
                 >
                   {s.icon}

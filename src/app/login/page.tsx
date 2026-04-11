@@ -90,7 +90,7 @@ export default function Login() {
 
         <motion.div
           initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
-          className="relative z-30 mt-2 mb-20"
+          className="relative z-30 mt-2 mb-8"
         >
           <Link href="/" className="inline-block transition-transform hover:scale-105">
             <img src="/site-logo.png" alt="AxisX" className="w-[180px] md:w-[200px] h-auto object-contain object-left" />
