@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/api/'], // Protect admin and API routes from crawling
     },
-    sitemap: 'https://www.axisxstudio.com/sitemap.xml',
+    sitemap: 'https://axisxstudio.com/sitemap.xml',
   };
 }

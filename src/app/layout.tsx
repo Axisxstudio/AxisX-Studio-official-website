@@ -19,7 +19,7 @@ export const metadata = {
   },
   description: "AxisX Studio specializes in high-performance web application development, modern UI/UX design, and scalable software solutions tailored for businesses and startups.",
   keywords: [
-    "Web Development company", "UI/UX Design", "Software Agency", 
+    "AxisX Studio", "AxisX", "Axis-X", "Web Development company", "UI/UX Design", "Software Agency", 
     "Next.js Development", "React Agency", "Tech Startup", 
     "Custom Web Applications", "Front-end Development"
   ],

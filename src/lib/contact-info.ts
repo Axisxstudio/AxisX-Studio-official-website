@@ -1,6 +1,6 @@
 export const CONTACT_INFO = {
   email: "info@axisxstudio.com",
-  website: "https://www.axisxstudio.com",
+  website: "https://axisxstudio.com",
   location: {
     href: "https://www.google.com/maps/search/?api=1&query=Rockplace+Place,+Malabe",
     label: "Rockplace Place, Malabe",
