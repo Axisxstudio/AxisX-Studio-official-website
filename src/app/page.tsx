@@ -335,25 +335,25 @@ export default function Home() {
               <span className="truncate"><TypingText text="AxisX Studio | Web Development Company" /></span>
             </motion.div>
             {/* ── Mobile hero heading: explicit 5 lines (iPhone SE → 14 Pro Max) ── */}
-            <motion.h1
-              variants={fadeUp}
-              className="sm:hidden text-[2.6rem] min-[420px]:text-[3.8rem] leading-[1.05] font-bold tracking-tight mb-6 font-outfit text-center mx-auto"
+            <motion.h1 
+              variants={fadeUp} 
+              className="text-[2.6rem] min-[420px]:text-[3.8rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 sm:mb-8 font-outfit text-center leading-[1.05] sm:leading-[1.1] max-w-[95vw] lg:max-w-[1400px] mx-auto"
             >
-              <span className="block gradient-text">Engineering</span>
-              <span className="block gradient-text-alt">Digital</span>
-              <span className="block gradient-text-alt text-glow mb-1 md:mb-2">Excellence</span>
-              <span className="block text-[#F8FAFC]">for Modern</span>
-              <span className="block text-[#F8FAFC]">Brands</span>
-            </motion.h1>
-
-            {/* ── Desktop / tablet hero heading: original animated 2-line ── */}
-            <motion.h1 variants={fadeUp} className="hidden sm:block text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-8 font-outfit text-center leading-[1.1] max-w-[95vw] lg:max-w-[1400px] mx-auto">
-              <span className="block mb-2 md:mb-4 lg:whitespace-nowrap">
-                <TypingText text="Engineering" className="gradient-text" />{" "}
-                <TypingText text="Digital Excellence" className="gradient-text-alt text-glow" delay={0.3} />
+              <span className="block sm:inline-block mb-1 sm:mb-2 md:mb-4 lg:whitespace-nowrap">
+                <span className="sm:hidden gradient-text">Engineering </span>
+                <span className="sm:hidden gradient-text-alt">Digital </span>
+                <span className="sm:hidden gradient-text-alt text-glow">Excellence </span>
+                
+                <span className="hidden sm:inline">
+                  <TypingText text="Engineering" className="gradient-text" />{" "}
+                  <TypingText text="Digital Excellence" className="gradient-text-alt text-glow" delay={0.3} />
+                </span>
               </span>
-              <span className="block lg:whitespace-nowrap">
-                <TypingText text="for Modern Brands" delay={0.8} />
+              <span className="block sm:inline-block lg:whitespace-nowrap">
+                <span className="sm:hidden text-[#F8FAFC]">for Modern Brands</span>
+                <span className="hidden sm:inline">
+                  <TypingText text="for Modern Brands" delay={0.8} />
+                </span>
               </span>
             </motion.h1>
             <motion.p variants={fadeUp} className="text-sm sm:text-base md:text-lg text-[#94A3B8] max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed px-1">

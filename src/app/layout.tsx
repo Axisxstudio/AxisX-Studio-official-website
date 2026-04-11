@@ -7,6 +7,7 @@ import PageProgressBar from "@/components/PageProgressBar";
 import SiteMaintenanceGate from "@/components/SiteMaintenanceGate";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import Preloader from "@/components/Preloader";
+import { CONTACT_INFO } from "@/lib/contact-info";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -99,15 +100,15 @@ export default function RootLayout({
               "@type": "Organization",
               "name": "AxisX Studio",
               "url": "https://axisxstudio.com",
-              "logo": "https://axisxstudio.com/icon.png",
+              "logo": `${CONTACT_INFO.website}/icon.png`,
               "sameAs": [
                 "https://github.com/axisxstudio",
-                "https://linkedin.com/company/axisxstudio",
+                CONTACT_INFO.socials.linkedin,
                 "https://twitter.com/axisxstudio"
               ],
               "contactPoint": {
                 "@type": "ContactPoint",
-                "telephone": "+94771234567",
+                "telephone": CONTACT_INFO.phone.display,
                 "contactType": "customer service",
                 "availableLanguage": "English"
               }
@@ -115,10 +116,10 @@ export default function RootLayout({
             {
               "@context": "https://schema.org",
               "@type": "WebSite",
-              "url": "https://axisxstudio.com",
+              "url": CONTACT_INFO.website,
               "potentialAction": {
                 "@type": "SearchAction",
-                "target": "https://axisxstudio.com/projects?q={search_term_string}",
+                "target": `${CONTACT_INFO.website}/projects?q={search_term_string}`,
                 "query-input": "required name=search_term_string"
               }
             },
@@ -126,15 +127,15 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "ProfessionalService",
               "name": "AxisX Studio",
-              "image": "https://axisxstudio.com/og-image.png",
-              "url": "https://axisxstudio.com",
-              "telephone": "+94771234567",
+              "image": `${CONTACT_INFO.website}/og-image.png`,
+              "url": CONTACT_INFO.website,
+              "telephone": CONTACT_INFO.phone.display,
               "address": {
                 "@type": "PostalAddress",
-                "streetAddress": "Main Street",
-                "addressLocality": "Galle",
-                "addressRegion": "Southern",
-                "postalCode": "80000",
+                "streetAddress": CONTACT_INFO.location.label,
+                "addressLocality": "Malabe",
+                "addressRegion": "Western",
+                "postalCode": "10115",
                 "addressCountry": "LK"
               },
               "geo": {
