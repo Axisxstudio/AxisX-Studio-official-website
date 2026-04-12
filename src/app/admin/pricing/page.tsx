@@ -191,7 +191,7 @@ export default function AdminPricing() {
     isOpen: false,
     title: "",
     message: "",
-    onAction: () => {},
+    onAction: () => { },
   });
 
   const triggerConfirm = (title: string, message: string, onAction: () => void | Promise<void>, isDanger = false) => {
@@ -335,7 +335,7 @@ export default function AdminPricing() {
 
   const removePackage = async (id: string, title: string) => {
     if (!id) return;
-    
+
     const action = async () => {
       try {
         const { error } = await supabase.from("pricing_packages").delete().eq("id", id);
@@ -352,7 +352,7 @@ export default function AdminPricing() {
 
   const toggleStatus = async (pkg: PricingPackage) => {
     if (!pkg.id) return;
-    
+
     const action = async () => {
       try {
         const next = !pkg.enabled;
@@ -388,14 +388,14 @@ export default function AdminPricing() {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       }));
-      
+
       const { data, error } = await supabase
         .from("pricing_packages")
         .insert(payload)
         .select(selectClause("pricing_packages"));
-        
+
       if (error) throw error;
-      
+
       setPackages(fromDatabaseRows<PricingPackage>("pricing_packages", data as any));
       toast.success("Default packages synced to database!");
     } catch (err) {
@@ -408,8 +408,8 @@ export default function AdminPricing() {
 
   const handleSeedDefaults = () => {
     triggerConfirm(
-      "Seed Default Packages", 
-      "This will populate your database with the 6 standard AxisX pricing cards. Continue?", 
+      "Seed Default Packages",
+      "This will populate your database with the 6 standard AxisX pricing cards. Continue?",
       seedDefaults
     );
   };
@@ -501,14 +501,14 @@ export default function AdminPricing() {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2">
-               <div>
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">Features (One per line)</label>
-                  <textarea name="features" rows={6} value={formData.features} onChange={handleChange} className={`${inputCls} resize-none`} placeholder="Up to 5 pages\nMobile responsive..." />
-               </div>
-               <div>
-                  <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">Contact Subject Override</label>
-                  <input name="contactSubject" value={formData.contactSubject} onChange={handleChange} className={inputCls} placeholder="Overrides default title if set" />
-               </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">Features (One per line)</label>
+                <textarea name="features" rows={6} value={formData.features} onChange={handleChange} className={`${inputCls} resize-none`} placeholder="Up to 5 pages\nMobile responsive..." />
+              </div>
+              <div>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-[#4A5568] ml-1 mb-2 block">Contact Subject Override</label>
+                <input name="contactSubject" value={formData.contactSubject} onChange={handleChange} className={inputCls} placeholder="Overrides default title if set" />
+              </div>
             </div>
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pt-4">
@@ -537,7 +537,7 @@ export default function AdminPricing() {
           <Tag size={48} className="mx-auto text-[#4A5568] mb-6" />
           <p className="text-[#F8FAFC] font-bold text-xl font-outfit">No pricing packages found</p>
           <p className="text-[#94A3B8] text-sm mt-1 mb-8">Your database is currently empty. Would you like to load the 6 default AxisX Studio packages?</p>
-          <button 
+          <button
             disabled={submitLoading}
             onClick={handleSeedDefaults}
             className="inline-flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 px-6 py-3 text-white font-bold text-xs uppercase tracking-widest hover:bg-[#3B82F6] hover:text-[#0B0F14] transition-all hover:border-[#3B82F6]"
@@ -555,34 +555,34 @@ export default function AdminPricing() {
               className="glass-strong rounded-3xl p-6 border border-[#3B82F6]/10 hover:border-[#3B82F6]/30 transition-all flex flex-col cursor-pointer group/card h-full"
             >
               <div className="flex justify-between items-start mb-4">
-                 <div>
-                    <span className="text-[10px] font-bold text-[#3B82F6] uppercase">{pkg.category}</span>
-                    <h3 className="font-bold text-xl text-[#F8FAFC] font-outfit mt-1 group-hover/card:text-[#3B82F6] transition-colors">{pkg.title}</h3>
-                 </div>
-                 <button
-                    onClick={(e) => { e.stopPropagation(); toggleStatus(pkg); }}
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${pkg.enabled
-                      ? 'bg-[#10B981]/20 text-[#10B981]'
-                      : 'bg-[#ef4444]/20 text-[#ef4444]'
+                <div>
+                  <span className="text-[10px] font-bold text-[#3B82F6] uppercase">{pkg.category}</span>
+                  <h3 className="font-bold text-xl text-[#F8FAFC] font-outfit mt-1 group-hover/card:text-[#3B82F6] transition-colors">{pkg.title}</h3>
+                </div>
+                <button
+                  onClick={(e) => { e.stopPropagation(); toggleStatus(pkg); }}
+                  className={`w-8 h-8 rounded-lg flex items-center justify-center transition-all ${pkg.enabled
+                    ? 'bg-[#10B981]/20 text-[#10B981]'
+                    : 'bg-[#ef4444]/20 text-[#ef4444]'
                     }`}
-                 >
-                    {pkg.enabled ? <Eye size={14} /> : <EyeOff size={14} />}
-                 </button>
+                >
+                  {pkg.enabled ? <Eye size={14} /> : <EyeOff size={14} />}
+                </button>
               </div>
 
               <div className="flex items-baseline gap-1 mb-4">
-                 <span className="text-3xl font-black text-[#F8FAFC]">{formatPrice(pkg.rawPrice, pkg.hasPlus)}</span>
+                <span className="text-3xl font-black text-[#F8FAFC]">{formatPrice(pkg.rawPrice, pkg.hasPlus)}</span>
               </div>
-              
+
               <ul className="space-y-2 mb-6 flex-grow">
-                 {pkg.features.slice(0, 3).map((f, i) => (
-                    <li key={i} className="text-xs text-[#94A3B8] flex items-center gap-2">
-                       <span className="w-1 h-1 rounded-full bg-[#3B82F6]"></span> {f}
-                    </li>
-                 ))}
-                 {pkg.features.length > 3 && (
-                    <li className="text-xs text-[#4A5568] mt-1 italic group-hover/card:text-[#3B82F6] transition-colors">+{pkg.features.length - 3} more...</li>
-                 )}
+                {pkg.features.slice(0, 3).map((f, i) => (
+                  <li key={i} className="text-xs text-[#94A3B8] flex items-center gap-2">
+                    <span className="w-1 h-1 rounded-full bg-[#3B82F6]"></span> {f}
+                  </li>
+                ))}
+                {pkg.features.length > 3 && (
+                  <li className="text-xs text-[#4A5568] mt-1 italic group-hover/card:text-[#3B82F6] transition-colors">+{pkg.features.length - 3} more...</li>
+                )}
               </ul>
 
               <div className="flex items-center justify-between pt-4 border-t border-white/5">
@@ -626,7 +626,7 @@ export default function AdminPricing() {
               exit={{ scale: 0.9, opacity: 0, y: 30 }}
               className="relative w-full max-w-2xl glass-strong border border-white/10 rounded-[40px] p-8 md:p-12 shadow-2xl max-h-[90vh] overflow-y-auto scrollbar-hide"
             >
-              <button 
+              <button
                 onClick={() => setViewingPkg(null)}
                 className="absolute top-8 right-8 w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-[#94A3B8] hover:text-white transition-colors border border-white/10"
               >
@@ -643,39 +643,39 @@ export default function AdminPricing() {
 
               <div className="grid md:grid-cols-2 gap-10">
                 <div>
-                   <h4 className="text-[10px] font-bold text-[#4A5568] uppercase tracking-[0.2em] mb-6">Price & Structure</h4>
-                   <div className="space-y-6">
+                  <h4 className="text-[10px] font-bold text-[#4A5568] uppercase tracking-[0.2em] mb-6">Price & Structure</h4>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-[#4A5568] text-[10px] font-bold uppercase tracking-widest mb-1">Raw Price</p>
+                      <p className="text-3xl font-black text-white">{formatPrice(viewingPkg.rawPrice, viewingPkg.hasPlus)}</p>
+                    </div>
+                    <div className="flex items-center gap-10">
                       <div>
-                         <p className="text-[#4A5568] text-[10px] font-bold uppercase tracking-widest mb-1">Raw Price</p>
-                         <p className="text-3xl font-black text-white">{formatPrice(viewingPkg.rawPrice, viewingPkg.hasPlus)}</p>
+                        <p className="text-[#4A5568] text-[10px] font-bold uppercase tracking-widest mb-1">Status</p>
+                        <span className={`text-[10px] font-bold uppercase ${viewingPkg.enabled ? 'text-[#10B981]' : 'text-[#ef4444]'}`}>
+                          {viewingPkg.enabled ? 'Publicly Visible' : 'Hidden/Disabled'}
+                        </span>
                       </div>
-                      <div className="flex items-center gap-10">
-                        <div>
-                           <p className="text-[#4A5568] text-[10px] font-bold uppercase tracking-widest mb-1">Status</p>
-                           <span className={`text-[10px] font-bold uppercase ${viewingPkg.enabled ? 'text-[#10B981]' : 'text-[#ef4444]'}`}>
-                              {viewingPkg.enabled ? 'Publicly Visible' : 'Hidden/Disabled'}
-                           </span>
-                        </div>
-                        <div>
-                           <p className="text-[#4A5568] text-[10px] font-bold uppercase tracking-widest mb-1">Highlighted</p>
-                           <span className="text-[10px] font-bold uppercase text-[#94A3B8]">
-                              {viewingPkg.isPopular ? 'Popular Badge Active' : 'Standard Card'}
-                           </span>
-                        </div>
+                      <div>
+                        <p className="text-[#4A5568] text-[10px] font-bold uppercase tracking-widest mb-1">Highlighted</p>
+                        <span className="text-[10px] font-bold uppercase text-[#94A3B8]">
+                          {viewingPkg.isPopular ? 'Popular Badge Active' : 'Standard Card'}
+                        </span>
                       </div>
-                   </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div>
-                   <h4 className="text-[10px] font-bold text-[#4A5568] uppercase tracking-[0.2em] mb-6">Included Features</h4>
-                   <ul className="space-y-3">
-                      {viewingPkg.features.map((f, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                           <CheckCircle2 size={16} className="text-[#3B82F6] mt-0.5 shrink-0" />
-                           <span className="text-sm text-[#CBD5E1] leading-relaxed">{f}</span>
-                        </li>
-                      ))}
-                   </ul>
+                  <h4 className="text-[10px] font-bold text-[#4A5568] uppercase tracking-[0.2em] mb-6">Included Features</h4>
+                  <ul className="space-y-3">
+                    {viewingPkg.features.map((f, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <CheckCircle2 size={16} className="text-[#3B82F6] mt-0.5 shrink-0" />
+                        <span className="text-sm text-[#CBD5E1] leading-relaxed">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
@@ -723,7 +723,7 @@ export default function AdminPricing() {
               )}
               <h3 className="text-xl font-bold font-outfit text-[#F8FAFC] mb-4">{confirmData.title}</h3>
               <p className="text-[#94A3B8] text-sm leading-relaxed mb-8">{confirmData.message}</p>
-              
+
               <div className="flex items-center gap-4">
                 <button
                   onClick={() => setConfirmData(prev => ({ ...prev, isOpen: false }))}
@@ -736,11 +736,10 @@ export default function AdminPricing() {
                     confirmData.onAction();
                     setConfirmData(prev => ({ ...prev, isOpen: false }));
                   }}
-                  className={`flex-1 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all ${
-                    confirmData.isDanger 
-                      ? "bg-red-500 text-white hover:bg-red-600" 
+                  className={`flex-1 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest transition-all ${confirmData.isDanger
+                      ? "bg-red-500 text-white hover:bg-red-600"
                       : "bg-[#3B82F6] text-[#0B0F14] hover:bg-white"
-                  }`}
+                    }`}
                 >
                   Confirm
                 </button>

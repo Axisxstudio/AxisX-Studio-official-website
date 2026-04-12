@@ -335,26 +335,30 @@ export default function Home() {
               <span className="truncate"><TypingText text="AxisX Studio | Web Development Company" /></span>
             </motion.div>
             {/* ── Mobile hero heading: explicit 5 lines (iPhone SE → 14 Pro Max) ── */}
-            <motion.h1 
-              variants={fadeUp} 
+            <motion.h1
+              variants={fadeUp}
               className="text-[2.6rem] min-[420px]:text-[3.8rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 sm:mb-8 font-outfit text-center leading-[1.05] sm:leading-[1.1] max-w-[95vw] lg:max-w-[1400px] mx-auto"
             >
-              <span className="block sm:inline-block mb-1 sm:mb-2 md:mb-4 lg:whitespace-nowrap">
-                <span className="sm:hidden gradient-text">Engineering </span>
-                <span className="sm:hidden gradient-text-alt">Digital </span>
-                <span className="sm:hidden gradient-text-alt text-glow">Excellence </span>
-                
-                <span className="hidden sm:inline">
+              <div className="sm:hidden flex flex-col items-center">
+                <span className="block gradient-text">Engineering</span>
+                <span className="block gradient-text-alt">Digital</span>
+                <span className="block gradient-text-alt text-glow">Excellence</span>
+                <div className="flex items-baseline justify-center gap-2 mt-1">
+                  <span className="lowercase text-[#F8FAFC]">for</span>
+                  <span className="text-[#F8FAFC]">Modern</span>
+                </div>
+                <span className="block text-[#F8FAFC]">Brands</span>
+              </div>
+              
+              <div className="hidden sm:block">
+                <span className="block sm:inline-block mb-1 sm:mb-2 md:mb-4 lg:whitespace-nowrap">
                   <TypingText text="Engineering" className="gradient-text" />{" "}
                   <TypingText text="Digital Excellence" className="gradient-text-alt text-glow" delay={0.3} />
                 </span>
-              </span>
-              <span className="block sm:inline-block lg:whitespace-nowrap">
-                <span className="sm:hidden text-[#F8FAFC]">for Modern Brands</span>
-                <span className="hidden sm:inline">
+                <span className="block sm:inline-block lg:whitespace-nowrap">
                   <TypingText text="for Modern Brands" delay={0.8} />
                 </span>
-              </span>
+              </div>
             </motion.h1>
             <motion.p variants={fadeUp} className="text-sm sm:text-base md:text-lg text-[#94A3B8] max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed px-1">
               <TypingText text="AxisX Studio" className="font-bold" /> specializes in high-performance web application development, modern UI/UX design, and scalable software solutions tailored for businesses and startups.
@@ -394,9 +398,8 @@ export default function Home() {
                     key={i}
                     variants={fadeUp}
                     onClick={() => setExpandedService(isOpen ? null : i)}
-                    className={`glass-strong rounded-2xl border transition-all duration-500 group select-none ${
-                      isOpen ? 'border-[#3B82F6]/40 bg-[#111827]/60 shadow-lg shadow-[#3B82F6]/5' : 'border-[#3B82F6]/10 hover:border-[#3B82F6]/30'
-                    } ${!isOpen && 'hover:-translate-y-2'} cursor-pointer sm:cursor-default`}
+                    className={`glass-strong rounded-2xl border transition-all duration-500 group select-none ${isOpen ? 'border-[#3B82F6]/40 bg-[#111827]/60 shadow-lg shadow-[#3B82F6]/5' : 'border-[#3B82F6]/10 hover:border-[#3B82F6]/30'
+                      } ${!isOpen && 'hover:-translate-y-2'} cursor-pointer sm:cursor-default`}
                   >
                     <div className="p-6 sm:p-8">
                       <div className="flex items-center gap-4 sm:block">
@@ -405,24 +408,24 @@ export default function Home() {
                             {s.icon}
                           </div>
                         </div>
-                        
+
                         <div className="flex-grow">
                           <h3 className="text-base sm:text-lg font-bold text-[#F8FAFC] leading-snug">{s.title}</h3>
                         </div>
-              
-                        <motion.div 
+
+                        <motion.div
                           animate={{ rotate: isOpen ? 180 : 0 }}
                           className="sm:hidden text-[#4a4a5a] bg-white/5 p-1.5 rounded-full"
                         >
                           <ChevronDown size={14} />
                         </motion.div>
                       </div>
-              
+
                       {/* Desktop Description */}
                       <div className="hidden sm:block">
                         <p className="text-[#94A3B8] text-sm leading-relaxed">{s.desc}</p>
                       </div>
-              
+
                       {/* Mobile Dropdown Description */}
                       <AnimatePresence>
                         {isOpen && (
