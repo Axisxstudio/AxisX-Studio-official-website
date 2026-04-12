@@ -35,7 +35,7 @@ const socialLinks = [
     icon: <InstagramIcon />,
     label: "Instagram",
     href: CONTACT_INFO.socials.instagram,
-    className: "border-[#E1306C]/40 text-[#E1306C] shadow-[0_0_12px_rgba(225,48,108,0.20)] hover:shadow-[0_0_16px_rgba(225,48,108,0.35)] hover:border-[#E1306C]/60",
+    className: "border-[#FFB6C1]/40 text-[#FFB6C1] shadow-[0_0_12px_rgba(255,182,193,0.20)] hover:shadow-[0_0_16px_rgba(255,182,193,0.35)] hover:border-[#FFB6C1]/60",
   },
   {
     icon: <FacebookIcon />,
