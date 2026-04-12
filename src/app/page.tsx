@@ -339,7 +339,7 @@ export default function Home() {
               variants={fadeUp}
               className="text-[2.6rem] min-[420px]:text-[3.8rem] sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight mb-6 sm:mb-8 font-outfit text-center leading-[1.05] sm:leading-[1.1] max-w-[95vw] lg:max-w-[1400px] mx-auto"
             >
-              <div className="sm:hidden flex flex-col items-center">
+              <div className="sm:hidden flex flex-col items-center" aria-hidden="true">
                 <span className="block gradient-text">Engineering</span>
                 <span className="block gradient-text-alt">Digital</span>
                 <span className="block gradient-text-alt text-glow">Excellence</span>
