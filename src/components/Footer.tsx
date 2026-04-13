@@ -67,10 +67,10 @@ export default function Footer() {
   return (
     <footer className="border-t border-[#3B82F6]/10 bg-[#0B0F14] py-12 mt-4 relative">
       <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 text-[#94A3B8] text-sm">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 text-[#94A3B8] text-sm">
 
           {/* Brand + social */}
-          <div>
+          <div className="lg:col-span-1">
             <Link href="/" aria-label="AxisX home" className="mb-5 inline-flex items-center">
               <BrandLogo className="h-auto w-[10.5rem]" />
             </Link>
@@ -128,6 +128,22 @@ export default function Footer() {
               ].map(item => (
                 <li key={item.id}>
                   <button suppressHydrationWarning onClick={() => scrollTo(item.id)} className="hover:text-[#3B82F6] transition-colors text-left">{item.label}</button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="text-[#F8FAFC] font-semibold mb-5">Legal</h4>
+            <ul className="space-y-3">
+              {[
+                { label: "Privacy Policy", href: "/privacy-policy" },
+                { label: "Terms & Conditions", href: "/terms-and-conditions" },
+                { label: "Return Policy", href: "/return-policy" },
+              ].map(item => (
+                <li key={item.href}>
+                  <Link href={item.href} className="hover:text-[#3B82F6] transition-colors text-left">{item.label}</Link>
                 </li>
               ))}
             </ul>
