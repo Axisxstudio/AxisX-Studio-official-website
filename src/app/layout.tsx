@@ -29,9 +29,6 @@ export const metadata = {
   metadataBase: new URL('https://axisxstudio.com'),
   alternates: {
     canonical: '/',
-    languages: {
-      'en-US': '/en-US',
-    },
   },
   icons: {
     icon: '/icon.png',
@@ -63,7 +60,6 @@ export const metadata = {
   robots: {
     index: true,
     follow: true,
-    nocache: true,
     googleBot: {
       index: true,
       follow: true,
